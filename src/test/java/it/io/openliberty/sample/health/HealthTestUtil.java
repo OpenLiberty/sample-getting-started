@@ -34,8 +34,8 @@ public class HealthTestUtil {
   private static String port;
   private static String baseUrl;
   private final static String HEALTH_ENDPOINT = "health";
-  public static final String INV_MAINTENANCE_FALSE = "io_openliberty_guides_inventory_inMaintenance\":false";
-  public static final String INV_MAINTENANCE_TRUE = "io_openliberty_guides_inventory_inMaintenance\":true";
+  public static final String INV_MAINTENANCE_FALSE = "io_openliberty_sample_system_inMaintenance\":false";
+  public static final String INV_MAINTENANCE_TRUE = "io_openliberty_sample_system_inMaintenance\":true";
 
   static {
     port = System.getProperty("liberty.test.port");
@@ -69,7 +69,7 @@ public class HealthTestUtil {
   public static void changeProperty(String oldValue, String newValue) {
     try {
       String fileName = System.getProperty("user.dir").split("target")[0]
-          + "/../resources/CustomConfigSource.json";
+          + "/resources/CustomConfigSource.json";
       BufferedReader reader = new BufferedReader(new FileReader(new File(fileName)));
       String line = "";
       String oldContent = "", newContent = "";

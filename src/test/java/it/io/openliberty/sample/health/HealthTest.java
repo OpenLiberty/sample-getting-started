@@ -28,12 +28,13 @@ public class HealthTest {
   static {
     dataWhenServicesUP = new HashMap<String, String>();
     dataWhenInventoryDown = new HashMap<String, String>();
+    
 
     dataWhenServicesUP.put("SystemResource", "UP");
-    dataWhenServicesUP.put("InventoryResource", "UP");
+    
 
-    dataWhenInventoryDown.put("SystemResource", "UP");
-    dataWhenInventoryDown.put("InventoryResource", "DOWN");
+    dataWhenInventoryDown.put("SystemResource", "DOWN");
+    
   }
 
   @Test
