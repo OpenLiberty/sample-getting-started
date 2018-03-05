@@ -23,17 +23,17 @@ import org.junit.Test;
 public class HealthTest {
 
   private JsonArray servicesStates;
-  private static HashMap<String, String> dataWhenServicesUP, dataWhenInventoryDown;
+  private static HashMap<String, String> dataWhenServicesUP, dataWhenServicesDown;
 
   static {
     dataWhenServicesUP = new HashMap<String, String>();
-    dataWhenInventoryDown = new HashMap<String, String>();
+    dataWhenServicesDown = new HashMap<String, String>();
     
 
     dataWhenServicesUP.put("SystemResource", "UP");
     
 
-    dataWhenInventoryDown.put("SystemResource", "DOWN");
+    dataWhenServicesDown.put("SystemResource", "DOWN");
     
   }
 
@@ -44,12 +44,12 @@ public class HealthTest {
   }
 
   @Test
-  public void testIfInventoryServiceIsDown() {
+  public void testIfServicesAreDown() {
     servicesStates = HealthTestUtil.connectToHealthEnpoint(200);
     checkServicesStates(dataWhenServicesUP, servicesStates);
     HealthTestUtil.changeProperty(HealthTestUtil.INV_MAINTENANCE_FALSE, HealthTestUtil.INV_MAINTENANCE_TRUE);
-    servicesStates = HealthTestUtil.connectToHealthEnpoint(503);
-    checkServicesStates(dataWhenInventoryDown, servicesStates);
+    servicesStates = HealthTestUtil.connectToHealthEnpoint(502);
+    checkServicesStates(dataWhenServicesDown, servicesStates);
   }
 
   private void checkServicesStates(HashMap<String, String> testData, JsonArray servicesStates) {
@@ -62,7 +62,7 @@ public class HealthTest {
 
   @After
   public void teardown() {
-    HealthTestUtil.cleanUp();
+    //HealthTestUtil.cleanUp();
   }
 
 }

@@ -13,6 +13,7 @@
 package io.openliberty.sample.system;
 
 import javax.enterprise.context.RequestScoped;
+import javax.inject.Inject;
 import javax.ws.rs.GET;
 import javax.ws.rs.core.Response;
 
@@ -26,6 +27,9 @@ import javax.ws.rs.core.MediaType;
 @RequestScoped
 @Path("properties")
 public class SystemResource {
+	
+	@Inject
+	SystemConfig systemConfig;
 
   @GET
   @Produces(MediaType.APPLICATION_JSON)
@@ -34,6 +38,12 @@ public class SystemResource {
   @Counted(absolute = true, monotonic = true,
   description = "Number of times the properties of a systems is requested")
   public Response getProperties() {
-    return Response.ok(System.getProperties()).build();
+	  if (!systemConfig.isInMaintenance()) {
+	      return Response.ok(System.getProperties()).build();
+	    } else {
+	      return Response.status(Response.Status.SERVICE_UNAVAILABLE)
+	                     .entity("ERROR: Service is currently in maintenance.")
+	                     .build();
+	}
   }
 }

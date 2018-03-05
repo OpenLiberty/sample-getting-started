@@ -12,6 +12,7 @@
 // end::copyright[]
 package io.openliberty.sample.system;
 
+import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 
@@ -19,7 +20,7 @@ import javax.inject.Provider;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 
-@RequestScoped
+@ApplicationScoped
 public class SystemConfig {
 
   // tag::config[]
