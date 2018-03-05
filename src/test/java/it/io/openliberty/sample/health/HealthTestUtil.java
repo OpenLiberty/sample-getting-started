@@ -89,7 +89,6 @@ public class HealthTestUtil {
 
   public static void cleanUp() {
     changeProperty(INV_MAINTENANCE_TRUE, INV_MAINTENANCE_FALSE);
-    System.out.println("Resetting props");
   }
 
 }
