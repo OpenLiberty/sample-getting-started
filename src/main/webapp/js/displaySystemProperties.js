@@ -85,20 +85,30 @@ function displayHealth() {
 }
 
 function getHealth() {
-    var url = "http://localhost:9080/health";
+    var url = "https://localhost:9443/health";
     var req = new XMLHttpRequest();
+
+    var healthBox = document.getElementById("healthBox");
+    var serviceName = document.getElementById("serviceName");
+    var healthStatus = document.getElementById("serviceStatus");
 
     req.onreadystatechange = function () {
         if (req.readyState != 4) return; // Not there yet
-        if (req.status != 200) {
-            document.getElementById("healthStatus").innerHTML = "Status: " + req.statusText;
-            return;
-        }
-        var healthStatus = document.getElementById("healthStatus");
+
         // Request successful, read the response
         var resp = JSON.parse(req.responseText);
+        var service = resp.checks[0]; //TODO: use for loop for multiple services
 
-        console.log(resp.checks);
+        resp.checks.forEach(function(service){
+            serviceName.innerText = service.name;
+            healthStatus.innerText = service.state;
+
+            if (service.state === "UP") {
+                healthBox.style.backgroundColor = "lime";
+            } else {
+                healthBox.style.backgroundColor = "red";
+            }
+        });
     }
         req.open("GET", url, true);
         req.send();
