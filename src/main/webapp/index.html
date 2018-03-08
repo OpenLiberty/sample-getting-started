@@ -26,6 +26,17 @@
             <li>microProfile Health</li>
             <li>microProfile Metrics</li>
         </ul>
+        <section id="metricsSection">
+        <h2>Metrics</h2>
+        <div id="metricsText">
+            <table id="metricsTable">
+                <tbody id="metricsTableBody">
+                <tr><th>Key</th><th>Value</th></tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="sectionFooter" id="metricsFooter">Powered by <a href="https://github.com/eclipse/microprofile-metrics">MicroProfile Metrics</a></div>
+        </section>
     
         <h2>System Properties</h2>
         <div id="systemPropertiesTable" class="flexContainer">
@@ -36,6 +47,7 @@
         <script>
             //document.getElementById('systemPropertiesTable').innerHTML = 'hello again';
             displaySystemProperties();
+            displayMetrics();
         </script>
     </body>
 </html>
