@@ -15,7 +15,7 @@ table {
 	display: -ms-flex;
 	display: -webkit-flex;
     display: flex;
-    max-height: 700px;
+    max-height: 400px;
     overflow: auto;
     flex-flow: row wrap;
 }
@@ -48,7 +48,7 @@ td {
 
 .sectionFooter {
     text-align: right;
-    margin-right: 10px;
+    margin-right: 100px;
     font-size: 12px;
 }
 
@@ -60,9 +60,10 @@ td {
 }
 
 .bodyFooterLink {
+    margin-top: -50px;
     text-align: right;
     margin-right: 100px;
-    font-size: 14px;
+    font-size: 12px;
     color: #96bc32;
     font-weight: 500;
 }
