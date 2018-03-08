@@ -5,6 +5,8 @@
     max-height: 700px;
     overflow: auto;
     flex-flow: row wrap;
+    border: 1px solid black;
+    padding: 20px;
 }
 
 .flexContainer > div {
