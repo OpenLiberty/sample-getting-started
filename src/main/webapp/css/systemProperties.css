@@ -1,3 +1,16 @@
+body,
+table {
+    font-size: 14px;
+}
+
+#healthBox {
+    height: 100px;
+    width: 200px;
+    text-align: center;
+    vertical-align: middle;
+    border: 1px solid black;
+}
+
 .flexContainer {
 	display: -ms-flex;
 	display: -webkit-flex;
