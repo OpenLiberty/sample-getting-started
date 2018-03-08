@@ -38,3 +38,10 @@ td {
     margin-right: 10px;
     font-size: 12px;
 }
+
+.bodyFooter {
+    padding: 50px;
+    text-align: right;
+    margin-right: 10px;
+    font-size: 16px;
+}
