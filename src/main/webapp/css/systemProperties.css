@@ -28,3 +28,13 @@
     font-weight: bold;
     background-color: rgb(222, 237, 247);
 }
+
+td {
+    border: 1px solid gray;
+}
+
+.sectionFooter {
+    text-align: right;
+    margin-right: 10px;
+    font-size: 12px;
+}
