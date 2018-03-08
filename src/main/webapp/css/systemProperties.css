@@ -3,29 +3,28 @@
 	display: -webkit-flex;
     display: flex;
     max-height: 700px;
-    width: 80%;
     overflow: auto;
     flex-flow: row wrap;
 }
 
-.flexContainer > div:nth-child(even) {
-	width: 60%;
-    padding: 20px;
+.flexContainer > div {
+    padding: 10px;
     border: 1px solid black;
+    white-space: wrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    height: 1em;
+}
+
+.flexContainer > div:nth-child(even) {
+	width: 55%;
 }
 
 .flexContainer > div:nth-child(odd) {
-	width: 20%;
-    padding: 20px;
-    border: 1px solid black;
+	width: 30%;
 }
 
 .flexContainer > div:first-child, .flexContainer > div:nth-child(2) {
     font-weight: bold;
+    background-color: rgb(222, 237, 247);
 }
-
-/*
-.flexContainer > div:first-child {
-	margin-right: 20px;
-}
-*/
