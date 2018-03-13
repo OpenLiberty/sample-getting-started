@@ -39,7 +39,7 @@ function getSystemMetrics() {
         }    
     };
     
-    req.open("GET", url, true);
+    req.open("GET", url, true, "confAdmin", "microprofile");
     req.send();
 }
 
@@ -65,7 +65,6 @@ function getSystemPropertiesRequest() {
         for (var key in resp) {
             if (resp.hasOwnProperty(key)) {
                 var val = resp[key];
-                console.log(key + ": " + val);
                 var keyElem = document.createElement('div');
                 keyElem.innerHTML = key;
                 var valElem = document.createElement('div');
@@ -96,20 +95,22 @@ function getHealth() {
         if (req.readyState != 4) return; // Not there yet
 
         // Request successful, read the response
-        var resp = JSON.parse(req.responseText);
-        var service = resp.checks[0]; //TODO: use for loop for multiple services
+        if (req.responseText) {
+            var resp = JSON.parse(req.responseText);
+            var service = resp.checks[0]; //TODO: use for loop for multiple services
 
-        resp.checks.forEach(function(service){
-            serviceName.innerText = service.name;
-            healthStatus.innerText = service.state;
+            resp.checks.forEach(function (service) {
+                serviceName.innerText = service.name;
+                healthStatus.innerText = service.state;
 
-            if (service.state === "UP") {
-                healthBox.style.backgroundColor = "lime";
-            } else {
-                healthBox.style.backgroundColor = "red";
-            }
-        });
+                if (service.state === "UP") {
+                    healthBox.style.backgroundColor = "lime";
+                } else {
+                    healthBox.style.backgroundColor = "red";
+                }
+            });
+        }
     }
-        req.open("GET", url, true);
-        req.send();
+    req.open("GET", url, true);
+    req.send();
 }
