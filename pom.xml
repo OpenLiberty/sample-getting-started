@@ -157,6 +157,7 @@
             <version>RELEASE</version>
             <type>zip</type>
           </assemblyArtifact>
+          <serverName>sampleAppServer</serverName>
           <configFile>src/main/liberty/config/server.xml</configFile>
           <packageFile>${package.file}</packageFile>
           <include>${packaging.type}</include>
@@ -190,13 +191,6 @@
             <phase>pre-integration-test</phase>
             <goals>
               <goal>start-server</goal>
-            </goals>
-          </execution>
-          <execution>
-            <id>stop-server</id>
-            <phase>post-integration-test</phase>
-            <goals>
-              <goal>stop-server</goal>
             </goals>
           </execution>
           <execution>
