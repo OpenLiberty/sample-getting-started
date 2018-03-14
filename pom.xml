@@ -21,6 +21,7 @@
     <!-- end::ports[] -->
     <package.file>${project.build.directory}/${app.name}.zip</package.file>
     <packaging.type>usr</packaging.type>
+    <skipTests>true</skipTests>
   </properties>
 
   <dependencies>
@@ -144,6 +145,9 @@
             </configuration>
           </execution>
         </executions>
+        <configuration>
+          <skipTests>${skipTests}</skipTests>
+        </configuration>
       </plugin>
       <!-- Enable liberty-maven plugin -->
       <plugin>

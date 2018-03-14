@@ -1,12 +1,14 @@
 ![](https://github.com/OpenLiberty/open-liberty/blob/master/logos/logo_horizontal_light_navy.png)
 
-## Run Sample
+## Run Sample with server running in the background
     mvn clean install
 
-### Keep server running
-    mvn clean install -DskipTests liberty:run-server
+### Include test
+    mvn clean install -DskipTests=false
+
+### Stop server
+    mvn clean install libarty:stop-server
 
 ### Open url's in browser
-    http://localhost:9080/system/properties
-    http://localhost:9080/health
-    http://localhost:9080/metrics
+    https://localhost:9443/systemApp
+
