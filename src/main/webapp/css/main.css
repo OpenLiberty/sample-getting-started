@@ -1,4 +1,15 @@
 @import url("https://fonts.googleapis.com/css?family=Asap:300,400,500");
+
+@font-face {
+    font-family: BunueloLight;
+    src: url("/sampleApp/fonts/BunueloCleanPro-Light.otf");
+}
+
+@font-face {
+    font-family: BunueloSemiBold;
+    src: url("/sampleApp/fonts/BunueloCleanPro-SemiBold.otf");
+}
+
 body{
     font-family:Asap;
     font-size: 16px;
@@ -24,7 +35,7 @@ p {
     line-height: 22px;
 }
 h1 {
-    font-family:BunueloCleanPro-SemiBold;
+    font-family:BunueloSemiBold;
     font-size: 40px;
     font-weight: 400;
     letter-spacing:0;
@@ -50,7 +61,7 @@ h4 {
 }
 
 #appTitle {
-    font-family:BunueloCleanPro-Light;
+    font-family:BunueloLight;
     font-size:55px;
 }
 
@@ -77,7 +88,7 @@ h4 {
 }
 
 .headerTitle > h2 {
-    font-family:BunueloCleanPro-Light;
+    font-family:BBunueloLight;
     font-size:40px;
     margin: 0;
 }
