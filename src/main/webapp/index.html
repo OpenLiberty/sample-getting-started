@@ -15,77 +15,87 @@
 -->
 <html>
     <head>
-        <script src="js/displaySystemProperties.js"></script>
+        <script src="js/mpData.js"></script>
         <link href="https://fonts.googleapis.com/css?family=Asap" rel="stylesheet">
-        <link rel="stylesheet" href="css/systemProperties.css">
         <link rel="stylesheet" href="css/main.css">
     </head>
     <body>
-      <div class="bgTop">
-        <div id="appIntro">
-          <section id="titleSection">
-            <h1 class="appTitle">Sample-getting-started</h1>
-            <div class="line"></div>
-            <p class="title">Congrats on your shiny, new Open Liberty sample app!</p>
-          </section>
+        <section id="appIntro">
+            <div id="titleSection">
+                <h1 id="appTitle">Sample-getting-started</h1>
+                <div class="line"></div>
+                <h2>Congrats on your shiny, new Open Liberty sample app!</h2>
+                <p>This sample app uses a System Properties microservice to return the properties of the system that you're running (See below).</p>
+            </div>
 
-          <section id="whereTo">
-            <p class="title">Where to next, captain?</p>
-            <p class="descriptionText">Set course for the Open Liberty guides! All of the info you need to continue your journey is there, laid out in easy to follow steps and examples. Plus, we'll show you how to build pieces of this sample app.</p>
-            <div class="button"><p class="buttonText">View all Open Liberty guides</p></div>
-          </section>
-        </div>
-        <section id="systemProperties">
-          <div class="titleBox">
-            <p class="title dark">System Properties</p>
-            <p class="descriptionText dark">This sample app uses a System Properties microservice to return the properties of the system that you're running.</p>
-          </div>
-          <div id="systemPropertiesTable" class="flexContainer">
-              <div>Properties</div>
-              <div>Values</div>
-          </div>
+            <div class="msSection" id="systemProperties">
+                <div class="headerRow">
+                    <div class="headerIcon"></div>
+                    <div class="headerTitle" id="sysPropTitle"><h2>System Properties</h2></div>
+                </div>
+                <div id="systemPropertiesTable" class="flexContainer">
+                    <div>Properties</div>
+                    <div>Values</div>
+                </div>
+            </div>
+        
         </section>
 
+        <section id="whereTo">
+            <h2>Where to next, captain?</h2>
+            <h4>Set course for the Open Liberty guides!</h4>
+            <p>All of the info you need to continue your journey is here, laid out in easy to follow steps and examples. Plus, we'll show you how to build pieces of this sample app.</p>
+            <button class="button">View all Open Liberty guides</button>
 
-        <div id="openLibertyAndMp">
-            <section class="titleBox green">
-              <p class="title dark">Open Liberty and Microprofile</p>
-              <p class="descriptionText dark">Open Liberty provides developers with the latest MicroProfile&#8482 capabilities for building microservices. This sample app is running on Open Liberty and utilizes MicroProfile health, config, and metrics.</p>
-            </section>
-            <section id="healthSection">
-                <h2>Health</h2>
+            <h4>Learn more about this sample app!</h4>
+            <p>Open Liberty provides developers with the latest MicroProfileTM capabilities for building microservices. This sample app is running on Open Liberty and utilizes MicroProfile health, config and metrics to reveal insights.</p>
+            <span class="tooltip">Keep scrolling to see your results!</span>
+        </section>
+
+        <section id="openLibertyAndMp">
+            <h1>Open Liberty and Microprofile</h1>
+            <h2>sample-getting-started insights</h2>
+            <div class="msSection" id="healthSection">
+                <div class="collapsible headerRow">
+                    <div class="headerIcon">icon</div>
+                    <div class="headerTitle">
+                        <h2>Health</h2>
+                        <p>Monitoring the health of your microservice</p>
+                    </div>
+                </div>
                 <div id="healthBox">
                     <h3 id="serviceName"></h3>
                     <p id="serviceStatus"></p>
                 </div>
-            </section>
-
-            <section id="metricsSection">
-            <h2>Metrics</h2>
-            <div id="metricsText">
-                <table id="metricsTable">
-                    <tbody id="metricsTableBody">
-                    <tr><th>Key</th><th>Value</th></tr>
-                    </tbody>
-                </table>
             </div>
-            </section>
 
-            <section id="learnMore">
-              <p class="title dark">Want to learn more about Open Liberty and MicroProfile?</p>
-              <p class="descriptionText dark">Some things just go together, like Earth and gravity or lasers and spaceships. Open Liberty and Microprofile is another one of those powerhouse pairs.</p>
-              <h2><a href="https://openliberty.io/guides/">Check out our MicroProfile guides on openliberty.io</a></h2>
-            </section>
-          </div>
-        </div>
-        <div class="bodyFooter">
-            <div class="bodyFooterLink">Powered by <a href="http://openliberty.io">Open Liberty</a></div>
-      </div>
-      <script>
-          //document.getElementById('systemPropertiesTable').innerHTML = 'hello again';
-          displaySystemProperties();
-          displayMetrics();
-          displayHealth();
-      </script>
+            <div id="metricsSection">
+                <h2>Metrics</h2>
+                <div id="metricsText">
+                    <table id="metricsTable">
+                        <tbody id="metricsTableBody">
+                        <tr><th>Key</th><th>Value</th></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div id="learnMore">
+                <p>Want to learn more about Open Liberty and MicroProfile?</p>
+                <p>Some things just go together, like Earth and gravity or lasers and spaceships. Open Liberty and Microprofile is another one of those powerhouse pairs.</p>
+                <p><a href="https://openliberty.io/guides/">Check out our MicroProfile guides on openliberty.io</a></p>
+            </div>
+        </section>
+
+        <script>
+            //document.getElementById('systemPropertiesTable').innerHTML = 'hello again';
+            displaySystemProperties();
+            displayHealth();
+            displayMetrics();
+        </script>
     </body>
+
+    <footer class="bodyFooter">
+        <div class="bodyFooterLink">Powered by <a href="http://openliberty.io">Open Liberty</a></div>
+    </footer>
 </html>
