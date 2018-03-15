@@ -1,0 +1,79 @@
+@import url("https://fonts.googleapis.com/css?family=Asap:300,400,500");
+
+.bgTop {
+  background-image:linear-gradient(-180deg, #2c2e50 0%, #141427 100%);
+  width:1440px;
+  height:3748px;
+}
+
+.appTitle {
+  font-family:BunueloCleanPro-Light;
+  font-size:50px;
+  color:#ffffff;
+  letter-spacing:0;
+  text-align:left;
+}
+
+section {
+  font-family:Asap;
+  font-weight: 400;
+  letter-spacing:0;
+  text-align:left;
+}
+
+.title {
+  font-size:24px;
+  color:#ffffff;
+}
+
+.descriptionText {
+  font-size:16px;
+  color:#c8d2d2;
+  line-height:22px;
+}
+
+.dark {
+  color:#1b1d34;
+}
+
+.button {
+  background:#abd155;
+  border:3px solid #abd155;
+  border-radius:100px;
+  width:269px;
+  height:44px;
+}
+
+.buttonText {
+  font-weight: 500;
+  font-size:16px;
+  color:#24253a;
+  text-align:center;
+}
+
+.line {
+  border:3px solid #5d6a8e;
+  width:755px;
+  height:0px;
+}
+
+#appIntro {
+  padding: 240px;
+}
+
+#openLibertyAndMp {
+  background:#ffffff;
+  box-shadow:0 2px 4px 0 rgba(63,70,89,0.31);
+  width:1159px;
+  height:2336px;
+  margin: 100px 140px 0px;
+}
+
+.titleBox {
+  background:#eeeff3;
+  padding: 52px 100px 42px
+}
+
+.green {
+  background:#f6f8dd;
+}
