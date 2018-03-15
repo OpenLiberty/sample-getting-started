@@ -6,6 +6,22 @@ function getSystemMetrics() {
     var url = "https://localhost:9443/metrics";
     var req = new XMLHttpRequest();
 
+    var metricToDisplay = {};
+    metricToDisplay["application:get_properties"] = "Request Count";
+    metricToDisplay["application:io_openliberty_sample_system_system_resource_get_properties_time_min_seconds"] = "Min Request Time (ms)";
+    metricToDisplay["application:io_openliberty_sample_system_system_resource_get_properties_time_mean_seconds"] = "Mean Request Time (ms)";
+    metricToDisplay["application:io_openliberty_sample_system_system_resource_get_properties_time_max_seconds"] = "Max Request Time (ms)";
+    metricToDisplay["base:cpu_process_cpu_load_percent"] = "System CPU Usage (%)";
+    metricToDisplay["base:memory_used_heap_bytes"] = "System Heap Usage (%)";
+
+    var metricToMatch = "^(";
+    for (var metricKey in metricToDisplay) {
+        metricToMatch += metricKey + "|"
+    }
+    // remove the last |
+    metricToMatch = metricToMatch.substring(0, metricToMatch.length-1);
+    metricToMatch += ")\\s*(\\S*)$"
+
     req.onreadystatechange = function() {
         if (req.readyState != 4) return; // Not there yet
         if (req.status != 200) {
@@ -14,17 +30,19 @@ function getSystemMetrics() {
         }
 
         var resp = req.responseText;
+        var regexpToMatch = new RegExp(metricToMatch, "gm");
+        var matchMetrics = resp.match(regexpToMatch);
 
-        var regEx = /^application:(.*) ([0-9.]*)$/gm;
-        var keyValRegEx = /application:(.*) ([0-9.]*)/;  // Use this for two matching groups: prop name and value
-        
         var keyValPairs = {};
-
-        var matches = resp.match(regEx);
-        matches.forEach(function(line){
-            var keyVal = line.match(keyValRegEx); // key is [1], value is [2]
-            keyValPairs[keyVal[1]] = keyVal[2];
-        });
+        for (var metricKey in metricToDisplay) {
+            matchMetrics.forEach(function(line) {
+                var keyToMatch = metricKey + " (.*)";
+                var keyVal = line.match(new RegExp(keyToMatch));
+                if (keyVal) {
+                    keyValPairs[metricToDisplay[metricKey]] = keyVal[1];
+                }
+            })
+        }
 
         var table = document.getElementById("metricsTableBody");
         for (key in keyValPairs) {
@@ -50,6 +68,7 @@ function displaySystemProperties() {
 }
 
 function getSystemPropertiesRequest() {
+    var propToDisplay = ["java.vendor", "java.version", "user.name", "os.name", "wlp.install.dir", "wlp.server.name" ];
     var url = "https://localhost:9443/sampleApp/system/properties";
     var req = new XMLHttpRequest()
     // Create the callback:
@@ -62,7 +81,8 @@ function getSystemPropertiesRequest() {
         var propTable = document.getElementById("systemPropertiesTable");
         // Request successful, read the response
         var resp = JSON.parse(req.responseText);
-        for (var key in resp) {
+        for (var i = 0; i < propToDisplay.length; i++) {
+            var key = propToDisplay[i]; 
             if (resp.hasOwnProperty(key)) {
                 var val = resp[key];
                 var keyElem = document.createElement('div');
@@ -73,7 +93,6 @@ function getSystemPropertiesRequest() {
                 propTable.appendChild(valElem);
             }
         }
-        //document.getElementById("systemPropertiesTable").innerHTML = resp;
     }
     req.open("GET", url, true);
     req.send();
@@ -110,6 +129,47 @@ function getHealth() {
                 }
             });
         }
+    }
+    req.open("GET", url, true);
+    req.send();
+}
+
+function displayConfigProperties() {
+    getConfigPropertiesRequest();
+}
+
+function getConfigPropertiesRequest() {
+    var url = "https://localhost:9443/sampleApp/config";
+    var req = new XMLHttpRequest();
+
+    var configToDisplay = {};
+    configToDisplay["io_openliberty_sample_system_inMaintenance"] = "System In Maintenance";
+    configToDisplay["io_openliberty_sample_testConfigOverwrite"] = "Test Config Overwrite";
+    configToDisplay["io_openliberty_sample_port_number"] = "Port Number";
+    // Create the callback:
+    req.onreadystatechange = function () {
+        if (req.readyState != 4) return; // Not there yet
+        if (req.status != 200) {
+            return;
+        }
+
+        // To be enabled once config prop table is in the frontend. For now, I look for id configPropTableBody in the
+        // codes. Please change it to the id used in the index.html.
+        // Request successful, read the response
+        // var resp = JSON.parse(req.responseText);
+        // var configProps = resp["ConfigProperties"];
+        // var table = document.getElementById("configPropTableBody");
+        // for (key in configProps) {
+        //     var row = document.createElement("tr");
+        //     var keyData = document.createElement("td");
+        //     keyData.innerText = configToDisplay[key];
+        //     var valueData = document.createElement("td");
+        //     valueData.innerText = configProps[key];
+        //     row.appendChild(keyData);
+        //     row.appendChild(valueData);
+        //     table.appendChild(row);
+        // }    
+        
     }
     req.open("GET", url, true);
     req.send();
