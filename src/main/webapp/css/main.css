@@ -37,13 +37,13 @@ section {
 }
 
 .line {
-    border:3px solid #5d6a8e;
-    width:755px;
+    border:1px solid #C8D3D3;
     height:0px;
 }
 
 #whereTo {
     padding-bottom: 80px;
+    width: 50%;
 }
 
 p {
@@ -83,14 +83,23 @@ h4 {
 
 .headerRow {
     height: 100px;
-    box-shadow: 0 2px 4px 0;
     position:relative;
     z-index:2;
+    border-bottom: 4px solid #D6D9E4;
 
 }
 .headerRow > div {
     display: inline-block;
 }
+
+#configSection > .headerRow {
+  border-bottom-color: #F8D7C1;
+}
+
+#metricsSection > .headerRow {
+  border-bottom-color: #EEF3C3;
+}
+
 .headerIcon {
     width: 160px;
     height: 100%;
@@ -193,7 +202,7 @@ button {
 
 button a {
     text-decoration: none;
-    color:#24253a;
+    color:#F4914D;
 }
 
 #guidesButton {
@@ -209,12 +218,6 @@ button a {
     width:505px;
     font-size:20px;
     letter-spacing:0;
-}
-
-.tooltip {
-    border-left: 4px solid #abd155;
-    padding-left: 20px;
-    margin-bottom: 80px;
 }
 
 section#openLibertyAndMp {
@@ -245,7 +248,7 @@ section#openLibertyAndMp {
 #healthStatusIcon {
     width: 104px;
     height: 104px;
-} 
+}
 
 #healthText {
     padding: 50px;
@@ -311,7 +314,11 @@ td {
 
 #learnMore {
     margin-top: 120px;
-    text-align: center;
+    padding: 0px 200px 100px;
+}
+
+#learnMore > h2 {
+  color:#5e6b8d;
 }
 
 .sectionFooter {
