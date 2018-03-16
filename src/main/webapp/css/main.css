@@ -408,12 +408,12 @@ td {
   padding-bottom: 5px;
   padding-right: 40px;
   text-align: right;
-  color: #96bc32;
 }
 
 .bodyFooterLink > a {
     text-decoration: none;
     padding: 10px;
+    color: #96bc32;
 }
 
 #licenseLink {
