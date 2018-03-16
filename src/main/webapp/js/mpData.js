@@ -72,13 +72,7 @@ function getSystemMetrics() {
             table.appendChild(row);
         }
 
-        var sourceRow = document.createElement("tr");
-        sourceRow.classList.add("sourceRow");
-        var sourceText = document.createElement("td");
-        sourceText.setAttribute("colspan", "100%");
-        sourceText.innerHTML = "API Source\: <a href='"+url+"'>"+url+"</a>";
-        sourceRow.appendChild(sourceText);
-        table.appendChild(sourceRow);
+        addSourceRow(table, url);
     };
 
     req.open("GET", url, true, "confAdmin", "microprofile");
@@ -92,15 +86,22 @@ function displaySystemProperties() {
 function getSystemPropertiesRequest() {
     var propToDisplay = ["java.vendor", "java.version", "user.name", "os.name", "wlp.install.dir", "wlp.server.name" ];
     var url = "https://localhost:9443/sampleApp/system/properties";
-    var req = new XMLHttpRequest()
+    var req = new XMLHttpRequest();
+    var table = document.getElementById("systemPropertiesTable");
     // Create the callback:
     req.onreadystatechange = function () {
         if (req.readyState != 4) return; // Not there yet
         if (req.status != 200) {
-            document.getElementById("systemPropertiesTable").innerHTML = "Status: " + req.statusText;
+            table.innerHTML = "";
+            var row = document.createElement("tr");
+            var th = document.createElement("th");
+            th.innerText = req.statusText;
+            row.appendChild(th);
+            table.appendChild(row);
+
+            addSourceRow(table, url);
             return;
         }
-        var table = document.getElementById("systemPropertiesTable");
         // Request successful, read the response
         var resp = JSON.parse(req.responseText);
         for (var i = 0; i < propToDisplay.length; i++) {
@@ -117,13 +118,7 @@ function getSystemPropertiesRequest() {
             }
         }
 
-        var sourceRow = document.createElement("tr");
-        sourceRow.classList.add("sourceRow");
-        var sourceText = document.createElement("td");
-        sourceText.setAttribute("colspan", "100%");
-        sourceText.innerHTML = "API Source\: <a href='"+url+"'>"+url+"</a>";
-        sourceRow.appendChild(sourceText);
-        table.appendChild(sourceRow);
+        addSourceRow(table, url);
     };
     req.open("GET", url, true);
     req.send();
@@ -165,13 +160,7 @@ function getHealth() {
         }
         var table = document.getElementById("healthTable");
 
-        var sourceRow = document.createElement("tr");
-        sourceRow.classList.add("sourceRow");
-        var sourceText = document.createElement("td");
-        sourceText.setAttribute("colspan", "100%");
-        sourceText.innerHTML = "API Source\: <a href='"+url+"'>"+url+"</a>";
-        sourceRow.appendChild(sourceText);
-        table.appendChild(sourceRow);
+        addSourceRow(table, url);
     };
     req.open("GET", url, true);
     req.send();
@@ -211,13 +200,7 @@ function getConfigPropertiesRequest() {
             table.appendChild(row);
         }
 
-        var sourceRow = document.createElement("tr");
-        sourceRow.classList.add("sourceRow");
-        var sourceText = document.createElement("td");
-        sourceText.setAttribute("colspan", "100%");
-        sourceText.innerHTML = "API Source\: <a href='"+url+"'>"+url+"</a>";
-        sourceRow.appendChild(sourceText);
-        table.appendChild(sourceRow);
+        addSourceRow(table, url);
     }
     req.open("GET", url, true);
     req.send();
@@ -236,4 +219,14 @@ function toggle(e) {
         classes.replace("expanded", "collapsed");
         caretImg.setAttribute("src", caretImgSrc.replace("up", "down"));
     }
+}
+
+function addSourceRow(table, url) {
+    var sourceRow = document.createElement("tr");
+    sourceRow.classList.add("sourceRow");
+    var sourceText = document.createElement("td");
+    sourceText.setAttribute("colspan", "100%");
+    sourceText.innerHTML = "API Source\: <a href='"+url+"'>"+url+"</a>";
+    sourceRow.appendChild(sourceText);
+    table.appendChild(sourceRow);
 }

@@ -270,10 +270,8 @@ button a {
 
 section#openLibertyAndMp {
     background:#f4f4f5;
-    box-shadow: 0 2px 4px 0 rgba(63,70,89,0.31);
-}
-
-.collapsibleRow {
+    background-size: 100% calc(100% - 70px);
+    background-repeat: no-repeat;
 }
 
 #healthBox {
