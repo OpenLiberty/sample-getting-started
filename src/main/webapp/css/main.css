@@ -332,27 +332,32 @@ tr {
 td {
     padding-left: 41px;
 }
-
+#systemPropertiesTable tr:first-child {
+    background: #D6D9E4;
+}
 #configTable tr:first-child {
     background: #F8D7C1;;
 }
-
 #metricsTable tr:first-child {
     background: #EEF3C3;
 }
 
+#systemPropertiesTable tr:nth-child(2n+3) {
+    background: #EEEFF3;
+}
 #configTable tr:nth-child(2n+2) {
     background: #FEF8F4;
 }
-
 #metricsTable tr:nth-child(2n+2) {
     background: #FBFCEE;
 }
 
+#systemPropertiesTable .sourceRow {
+    border-top: 4px solid #D6D9E4;
+}
 #configTable .sourceRow {
     border-top: 4px solid #F8D7C1;
 }
-
 #metricsTable .sourceRow {
     border-top: 4px solid #EEF3C3;
 }

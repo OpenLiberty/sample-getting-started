@@ -86,8 +86,6 @@ function getSystemMetrics() {
 }
 
 function displaySystemProperties() {
-    //console.log("table", document.getElementById("systemPropertiesTable"));
-    //document.getElementById('systemPropertiesTable').innerHTML = 'system properties table here';
     getSystemPropertiesRequest();
 }
 
@@ -102,22 +100,31 @@ function getSystemPropertiesRequest() {
             document.getElementById("systemPropertiesTable").innerHTML = "Status: " + req.statusText;
             return;
         }
-        var propTable = document.getElementById("systemPropertiesTable");
+        var table = document.getElementById("systemPropertiesTable");
         // Request successful, read the response
         var resp = JSON.parse(req.responseText);
         for (var i = 0; i < propToDisplay.length; i++) {
             var key = propToDisplay[i];
             if (resp.hasOwnProperty(key)) {
-                var val = resp[key];
-                var keyElem = document.createElement('div');
-                keyElem.innerHTML = key;
-                var valElem = document.createElement('div');
-                valElem.innerHTML = val;
-                propTable.appendChild(keyElem);
-                propTable.appendChild(valElem);
+                var row = document.createElement("tr");
+                var keyData = document.createElement("td");
+                keyData.innerText = key;
+                var valueData = document.createElement("td");
+                valueData.innerText = resp[key];
+                row.appendChild(keyData);
+                row.appendChild(valueData);
+                table.appendChild(row);
             }
         }
-    }
+
+        var sourceRow = document.createElement("tr");
+        sourceRow.classList.add("sourceRow");
+        var sourceText = document.createElement("td");
+        sourceText.setAttribute("colspan", "100%");
+        sourceText.innerHTML = "API Source\: <a href='"+url+"'>"+url+"</a>";
+        sourceRow.appendChild(sourceText);
+        table.appendChild(sourceRow);
+    };
     req.open("GET", url, true);
     req.send();
 }
