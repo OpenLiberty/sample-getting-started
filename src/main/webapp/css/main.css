@@ -393,14 +393,14 @@ td {
 }
 
 #learnMore > h2 {
-    olor:#5e6b8d;
+    color:#5e6b8d;
 }
 
 .bodyFooter {
-  padding: 5px 15px;
+  padding: 5px 8%;
   background-image: url(/sampleApp/img/footer_main.png);
   background-repeat: no-repeat;
-  background-position: top 20px right 15px;
+  background-position: top 20px right 110px;
   margin-bottom: 40px;
   margin-top: 50px;
   color: #3F4659;
@@ -415,7 +415,7 @@ td {
   margin-top: 30px;
   margin-right: 130px;
   padding-bottom: 5px;
-  padding-right: 40px;
+  padding-right: 50px;
   text-align: right;
 }
 
