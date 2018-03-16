@@ -85,18 +85,25 @@ h4 {
     height: 100px;
     position:relative;
     z-index:2;
-    border-bottom: 4px solid #D6D9E4;
+    box-shadow: 0 2px 4px 0;
 }
 .headerRow > div {
     display: inline-block;
 }
 
+#healthSection > .headerRow {
+  border-bottom: 4px solid #D6D9E4;
+  box-shadow: none;
+}
+
 #configSection > .headerRow {
-  border-bottom-color: #F8D7C1;
+  border-bottom: 4px solid #F8D7C1;
+  box-shadow: none;
 }
 
 #metricsSection > .headerRow {
-  border-bottom-color: #EEF3C3;
+  border-bottom: 4px solid #EEF3C3;
+  box-shadow: none;
 }
 
 .headerIcon {
@@ -142,7 +149,6 @@ h4 {
 
 #sysPropTitle {
     padding-top: 28px;
-    padding-bottom: 28px;
 }
 
 .headerTitle > h2 {

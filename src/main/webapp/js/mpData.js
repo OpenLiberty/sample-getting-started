@@ -80,7 +80,7 @@ function getSystemMetrics() {
         sourceRow.appendChild(sourceText);
         table.appendChild(sourceRow);
     };
-    
+
     req.open("GET", url, true, "confAdmin", "microprofile");
     req.send();
 }
@@ -106,7 +106,7 @@ function getSystemPropertiesRequest() {
         // Request successful, read the response
         var resp = JSON.parse(req.responseText);
         for (var i = 0; i < propToDisplay.length; i++) {
-            var key = propToDisplay[i]; 
+            var key = propToDisplay[i];
             if (resp.hasOwnProperty(key)) {
                 var val = resp[key];
                 var keyElem = document.createElement('div');
