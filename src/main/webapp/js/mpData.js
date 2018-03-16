@@ -211,9 +211,13 @@ function toggle(e) {
     e = e || window.event;
     var classes = e.currentTarget.parentElement.classList;
     var collapseState = e.currentTarget.parentElement.classList[1];
-    if (collapseState === "collapsed") {
+    var caretImg = e.currentTarget.getElementsByClassName("caret")[0]
+    var caretImgSrc = e.currentTarget.getElementsByClassName("caret")[0].getAttribute("src");
+    if (collapseState === "collapsed") { // expand the section
         classes.replace("collapsed", "expanded");
-    } else {
+        caretImg.setAttribute("src", caretImgSrc.replace("down", "up"));
+    } else { // collapse the section
         classes.replace("expanded", "collapsed");
+        caretImg.setAttribute("src", caretImgSrc.replace("up", "down"));
     }
 }

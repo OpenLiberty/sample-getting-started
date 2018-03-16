@@ -126,7 +126,6 @@ h4 {
     visibility: visible;
 }
 
-
 .headerIcon {
     width: 160px;
     height: 100%;
@@ -176,6 +175,19 @@ h4 {
     font-family: BunueloLight;
     font-size:40px;
     margin: 0;
+}
+
+.caret {
+    position: absolute;
+    right: 45px;
+    top: 45px;
+}
+
+.collapsed#configSection .caret {
+    background-image: url("../img/carets/caret_down_orange.svg")
+}
+.expanded#configSection .caret {
+    background-image: url("../img/carets/caret_up_orange.svg")
 }
 
 .msSection {
