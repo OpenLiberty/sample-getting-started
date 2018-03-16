@@ -45,7 +45,7 @@
             <h2>Where to next, captain?</h2>
             <h4>Set course for the Open Liberty guides!</h4>
             <p>All of the info you need to continue your journey is here, laid out in easy to follow steps and examples. Plus, we'll show you how to build pieces of this sample app.</p>
-            <button class="button">View all Open Liberty guides</button>
+            <button id="guidesButton">View all Open Liberty guides</button>
 
             <h4>Learn more about this sample app!</h4>
             <p>Open Liberty provides developers with the latest MicroProfileTM capabilities for building microservices. This sample app is running on Open Liberty and utilizes MicroProfile health, config and metrics to reveal insights.</p>
@@ -63,7 +63,7 @@
                         <p>Monitoring the health of your microservice</p>
                     </div>
                 </div>
-                <div class="collapsibleContent">
+                <div class="collapsibleContent" id="collapsibleHealth">
                     <div class="sectionContent">
                         <div id="healthBox">
                             <div id="healthIcon">checkmark</div>
@@ -78,36 +78,54 @@
                         </div>
                     </div>
                 </div>
-                
             </div>
 
-            <div id="configSection">
-                <h2>Config</h2>
-                <div id="configText">
-                    <table id="configTable">
-                        <tbody id="configTableBody">
-                        <tr><th>Key</th><th>Value</th></tr>
-                        </tbody>
-                    </table>
+            <div class="msSection" id="configSection">
+                <div class="collapsibleRow headerRow">
+                    <div class="headerIcon">icon</div>
+                    <div class="headerTitle">
+                        <h2>Config</h2>
+                        <p>Exposing your service configuration</p>
+                    </div>
+                </div>
+                <div class="collapsibleContent" id="collapsibleConfig">
+                    <div class="sectionContent">
+                        <table id="configTable">
+                            <tbody id="configTableBody">
+                            <tr><th>Key</th><th>Value</th></tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
 
-            <div id="metricsSection">
-                <h2>Metrics</h2>
-                <div id="metricsText">
-                    <table id="metricsTable">
-                        <tbody id="metricsTableBody">
-                        <tr><th>Key</th><th>Value</th></tr>
-                        </tbody>
-                    </table>
+            <div class="msSection" id="metricsSection">
+                <div class="collapsibleRow headerRow">
+                    <div class="headerIcon">icon</div>
+                    <div class="headerTitle">
+                        <h2>Metrics</h2>
+                        <p>Monitoring how well your service is running</p>
+                    </div>
                 </div>
+                <div class="collapsibleContent" id="collapsibleConfig">
+                    <div class="sectionContent" id="metricsText">
+                        <table id="metricsTable">
+                            <tbody id="metricsTableBody">
+                            <tr><th>Key</th><th>Value</th></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div id="learnMore">
+                        <h2>Want to learn more about Open Liberty and MicroProfile?</h2>
+                        <p>Some things just go together, like Earth and gravity or lasers and spaceships.</p> 
+                        <p>Open Liberty and Microprofile is another one of those powerhouse pairs.</p>
+                        <button id="mpGuidesButton"><a href="https://openliberty.io/guides/?search=MicroProfile&key=tag">Check out our MicroProfile guides on openliberty.io</a></button>
+                    </div>
             </div>
 
-            <div id="learnMore">
-                <p>Want to learn more about Open Liberty and MicroProfile?</p>
-                <p>Some things just go together, like Earth and gravity or lasers and spaceships. Open Liberty and Microprofile is another one of those powerhouse pairs.</p>
-                <p><a href="https://openliberty.io/guides/">Check out our MicroProfile guides on openliberty.io</a></p>
-            </div>
+            
         </section>
 
         <script>

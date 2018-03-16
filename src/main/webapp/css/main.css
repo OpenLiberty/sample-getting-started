@@ -163,18 +163,35 @@ h4 {
     background-color: rgb(222, 237, 247);
 }
 
-.button {
-    background:#abd155;
+button {
     border-radius:100px;
-    width:269px;
     height:44px;
-    font-weight: 500;
-    font-size:16px;
     color:#24253a;
     text-align:center;
     font-family: Asap;
     margin-top: 25px;
     margin-bottom: 70px;
+}
+
+button a {
+    text-decoration: none;
+    color:#24253a;
+}
+
+#guidesButton {
+    background:#abd155;
+    width:269px;
+    font-weight: 500;
+    font-size:16px;
+
+}
+
+#mpGuidesButton {
+    border:2px solid #f4914d8c;
+    border-radius:100px;
+    width:505px;
+    font-size:20px;
+    letter-spacing:0;
 }
 
 .tooltip {
@@ -231,6 +248,11 @@ section#openLibertyAndMp {
 
 td {
     border: 1px solid gray;
+}
+
+#learnMore {
+    margin-top: 120px;
+    text-align: center;
 }
 
 .sectionFooter {
