@@ -25,12 +25,13 @@ body{
     font-size: 16px;
     color:#24243b;
     background-color: white;
+    margin: 0px;
 }
 
 section {
     padding-top: 55px;
-    padding-left: 140px;
-    padding-right: 140px;
+    padding-left: 8%;
+    padding-right: 8%;
     /* font-weight: 400; */
     letter-spacing:0;
     text-align:left;
@@ -117,10 +118,12 @@ h4 {
 .collapsed .collapsibleContent {
     opacity: 0;
     max-height: 0;
+    visibility: hidden;
 }
 .expanded .collapsibleContent {
     opacity: 1;
     max-height: 1000px;
+    visibility: visible;
 }
 
 
@@ -227,6 +230,7 @@ button {
     font-family: Asap;
     margin-top: 25px;
     margin-bottom: 70px;
+    cursor: pointer;
 }
 
 button a {
