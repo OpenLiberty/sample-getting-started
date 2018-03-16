@@ -65,6 +65,9 @@ h2 {
 h4 {
     margin-top: 52px;
 }
+a {
+    text-decoration: none;
+}
 
 #appIntro {
     background-image:linear-gradient(0, #2c2e50 0%, #141427 100%);
@@ -352,14 +355,28 @@ td {
     background: #FBFCEE;
 }
 
-#systemPropertiesTable .sourceRow {
+#systemPropertiesTable .sourceRow,
+#healthTable .sourceRow {
     border-top: 4px solid #D6D9E4;
+}
+#systemPropertiesTable .sourceRow a,
+#healthTable .sourceRow a {
+    color: #5D6A8E;
 }
 #configTable .sourceRow {
     border-top: 4px solid #F8D7C1;
 }
+#configTable .sourceRow a {
+    color: #E57000;
+}
 #metricsTable .sourceRow {
     border-top: 4px solid #EEF3C3;
+}
+#metricsTable .sourceRow a {
+    color: #4F6700;
+}
+.sourceRow a {
+    font-weight: 500;
 }
 
 #learnMore {

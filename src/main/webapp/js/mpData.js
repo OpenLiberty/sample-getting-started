@@ -163,7 +163,16 @@ function getHealth() {
                 }
             });
         }
-    }
+        var table = document.getElementById("healthTable");
+
+        var sourceRow = document.createElement("tr");
+        sourceRow.classList.add("sourceRow");
+        var sourceText = document.createElement("td");
+        sourceText.setAttribute("colspan", "100%");
+        sourceText.innerHTML = "API Source\: <a href='"+url+"'>"+url+"</a>";
+        sourceRow.appendChild(sourceText);
+        table.appendChild(sourceRow);
+    };
     req.open("GET", url, true);
     req.send();
 }
