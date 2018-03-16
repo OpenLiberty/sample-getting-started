@@ -12,7 +12,7 @@ function getSystemMetrics() {
     metricToDisplay["application:io_openliberty_sample_system_system_resource_get_properties_time_mean_seconds"] = "Mean Request Time (ms)";
     metricToDisplay["application:io_openliberty_sample_system_system_resource_get_properties_time_max_seconds"] = "Max Request Time (ms)";
     metricToDisplay["base:cpu_process_cpu_load_percent"] = "System CPU Usage (%)";
-    metricToDisplay["base:memory_used_heap_bytes"] = "System Heap Usage (%)";
+    metricToDisplay["base:memory_used_heap_bytes"] = "System Heap Usage (MB)";
 
     var metricToMatch = "^(";
     for (var metricKey in metricToDisplay) {
@@ -39,7 +39,13 @@ function getSystemMetrics() {
                 var keyToMatch = metricKey + " (.*)";
                 var keyVal = line.match(new RegExp(keyToMatch));
                 if (keyVal) {
-                    keyValPairs[metricToDisplay[metricKey]] = keyVal[1];
+                    var val = keyVal[1];
+                    if (metricKey.indexOf("application:io_openliberty_sample_system_system_resource_get_properties_time") === 0) {
+                        val = val * 1000;
+                    } else if (metricKey.indexOf("base:memory_used_heap_bytes") === 0) {
+                        val = val / 1000000;
+                    }
+                    keyValPairs[metricToDisplay[metricKey]] = val;
                 }
             })
         }
@@ -153,22 +159,20 @@ function getConfigPropertiesRequest() {
             return;
         }
 
-        // To be enabled once config prop table is in the frontend. For now, I look for id configPropTableBody in the
-        // codes. Please change it to the id used in the index.html.
         // Request successful, read the response
-        // var resp = JSON.parse(req.responseText);
-        // var configProps = resp["ConfigProperties"];
-        // var table = document.getElementById("configPropTableBody");
-        // for (key in configProps) {
-        //     var row = document.createElement("tr");
-        //     var keyData = document.createElement("td");
-        //     keyData.innerText = configToDisplay[key];
-        //     var valueData = document.createElement("td");
-        //     valueData.innerText = configProps[key];
-        //     row.appendChild(keyData);
-        //     row.appendChild(valueData);
-        //     table.appendChild(row);
-        // }    
+        var resp = JSON.parse(req.responseText);
+        var configProps = resp["ConfigProperties"];
+        var table = document.getElementById("configTableBody");
+        for (key in configProps) {
+            var row = document.createElement("tr");
+            var keyData = document.createElement("td");
+            keyData.innerText = configToDisplay[key];
+            var valueData = document.createElement("td");
+            valueData.innerText = configProps[key];
+            row.appendChild(keyData);
+            row.appendChild(valueData);
+            table.appendChild(row);
+        }    
         
     }
     req.open("GET", url, true);
