@@ -95,7 +95,16 @@ h4 {
     width: 160px;
     height: 100%;
     float: left;
-    background-color: red;
+}
+
+#healthSection .headerIcon {
+    background-color: #E8EAEF;
+}
+#configSection .headerIcon {
+    background-color: #FDE4D1;
+}
+#metricsSection .headerIcon {
+    background-color: #F5F8DA;
 }
 
 .headerTitle {
@@ -106,6 +115,15 @@ h4 {
     padding-left: 40px;
     padding-top: 10px;
     width: calc(100% - 200px); /* 160 from icon, 40 from padding */
+}
+#healthSection h2 {
+    color: #5D6A8E;
+}
+#configSection h2 {
+    color: #E57000;
+}
+#metricsSection h2 {
+    color: #4F6700;
 }
 
 #sysPropTitle {
@@ -185,7 +203,6 @@ button a {
     font-size:16px;
 
 }
-
 #mpGuidesButton {
     border:2px solid #f4914d8c;
     border-radius:100px;
@@ -200,10 +217,9 @@ button a {
     margin-bottom: 80px;
 }
 
-
 section#openLibertyAndMp {
-  background:#f4f4f5;
-  box-shadow: 0 2px 4px 0 rgba(63,70,89,0.31);
+    background:#f4f4f5;
+    box-shadow: 0 2px 4px 0 rgba(63,70,89,0.31);
 }
 
 .collapsibleRow {
@@ -226,6 +242,10 @@ section#openLibertyAndMp {
     padding-top: 56px;
     padding-bottom: 56px;
 }
+#healthStatusIcon {
+    width: 104px;
+    height: 104px;
+} 
 
 #healthText {
     padding: 50px;
@@ -246,8 +266,47 @@ section#openLibertyAndMp {
     width: 53%;
 }
 
+table {
+    width: 100%;
+    font-size: 14px;
+    text-align: left;
+    border-collapse: collapse;
+}
+
+th {
+    height: 63px;
+    padding-left: 41px;
+    font-size: 16px;
+}
+tr {
+    height: 45px;
+}
 td {
-    border: 1px solid gray;
+    padding-left: 41px;
+}
+
+#configTable tr:first-child {
+    background: #F8D7C1;;
+}
+
+#metricsTable tr:first-child {
+    background: #EEF3C3;
+}
+
+#configTable tr:nth-child(2n+2) {
+    background: #FEF8F4;
+}
+
+#metricsTable tr:nth-child(2n+2) {
+    background: #FBFCEE;
+}
+
+#configTable .sourceRow {
+    border-top: 4px solid #F8D7C1;
+}
+
+#metricsTable .sourceRow {
+    border-top: 4px solid #EEF3C3;
 }
 
 #learnMore {

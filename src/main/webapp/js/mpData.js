@@ -70,7 +70,15 @@ function getSystemMetrics() {
             row.appendChild(keyData);
             row.appendChild(valueData);
             table.appendChild(row);
-        }    
+        }
+
+        var sourceRow = document.createElement("tr");
+        sourceRow.classList.add("sourceRow");
+        var sourceText = document.createElement("td");
+        sourceText.setAttribute("colspan", "100%");
+        sourceText.innerHTML = "API Source\: <a href='"+url+"'>"+url+"</a>";
+        sourceRow.appendChild(sourceText);
+        table.appendChild(sourceRow);
     };
     
     req.open("GET", url, true, "confAdmin", "microprofile");
@@ -125,6 +133,7 @@ function getHealth() {
     var healthBox = document.getElementById("healthBox");
     var serviceName = document.getElementById("serviceName");
     var healthStatus = document.getElementById("serviceStatus");
+    var healthIcon = document.getElementById("healthStatusIcon");
 
     req.onreadystatechange = function () {
         if (req.readyState != 4) return; // Not there yet
@@ -140,6 +149,7 @@ function getHealth() {
 
                 if (service.state === "UP") {
                     healthBox.style.backgroundColor = "#f0f7e1";
+                    healthIcon.setAttribute("background-image", "url: sampleApp/img/systemUp.svg");
                 } else {
                     healthBox.style.backgroundColor = "red";
                 }
@@ -182,8 +192,15 @@ function getConfigPropertiesRequest() {
             row.appendChild(keyData);
             row.appendChild(valueData);
             table.appendChild(row);
-        }    
-        
+        }
+
+        var sourceRow = document.createElement("tr");
+        sourceRow.classList.add("sourceRow");
+        var sourceText = document.createElement("td");
+        sourceText.setAttribute("colspan", "100%");
+        sourceText.innerHTML = "API Source\: <a href='"+url+"'>"+url+"</a>";
+        sourceRow.appendChild(sourceText);
+        table.appendChild(sourceRow);
     }
     req.open("GET", url, true);
     req.send();
