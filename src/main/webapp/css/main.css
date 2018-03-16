@@ -38,8 +38,17 @@ section {
 }
 
 .line {
-    border:1px solid #C8D3D3;
-    height:0px;
+    margin-right: 200px;
+    height: 1px;
+    background-color: #C8D3D3;
+}
+
+.headerImage {
+    background-image: url(/sampleApp/img/header_ufo.png);
+    background-repeat: no-repeat;
+    background-position: top 20px right 15px;
+    height: 103px;
+    margin-top: -94px;
 }
 
 #whereTo {
