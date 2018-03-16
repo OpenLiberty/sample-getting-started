@@ -22,7 +22,7 @@
     <body>
         <section id="appIntro">
             <div id="titleSection">
-                <h1 id="appTitle">Sample-getting-started</h1>
+                <h1 id="appTitle">System Properties Sample</h1>
                 <div class="line"></div>
                 <h2>Congrats on your shiny, new Open Liberty sample app!</h2>
                 <p>This sample app uses a System Properties microservice to return the properties of the system that you're running (See below).</p>
@@ -30,7 +30,7 @@
 
             <div class="msSection" id="systemProperties">
                 <div class="headerRow">
-                    <div class="headerIcon"></div>
+                    <div class="headerIcon">icon</div>
                     <div class="headerTitle" id="sysPropTitle"><h2>System Properties</h2></div>
                 </div>
                 <div id="systemPropertiesTable" class="flexContainer">
@@ -54,19 +54,31 @@
 
         <section id="openLibertyAndMp">
             <h1>Open Liberty and Microprofile</h1>
-            <h2>sample-getting-started insights</h2>
+            <h2>System Properties Insights</h2>
             <div class="msSection" id="healthSection">
-                <div class="collapsible headerRow">
+                <div class="collapsibleRow headerRow">
                     <div class="headerIcon">icon</div>
                     <div class="headerTitle">
                         <h2>Health</h2>
                         <p>Monitoring the health of your microservice</p>
                     </div>
                 </div>
-                <div id="healthBox">
-                    <h3 id="serviceName"></h3>
-                    <p id="serviceStatus"></p>
+                <div class="collapsibleContent">
+                    <div class="sectionContent">
+                        <div id="healthBox">
+                            <div id="healthIcon">checkmark</div>
+                            <div id="healthText">
+                                <p id="serviceName"></p>
+                                <p id="serviceStatus"></p>
+                            </div>
+                        </div>
+                        <div id="healthNote">
+                            <b>Please note:</b>
+                            <p>Changing the in-maintenance mode property in the 'Config' section below directly affects this value.</p>
+                        </div>
+                    </div>
                 </div>
+                
             </div>
 
             <div id="configSection">

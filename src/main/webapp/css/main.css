@@ -25,7 +25,6 @@ body{
     font-size: 16px;
     color:#24243b;
     background-color: white;
-
 }
 
 section {
@@ -37,12 +36,19 @@ section {
     text-align:left;
 }
 
+.line {
+    border:3px solid #5d6a8e;
+    width:755px;
+    height:0px;
+}
+
 #whereTo {
     padding-bottom: 80px;
 }
 
 p {
     line-height: 22px;
+    margin-top: 0px;
 }
 h1 {
     font-family:BunueloSemiBold;
@@ -77,12 +83,19 @@ h4 {
 
 .headerRow {
     height: 100px;
+    box-shadow: 0 2px 4px 0;
+    position:relative;
+    z-index:2;
+
 }
 .headerRow > div {
     display: inline-block;
 }
 .headerIcon {
     width: 160px;
+    height: 100%;
+    float: left;
+    background-color: red;
 }
 
 .headerTitle {
@@ -91,22 +104,29 @@ h4 {
     letter-spacing:0;
     text-align:left;
     padding-left: 40px;
+    padding-top: 10px;
+    width: calc(100% - 200px); /* 160 from icon, 40 from padding */
 }
 
 #sysPropTitle {
-    padding: 28px;
+    padding-top: 28px;
+    padding-bottom: 28px;
 }
 
 .headerTitle > h2 {
-    font-family:BBunueloLight;
+    font-family: BunueloLight;
     font-size:40px;
     margin: 0;
 }
 
 .msSection {
-    background:#e8eaef;
-    box-shadow:0 2px 4px 0 rgba(63,70,89,0.31);
-  }
+    background: white;
+    box-shadow: 0 2px 4px 0 rgba(63,70,89,0.31);
+}
+
+.sectionContent {
+    margin-left: 160px;
+}
 
 #systemPropertiesTable {
     padding-left: 160px;
@@ -155,7 +175,6 @@ h4 {
     font-family: Asap;
     margin-top: 25px;
     margin-bottom: 70px;
-  
 }
 
 .tooltip {
@@ -164,25 +183,51 @@ h4 {
     margin-bottom: 80px;
 }
 
-.line {
-  border:3px solid #5d6a8e;
-  width:755px;
-  height:0px;
-}
 
 section#openLibertyAndMp {
   background:#f4f4f5;
-  box-shadow:0 2px 4px 0 rgba(63,70,89,0.31);
+  box-shadow: 0 2px 4px 0 rgba(63,70,89,0.31);
+}
+
+.collapsibleRow {
 }
 
 #healthBox {
-    height: 100px;
-    width: 200px;
-    text-align: center;
+    text-align: left;
+    display: table-cell;
     vertical-align: middle;
-    border: 1px solid black;
+    width: 47%;
 }
 
+#healthBox > div {
+    display: table-cell;
+    vertical-align: middle;
+}
+
+#healthIcon {
+    padding-left: 73px;
+    padding-top: 56px;
+    padding-bottom: 56px;
+}
+
+#healthText {
+    padding: 50px;
+}
+
+#serviceStatus {
+    font-size: 50px;
+    font-family:BunueloCleanPro-Light;
+    margin-top: 30px;
+}
+
+#healthNote {
+    text-align: left;
+    display: table-cell;
+    vertical-align: middle;
+    padding-left: 43px;
+    line-height: 26px;
+    width: 53%;
+}
 
 td {
     border: 1px solid gray;

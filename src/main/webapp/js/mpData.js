@@ -139,7 +139,7 @@ function getHealth() {
                 healthStatus.innerText = service.state;
 
                 if (service.state === "UP") {
-                    healthBox.style.backgroundColor = "lime";
+                    healthBox.style.backgroundColor = "#f0f7e1";
                 } else {
                     healthBox.style.backgroundColor = "red";
                 }
