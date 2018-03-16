@@ -55,7 +55,7 @@
             <h1>System properties sample Insights</h1>
             <h2>Built with Microprofile on Open Liberty </h2>
             <div class="msSection collapsed" id="healthSection">
-                <div class="collapsibleRow headerRow">
+                <div class="collapsibleRow headerRow" onClick="toggle()">
                     <div class="headerIcon"><img src="img/health.svg"/></div>
                     <div class="headerTitle">
                         <h2>Health</h2>
@@ -79,8 +79,8 @@
                 </div>
             </div>
 
-            <div class="msSection expanded" id="configSection">
-                <div class="collapsibleRow headerRow">
+            <div class="msSection collapsed" id="configSection">
+                <div class="collapsibleRow headerRow" onClick="toggle()">
                     <div class="headerIcon"><img src="img/config.svg"/></div>
                     <div class="headerTitle">
                         <h2>Config</h2>
@@ -98,8 +98,8 @@
                 </div>
             </div>
 
-            <div class="msSection expanded" id="metricsSection">
-                <div class="collapsibleRow headerRow">
+            <div class="msSection collapsed" id="metricsSection">
+                <div class="collapsibleRow headerRow" onClick="toggle()">
                     <div class="headerIcon"><img src="img/metrics.svg"/></div>
                     <div class="headerTitle">
                         <h2>Metrics</h2>

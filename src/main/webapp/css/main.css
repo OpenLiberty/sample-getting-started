@@ -91,6 +91,9 @@ h4 {
     display: inline-block;
 }
 
+.collapsibleRow {
+    transition: border 400ms ease-out, box-shadow 200ms linear;
+}
 .collapsed .collapsibleRow {
     box-shadow: none;
     border-bottom: 4px solid;
@@ -105,11 +108,19 @@ h4 {
     border-bottom-color: #EEF3C3;
 }
 
+.collapsed .collapsibleContent { /* collapsing animation */
+    transition: all 400ms ease-out, opacity 300ms ease-in;
+}
+.expanded .collapsibleContent { /* expanding animation */
+    transition: all 400ms ease-out, opacity 450ms ease-out;
+}
 .collapsed .collapsibleContent {
-    display: none;
+    opacity: 0;
+    max-height: 0;
 }
 .expanded .collapsibleContent {
-    display: block;
+    opacity: 1;
+    max-height: 1000px;
 }
 
 

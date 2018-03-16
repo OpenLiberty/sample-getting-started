@@ -206,3 +206,14 @@ function getConfigPropertiesRequest() {
     req.open("GET", url, true);
     req.send();
 }
+
+function toggle(e) {
+    e = e || window.event;
+    var classes = e.currentTarget.parentElement.classList;
+    var collapseState = e.currentTarget.parentElement.classList[1];
+    if (collapseState === "collapsed") {
+        classes.replace("collapsed", "expanded");
+    } else {
+        classes.replace("expanded", "collapsed");
+    }
+}
