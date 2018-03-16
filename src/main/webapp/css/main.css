@@ -86,7 +86,6 @@ h4 {
     position:relative;
     z-index:2;
     border-bottom: 4px solid #D6D9E4;
-
 }
 .headerRow > div {
     display: inline-block;
@@ -104,6 +103,12 @@ h4 {
     width: 160px;
     height: 100%;
     float: left;
+    background-color: #E8EAEF;
+}
+.headerIcon img {
+    display:block;
+    margin:auto;
+    margin-top: 20px;
 }
 
 #healthSection .headerIcon {
@@ -256,7 +261,7 @@ section#openLibertyAndMp {
 
 #serviceStatus {
     font-size: 50px;
-    font-family:BunueloCleanPro-Light;
+    font-family:BunueloLight;
     margin-top: 30px;
 }
 

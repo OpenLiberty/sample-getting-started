@@ -149,7 +149,7 @@ function getHealth() {
 
                 if (service.state === "UP") {
                     healthBox.style.backgroundColor = "#f0f7e1";
-                    healthIcon.setAttribute("background-image", "url: sampleApp/img/systemUp.svg");
+                    healthIcon.style.backgroundImage = "url(\"/img/systemUp.svg\")";
                 } else {
                     healthBox.style.backgroundColor = "red";
                 }
