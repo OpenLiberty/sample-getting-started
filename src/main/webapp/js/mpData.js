@@ -133,7 +133,7 @@ function getHealth() {
     var healthBox = document.getElementById("healthBox");
     var serviceName = document.getElementById("serviceName");
     var healthStatus = document.getElementById("serviceStatus");
-    var healthIcon = document.getElementById("healthStatusIcon");
+    var healthIcon = document.getElementById("healthStatusIconImage");
 
     req.onreadystatechange = function () {
         if (req.readyState != 4) return; // Not there yet
@@ -149,9 +149,10 @@ function getHealth() {
 
                 if (service.state === "UP") {
                     healthBox.style.backgroundColor = "#f0f7e1";
-                    healthIcon.style.backgroundImage = "url(\"/img/systemUp.svg\")";
+                    healthIcon.setAttribute("src", "img/systemUp.svg");
                 } else {
-                    healthBox.style.backgroundColor = "red";
+                    healthBox.style.backgroundColor = "#fef7f2";
+                    healthIcon.setAttribute("src", "img/systemDown.svg");
                 }
             });
         }

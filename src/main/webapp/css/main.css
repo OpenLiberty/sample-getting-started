@@ -85,26 +85,33 @@ h4 {
     height: 100px;
     position:relative;
     z-index:2;
-    box-shadow: 0 2px 4px 0;
+    box-shadow: 0 2px 4px 0 rgba(0,0,0,0.50);
 }
 .headerRow > div {
     display: inline-block;
 }
 
-#healthSection > .headerRow {
-  border-bottom: 4px solid #D6D9E4;
-  box-shadow: none;
+.collapsed .collapsibleRow {
+    box-shadow: none;
+    border-bottom: 4px solid;
+}
+.collapsed#healthSection > .headerRow {
+    border-bottom-color: #D6D9E4;
+}
+.collapsed#configSection > .headerRow {
+    border-bottom-color: #F8D7C1;
+}
+.collapsed#metricsSection > .headerRow {
+    border-bottom-color: #EEF3C3;
 }
 
-#configSection > .headerRow {
-  border-bottom: 4px solid #F8D7C1;
-  box-shadow: none;
+.collapsed .collapsibleContent {
+    display: none;
+}
+.expanded .collapsibleContent {
+    display: block;
 }
 
-#metricsSection > .headerRow {
-  border-bottom: 4px solid #EEF3C3;
-  box-shadow: none;
-}
 
 .headerIcon {
     width: 160px;
@@ -329,7 +336,7 @@ td {
 }
 
 #learnMore > h2 {
-  color:#5e6b8d;
+    olor:#5e6b8d;
 }
 
 .sectionFooter {
