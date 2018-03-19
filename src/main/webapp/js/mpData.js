@@ -207,11 +207,20 @@ function getConfigPropertiesRequest() {
 }
 
 function toggle(e) {
-    e = e || window.event;
-    var classes = e.currentTarget.parentElement.classList;
-    var collapseState = e.currentTarget.parentElement.classList[1];
-    var caretImg = e.currentTarget.getElementsByClassName("caret")[0]
-    var caretImgSrc = e.currentTarget.getElementsByClassName("caret")[0].getAttribute("src");
+    var callerElement;
+    if (!e) {
+        if (window.event) {
+            e = window.event;
+            callerElement = e.currentTarget;
+        } else {
+            callerElement = window.toggle.caller.arguments[0].currentTarget; // for firefox
+        }
+    }
+
+    var classes = callerElement.parentElement.classList;
+    var collapseState = callerElement.parentElement.classList[1];
+    var caretImg = callerElement.getElementsByClassName("caret")[0]
+    var caretImgSrc = callerElement.getElementsByClassName("caret")[0].getAttribute("src");
     if (collapseState === "collapsed") { // expand the section
         classes.replace("collapsed", "expanded");
         caretImg.setAttribute("src", caretImgSrc.replace("down", "up"));
