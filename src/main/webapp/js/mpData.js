@@ -91,6 +91,7 @@ function getSystemPropertiesRequest() {
     // Create the callback:
     req.onreadystatechange = function () {
         if (req.readyState != 4) return; // Not there yet
+        displayMetrics();
         if (req.status != 200) {
             table.innerHTML = "";
             var row = document.createElement("tr");
@@ -218,10 +219,10 @@ function toggle(e) {
     }
 
     var classes = callerElement.parentElement.classList;
-    var collapseState = callerElement.parentElement.classList[1];
-    var caretImg = callerElement.getElementsByClassName("caret")[0]
-    var caretImgSrc = callerElement.getElementsByClassName("caret")[0].getAttribute("src");
-    if (collapseState === "collapsed") { // expand the section
+    var collapsed = classes.contains("collapsed");
+    var caretImg = callerElement.getElementsByClassName("caret")[0];
+    var caretImgSrc = caretImg.getAttribute("src");
+    if (collapsed) { // expand the section
         classes.replace("collapsed", "expanded");
         caretImg.setAttribute("src", caretImgSrc.replace("down", "up"));
     } else { // collapse the section
