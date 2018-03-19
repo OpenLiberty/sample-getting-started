@@ -91,6 +91,7 @@ function getSystemPropertiesRequest() {
     // Create the callback:
     req.onreadystatechange = function () {
         if (req.readyState != 4) return; // Not there yet
+        displayMetrics();
         if (req.status != 200) {
             table.innerHTML = "";
             var row = document.createElement("tr");
@@ -207,12 +208,21 @@ function getConfigPropertiesRequest() {
 }
 
 function toggle(e) {
-    e = e || window.event;
-    var classes = e.currentTarget.parentElement.classList;
-    var collapseState = e.currentTarget.parentElement.classList[1];
-    var caretImg = e.currentTarget.getElementsByClassName("caret")[0]
-    var caretImgSrc = e.currentTarget.getElementsByClassName("caret")[0].getAttribute("src");
-    if (collapseState === "collapsed") { // expand the section
+    var callerElement;
+    if (!e) {
+        if (window.event) {
+            e = window.event;
+            callerElement = e.currentTarget;
+        } else {
+            callerElement = window.toggle.caller.arguments[0].currentTarget; // for firefox
+        }
+    }
+
+    var classes = callerElement.parentElement.classList;
+    var collapsed = classes.contains("collapsed");
+    var caretImg = callerElement.getElementsByClassName("caret")[0];
+    var caretImgSrc = caretImg.getAttribute("src");
+    if (collapsed) { // expand the section
         classes.replace("collapsed", "expanded");
         caretImg.setAttribute("src", caretImgSrc.replace("down", "up"));
     } else { // collapse the section
