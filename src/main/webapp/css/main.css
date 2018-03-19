@@ -108,6 +108,10 @@ a {
     transition: border 400ms ease-out, box-shadow 200ms linear;
     cursor: pointer;
 }
+.collapsibleRow:hover .headerTitle {
+    background-color: #f4f4f4;
+    transition: background-color 0.1s;
+}
 .collapsed .collapsibleRow {
     box-shadow: none;
     border-bottom: 4px solid;
@@ -215,36 +219,6 @@ a {
 #systemPropertiesTable {
     padding-left: 160px;
     background: white;
-}
-
-.flexContainer {
-	display: -ms-flex;
-	display: -webkit-flex;
-    display: flex;
-    max-height: 400px;
-    overflow: auto;
-    flex-flow: row wrap;
-}
-
-.flexContainer > div {
-    padding: 10px;
-    white-space: wrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    height: 1em;
-}
-
-.flexContainer > div:nth-child(even) {
-	width: 60%;
-}
-
-.flexContainer > div:nth-child(odd) {
-	width: 30%;
-}
-
-.flexContainer > div:first-child, .flexContainer > div:nth-child(2) {
-    font-weight: bold;
-    background-color: rgb(222, 237, 247);
 }
 
 button {
