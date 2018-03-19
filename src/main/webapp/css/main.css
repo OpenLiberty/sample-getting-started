@@ -106,6 +106,7 @@ a {
 
 .collapsibleRow {
     transition: border 400ms ease-out, box-shadow 200ms linear;
+    cursor: pointer;
 }
 .collapsed .collapsibleRow {
     box-shadow: none;
