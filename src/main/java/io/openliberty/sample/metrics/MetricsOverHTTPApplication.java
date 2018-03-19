@@ -10,26 +10,21 @@
  *     IBM Corporation - Initial implementation
  *******************************************************************************/
 // end::copyright[]
-package io.openliberty.sample.system;
+package io.openliberty.sample.metrics;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-import javax.inject.Provider;
+import java.util.HashSet;
+import java.util.Set;
 
-import org.eclipse.microprofile.config.inject.ConfigProperty;
+// JAX-RS
+import javax.ws.rs.ApplicationPath;
+import javax.ws.rs.core.Application;
 
-
-@ApplicationScoped
-public class SystemConfig {
-
-  // tag::config[]
-  @Inject
-  @ConfigProperty(name = "io_openliberty_sample_system_inMaintenance")
-  Provider<Boolean> inMaintenance;
-  // end::config[]
-
-
-  public boolean isInMaintenance() {
-    return inMaintenance.get();
-  }
+@ApplicationPath("metricsOverHTTP")
+public class MetricsOverHTTPApplication extends Application {
+    @Override
+    public Set<Class<?>> getClasses() {
+        Set<Class<?>> resources = new HashSet<>();
+        resources.add(MetricsOverHTTPResource.class);
+        return resources;
+    }
 }

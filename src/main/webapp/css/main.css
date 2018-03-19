@@ -12,12 +12,12 @@
 
 @font-face {
     font-family: BunueloLight;
-    src: url("/sampleApp/fonts/BunueloCleanPro-Light.otf");
+    src: url("/fonts/BunueloCleanPro-Light.otf");
 }
 
 @font-face {
     font-family: BunueloSemiBold;
-    src: url("/sampleApp/fonts/BunueloCleanPro-SemiBold.otf");
+    src: url("/fonts/BunueloCleanPro-SemiBold.otf");
 }
 
 body{
@@ -44,7 +44,7 @@ section {
 }
 
 .headerImage {
-    background-image: url(/sampleApp/img/header_ufo.png);
+    background-image: url(/img/header_ufo.png);
     background-repeat: no-repeat;
     background-position: top 20px right 15px;
     height: 103px;
@@ -398,7 +398,7 @@ td {
 
 .bodyFooter {
   padding: 5px 8%;
-  background-image: url(/sampleApp/img/footer_main.png);
+  background-image: url(/img/footer_main.png);
   background-repeat: no-repeat;
   background-position: top 20px right 110px;
   margin-bottom: 40px;

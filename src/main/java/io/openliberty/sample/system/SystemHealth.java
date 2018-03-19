@@ -14,7 +14,6 @@
 package io.openliberty.sample.system;
 
 import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 
 import org.eclipse.microprofile.health.Health;

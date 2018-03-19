@@ -9,8 +9,8 @@ The sample application contains a system microservice to retrieve the system pro
     mvn clean install -DskipTests=false
 
 ### Stop server
-    mvn clean install libarty:stop-server
+    mvn liberty:stop-server
 
 ### Open url's in browser
-    https://localhost:9443/sampleApp
+    http://localhost:9080
 
