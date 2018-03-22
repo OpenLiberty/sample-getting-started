@@ -13,7 +13,7 @@ function displayMetrics() {
 }
 
 function getSystemMetrics() {
-    var url = "http://localhost:9080/metricsOverHTTP";
+    var url = location.origin + "/metricsOverHTTP";
     var req = new XMLHttpRequest();
 
     var metricToDisplay = {};
@@ -72,7 +72,7 @@ function getSystemMetrics() {
             table.appendChild(row);
         }
 
-        addSourceRow(table, url);
+        addSourceRow(table, location.origin + "/metrics");
     };
 
     req.open("GET", url, true);
@@ -85,7 +85,7 @@ function displaySystemProperties() {
 
 function getSystemPropertiesRequest() {
     var propToDisplay = ["java.vendor", "java.version", "user.name", "os.name", "wlp.install.dir", "wlp.server.name" ];
-    var url = "http://localhost:9080/system/properties";
+    var url = location.origin + "/system/properties";
     var req = new XMLHttpRequest();
     var table = document.getElementById("systemPropertiesTable");
     // Create the callback:
@@ -130,7 +130,7 @@ function displayHealth() {
 }
 
 function getHealth() {
-    var url = "http://localhost:9080/health";
+    var url = location.origin + "/health";
     var req = new XMLHttpRequest();
 
     var healthBox = document.getElementById("healthBox");
@@ -172,7 +172,7 @@ function displayConfigProperties() {
 }
 
 function getConfigPropertiesRequest() {
-    var url = "http://localhost:9080/config";
+    var url = location.origin + "/config";
     var req = new XMLHttpRequest();
 
     var configToDisplay = {};
