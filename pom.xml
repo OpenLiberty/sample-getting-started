@@ -179,8 +179,18 @@
             </goals>
           </execution>
           <execution>
+            <id>package-app</id>
+            <phase>package</phase>
+            <goals>
+              <goal>package-server</goal>
+            </goals>
+            <configuration>
+              <outputDirectory>target/wlp-package</outputDirectory>
+            </configuration>
+          </execution>
+          <execution>
             <id>install-app</id>
-            <phase>pre-integration-test</phase>
+            <phase>package</phase>
             <goals>
               <goal>install-apps</goal>
             </goals>
@@ -203,16 +213,6 @@
             <goals>
               <goal>stop-server</goal>
             </goals>
-          </execution>
-          <execution>
-            <id>package-app</id>
-            <phase>package</phase>
-            <goals>
-              <goal>package-server</goal>
-            </goals>
-            <configuration>
-              <outputDirectory>target/wlp-package</outputDirectory>
-            </configuration>
           </execution>
         </executions>
       </plugin>
