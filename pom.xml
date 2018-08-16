@@ -158,7 +158,7 @@
           <assemblyArtifact>
             <groupId>io.openliberty</groupId>
             <artifactId>openliberty-runtime</artifactId>
-            <version>RELEASE</version>
+            <version>18.0.0.1</version>
             <type>zip</type>
           </assemblyArtifact>
           <serverName>sampleAppServer</serverName>
