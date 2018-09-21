@@ -10,8 +10,8 @@
   </featureManager>
 
   <applicationManager autoExpand="true" />
-  <quickStartSecurity userName="admin" userPassword="adminpwd"/>
-  <keyStore id="defaultKeyStore" password="mpKeystore"/>
+
+  <mpMetrics authentication="false" />
 
   <httpEndpoint host="*" httpPort="${default.http.port}" httpsPort="${default.https.port}" id="defaultHttpEndpoint"/>
 
