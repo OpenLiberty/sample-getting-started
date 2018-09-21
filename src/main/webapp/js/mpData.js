@@ -13,7 +13,7 @@ function displayMetrics() {
 }
 
 function getSystemMetrics() {
-    var url = location.origin + "/metricsOverHTTP";
+    var url = location.origin + "/metrics";
     var req = new XMLHttpRequest();
 
     var metricToDisplay = {};
