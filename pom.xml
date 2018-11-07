@@ -130,51 +130,6 @@
             <default.https.port>${testServerHttpsPort}</default.https.port>
           </bootstrapProperties>
         </configuration>
- <!--       <executions>
-          <execution>
-            <id>install-liberty</id>
-            <phase>prepare-package</phase>
-            <goals>
-              <goal>install-server</goal>
-            </goals>
-          </execution>
-          <execution>
-            <id>package-app</id>
-            <phase>package</phase>
-            <goals>
-              <goal>package-server</goal>
-            </goals>
-            <configuration>
-              <outputDirectory>target/wlp-package</outputDirectory>
-            </configuration>
-          </execution>
-          <execution>
-            <id>install-app</id>
-            <phase>package</phase>
-            <goals>
-              <goal>install-apps</goal>
-            </goals>
-            <configuration>
-              <looseApplication>true</looseApplication>
-              <stripVersion>true</stripVersion>
-              <installAppPackages>project</installAppPackages>
-            </configuration>
-          </execution>
-          <execution>
-            <id>start-server</id>
-            <phase>pre-integration-test</phase>
-            <goals>
-              <goal>start-server</goal>
-            </goals>
-          </execution>
-          <execution>
-            <id>stop-server</id>
-            <phase>post-integration-test</phase>
-            <goals>
-              <goal>stop-server</goal>
-            </goals>
-          </execution>
-        </executions> -->
       </plugin>
       <!-- Plugin to run functional tests -->
       <plugin>
