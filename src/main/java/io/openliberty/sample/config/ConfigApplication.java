@@ -9,7 +9,7 @@
  *     IBM Corporation - Initial implementation
  *******************************************************************************/
 
- package io.openliberty.sample.config;
+package io.openliberty.sample.config;
 
 import java.util.HashSet;
 import java.util.Set;
