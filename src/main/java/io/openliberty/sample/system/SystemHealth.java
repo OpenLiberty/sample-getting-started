@@ -1,4 +1,3 @@
-// tag::comment[]
 /*******************************************************************************
  * Copyright (c) 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
@@ -9,8 +8,6 @@
  * Contributors:
  *     IBM Corporation - Initial implementation
  *******************************************************************************/
-// end::comment[]
-// tag::SystemHealth[]
 package io.openliberty.sample.system;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -44,4 +41,3 @@ public class SystemHealth implements HealthCheck {
             .withData("services","available").up().build();
   }
 }
-// end::SystemHealth[]

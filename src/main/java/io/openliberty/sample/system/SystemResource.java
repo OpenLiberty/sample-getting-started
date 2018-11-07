@@ -1,4 +1,3 @@
-// tag::copyright[]
 /*******************************************************************************
  * Copyright (c) 2017, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
@@ -9,8 +8,8 @@
  * Contributors:
  *     IBM Corporation - Initial implementation
  *******************************************************************************/
-// end::copyright[]
-package io.openliberty.sample.system;
+
+ package io.openliberty.sample.system;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;

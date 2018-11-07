@@ -1,4 +1,3 @@
-// tag::copyright[]
 /*******************************************************************************
  * Copyright (c) 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
@@ -9,8 +8,8 @@
  * Contributors:
  *     IBM Corporation - Initial implementation
  *******************************************************************************/
-// end::copyright[]
-package io.openliberty.sample.config;
+
+ package io.openliberty.sample.config;
 
 import java.util.HashSet;
 import java.util.Set;

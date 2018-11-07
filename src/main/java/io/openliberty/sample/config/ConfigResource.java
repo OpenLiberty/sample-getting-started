@@ -1,4 +1,3 @@
-// tag::copyright[]
 /*******************************************************************************
  * Copyright (c) 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
@@ -9,7 +8,6 @@
  * Contributors:
  *     IBM Corporation - Initial implementation
  *******************************************************************************/
-// end::copyright[]
 package io.openliberty.sample.config;
 
 import javax.enterprise.context.RequestScoped;
@@ -30,10 +28,8 @@ import org.eclipse.microprofile.config.spi.ConfigSource;
 @Path("/")
 public class ConfigResource {
 
-  // tag::config[]
   @Inject
   private Config config;
-  // end::config[]
 
   @GET
   @Produces(MediaType.APPLICATION_JSON)
