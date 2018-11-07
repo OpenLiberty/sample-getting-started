@@ -26,6 +26,13 @@
 
   <dependencies>
     <dependency>
+      <groupId>org.eclipse.microprofile</groupId>
+      <artifactId>microprofile</artifactId>
+      <version>2.0.1</version>
+      <type>pom</type>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
       <version>4.12</version>
@@ -49,19 +56,7 @@
       <version>1.0.4</version>
       <scope>test</scope>
     </dependency>
-    <dependency>
-      <groupId>javax.ws.rs</groupId>
-      <artifactId>javax.ws.rs-api</artifactId>
-      <version>2.0.1</version>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>com.ibm.websphere.appserver.api</groupId>
-      <artifactId>com.ibm.websphere.appserver.api.jaxrs20</artifactId>
-      <version>1.0.10</version>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
+ <!--   <dependency>
       <groupId>javax.json</groupId>
       <artifactId>javax.json-api</artifactId>
       <version>1.0</version>
@@ -84,7 +79,7 @@
       <artifactId>javax.inject</artifactId>
       <version>1</version>
       <scope>provided</scope>
-    </dependency>
+    </dependency> -->
     <dependency>
       <groupId>javax.json.bind</groupId>
       <artifactId>javax.json.bind-api</artifactId>
@@ -96,24 +91,6 @@
       <artifactId>yasson</artifactId>
       <version>1.0</version>
       <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.eclipse.microprofile.config</groupId>
-      <artifactId>microprofile-config-api</artifactId>
-      <version>1.1</version>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.eclipse.microprofile.health</groupId>
-      <artifactId>microprofile-health-api</artifactId>
-      <version>1.0</version>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.eclipse.microprofile.metrics</groupId>
-      <artifactId>microprofile-metrics-api</artifactId>
-      <version>1.0</version>
-      <scope>provided</scope>
     </dependency>
   </dependencies>
 
