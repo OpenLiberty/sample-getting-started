@@ -9,7 +9,7 @@
  *     IBM Corporation - Initial implementation
  *******************************************************************************/
 
- package io.openliberty.sample.config;
+package io.openliberty.sample.config;
 
 import javax.enterprise.context.RequestScoped;
 import javax.ws.rs.core.MediaType;

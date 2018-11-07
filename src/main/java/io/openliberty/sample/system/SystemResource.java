@@ -9,7 +9,7 @@
  *     IBM Corporation - Initial implementation
  *******************************************************************************/
 
- package io.openliberty.sample.system;
+package io.openliberty.sample.system;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
