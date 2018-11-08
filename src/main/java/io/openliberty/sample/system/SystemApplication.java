@@ -1,4 +1,3 @@
-// tag::copyright[]
 /*******************************************************************************
  * Copyright (c) 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
@@ -9,14 +8,13 @@
  * Contributors:
  *     IBM Corporation - Initial implementation
  *******************************************************************************/
-// end::copyright[]
+
 package io.openliberty.sample.system;
 
 import java.util.HashSet;
 import java.util.Set;
 
 import javax.ws.rs.ApplicationPath;
-// JAX-RS
 import javax.ws.rs.core.Application;
 
 @ApplicationPath("system")

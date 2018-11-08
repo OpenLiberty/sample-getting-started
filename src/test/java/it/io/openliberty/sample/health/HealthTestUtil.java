@@ -1,4 +1,3 @@
-// tag::comment[]
 /*******************************************************************************
  * Copyright (c) 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
@@ -9,8 +8,7 @@
  * Contributors:
  *     IBM Corporation - Initial implementation
  *******************************************************************************/
-// end::comment[]
-// tag::HealthTestUtil[]
+
 package it.io.openliberty.sample.health;
 
 import static org.junit.Assert.assertEquals;
@@ -92,4 +90,3 @@ public class HealthTestUtil {
   }
 
 }
-// end::HealthTestUtil[]

@@ -1,4 +1,3 @@
-// tag::copyright[]
 /*******************************************************************************
  * Copyright (c) 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
@@ -9,7 +8,7 @@
  * Contributors:
  *     IBM Corporation - Initial implementation
  *******************************************************************************/
-// end::copyright[]
+
 package io.openliberty.sample.system;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -22,11 +21,9 @@ import org.eclipse.microprofile.config.inject.ConfigProperty;
 @ApplicationScoped
 public class SystemConfig {
 
-  // tag::config[]
   @Inject
   @ConfigProperty(name = "io_openliberty_sample_system_inMaintenance")
   Provider<Boolean> inMaintenance;
-  // end::config[]
 
 
   public boolean isInMaintenance() {

@@ -9,6 +9,9 @@ target/
 .factorypath
 MANIFEST.MF
 
+# VS Code
+.vscode/
+
 # MacOS system files
 .DS_Store
 
