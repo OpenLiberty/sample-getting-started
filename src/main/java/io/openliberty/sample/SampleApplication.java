@@ -9,20 +9,11 @@
  *     IBM Corporation - Initial implementation
  *******************************************************************************/
 
-package io.openliberty.sample.config;
-
-import java.util.HashSet;
-import java.util.Set;
+package io.openliberty.sample;
 
 import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.core.Application;
 
-@ApplicationPath("config")
-public class ConfigApplication extends Application {
-    @Override
-    public Set<Class<?>> getClasses() {
-        Set<Class<?>> resources = new HashSet<>();
-        resources.add(ConfigResource.class);
-        return resources;
-    }
+@ApplicationPath("")
+public class SampleApplication extends Application {
 }
