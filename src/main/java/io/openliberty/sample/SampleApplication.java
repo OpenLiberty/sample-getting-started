@@ -14,6 +14,6 @@ package io.openliberty.sample;
 import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.core.Application;
 
-@ApplicationPath("")
+@ApplicationPath("system")
 public class SampleApplication extends Application {
 }
