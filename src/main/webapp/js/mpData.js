@@ -85,7 +85,7 @@ function displaySystemProperties() {
 
 function getSystemPropertiesRequest() {
     var propToDisplay = ["java.vendor", "java.version", "user.name", "os.name", "wlp.install.dir", "wlp.server.name" ];
-    var url = location.origin + "/system/properties";
+    var url = location.origin + "/sample/system/properties";
     var req = new XMLHttpRequest();
     var table = document.getElementById("systemPropertiesTable");
     // Create the callback:
@@ -172,7 +172,7 @@ function displayConfigProperties() {
 }
 
 function getConfigPropertiesRequest() {
-    var url = location.origin + "/config";
+    var url = location.origin + "/sample/config";
     var req = new XMLHttpRequest();
 
     var configToDisplay = {};

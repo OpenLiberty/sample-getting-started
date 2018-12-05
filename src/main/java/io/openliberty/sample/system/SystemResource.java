@@ -24,7 +24,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 @RequestScoped
-@Path("system")
+@Path("/system")
 public class SystemResource {
 	
 	@Inject
