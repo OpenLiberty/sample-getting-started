@@ -24,14 +24,13 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 @RequestScoped
-@Path("system")
+@Path("/properties")
 public class SystemResource {
 	
 	@Inject
 	SystemConfig systemConfig;
 
   @GET
-  @Path("properties")
   @Produces(MediaType.APPLICATION_JSON)
   @Timed(name = "getPropertiesTime",
   description = "Time needed to get the properties of a system")

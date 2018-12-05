@@ -172,7 +172,7 @@ function displayConfigProperties() {
 }
 
 function getConfigPropertiesRequest() {
-    var url = location.origin + "/config";
+    var url = location.origin + "/system/config";
     var req = new XMLHttpRequest();
 
     var configToDisplay = {};
