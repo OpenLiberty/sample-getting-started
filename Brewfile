@@ -1,0 +1,2 @@
+cask "java"
+brew "maven"
