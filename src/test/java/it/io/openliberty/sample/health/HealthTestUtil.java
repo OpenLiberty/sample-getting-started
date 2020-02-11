@@ -17,7 +17,6 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
-import java.io.IOException;
 
 import javax.json.JsonArray;
 import javax.json.JsonObject;
@@ -29,64 +28,64 @@ import org.apache.cxf.jaxrs.provider.jsrjsonp.JsrJsonpProvider;
 
 public class HealthTestUtil {
 
-  private static String port;
-  private static String baseUrl;
-  private final static String HEALTH_ENDPOINT = "health";
-  public static final String INV_MAINTENANCE_FALSE = "io_openliberty_sample_system_inMaintenance\":false";
-  public static final String INV_MAINTENANCE_TRUE = "io_openliberty_sample_system_inMaintenance\":true";
+    private static String port;
+    private static String baseUrl;
+    private final static String HEALTH_ENDPOINT = "health";
+    public static final String INV_MAINTENANCE_FALSE = "io_openliberty_sample_system_inMaintenance\":false";
+    public static final String INV_MAINTENANCE_TRUE = "io_openliberty_sample_system_inMaintenance\":true";
 
-  static {
-    port = System.getProperty("liberty.test.port");
-    baseUrl = "http://localhost:" + port + "/";
-  }
+    static {
+        port = System.getProperty("liberty.test.port");
+        baseUrl = "http://localhost:" + port + "/";
+    }
 
-  public static JsonArray connectToHealthEnpoint(int expectedResponseCode) {
-    String healthURL = baseUrl + HEALTH_ENDPOINT;
-    Client client = ClientBuilder.newClient().register(JsrJsonpProvider.class);
-    Response response = client.target(healthURL).request().get();
-    assertEquals("Response code is not matching " + healthURL, expectedResponseCode,
-                 response.getStatus());
-    JsonArray servicesStates = response.readEntity(JsonObject.class).getJsonArray("checks");
-    response.close();
-    client.close();
-    return servicesStates;
-  }
+    public static JsonArray connectToHealthEnpoint(int expectedResponseCode) {
+        String healthURL = baseUrl + HEALTH_ENDPOINT;
+        Client client = ClientBuilder.newClient().register(JsrJsonpProvider.class);
+        Response response = client.target(healthURL).request().get();
+        assertEquals("Response code is not matching " + healthURL, expectedResponseCode,
+                response.getStatus());
+        JsonArray servicesStates = response.readEntity(JsonObject.class).getJsonArray("checks");
+        response.close();
+        client.close();
+        return servicesStates;
+    }
 
-  public static String getActualState(String service, JsonArray servicesStates) {
-    String state = "";
-    for (Object obj : servicesStates) {
-      if (obj instanceof JsonObject) {
-        if (service.equals(((JsonObject) obj).getString("name"))) {
-          state = ((JsonObject) obj).getString("state");
+    public static String getActualState(String service, JsonArray servicesStates) {
+        String state = "";
+        for (Object obj : servicesStates) {
+            if (obj instanceof JsonObject) {
+                if (service.equals(((JsonObject) obj).getString("name"))) {
+                    state = ((JsonObject) obj).getString("state");
+                }
+            }
         }
-      }
+        return state;
     }
-    return state;
-  }
 
-  public static void changeProperty(String oldValue, String newValue) {
-    try {
-      String fileName = System.getProperty("user.dir").split("target")[0]
-          + "/resources/CustomConfigSource.json";
-      BufferedReader reader = new BufferedReader(new FileReader(new File(fileName)));
-      String line = "";
-      String oldContent = "", newContent = "";
-      while ((line = reader.readLine()) != null) {
-        oldContent += line + "\r\n";
-      }
-      reader.close();
-      newContent = oldContent.replaceAll(oldValue, newValue);
-      FileWriter writer = new FileWriter(fileName);
-      writer.write(newContent);
-      writer.close();
-      Thread.sleep(600);
-    } catch (Exception e) {
-      e.printStackTrace();
+    public static void changeProperty(String oldValue, String newValue) {
+        try {
+            String fileName = System.getProperty("user.dir").split("target")[0]
+                    + "/resources/CustomConfigSource.json";
+            BufferedReader reader = new BufferedReader(new FileReader(new File(fileName)));
+            String line = "";
+            String oldContent = "", newContent = "";
+            while ((line = reader.readLine()) != null) {
+                oldContent += line + "\r\n";
+            }
+            reader.close();
+            newContent = oldContent.replaceAll(oldValue, newValue);
+            FileWriter writer = new FileWriter(fileName);
+            writer.write(newContent);
+            writer.close();
+            Thread.sleep(600);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
-  }
 
-  public static void cleanUp() {
-    changeProperty(INV_MAINTENANCE_TRUE, INV_MAINTENANCE_FALSE);
-  }
+    public static void cleanUp() {
+        changeProperty(INV_MAINTENANCE_TRUE, INV_MAINTENANCE_FALSE);
+    }
 
 }
