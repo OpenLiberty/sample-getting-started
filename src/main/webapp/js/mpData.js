@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (c) 2018 IBM Corporation and others.
+* Copyright (c) 2018, 2020 IBM Corporation and others.
 * All rights reserved. This program and the accompanying materials
 * are made available under the terms of the Eclipse Public License v1.0
 * which accompanies this distribution, and is available at
@@ -17,22 +17,23 @@ function getSystemMetrics() {
     var req = new XMLHttpRequest();
 
     var metricToDisplay = {};
-    metricToDisplay["application:get_properties"] = "Request Count";
-    metricToDisplay["application:io_openliberty_sample_system_system_resource_get_properties_time_min_seconds"] = "Min Request Time (ms)";
-    metricToDisplay["application:io_openliberty_sample_system_system_resource_get_properties_time_mean_seconds"] = "Mean Request Time (ms)";
-    metricToDisplay["application:io_openliberty_sample_system_system_resource_get_properties_time_max_seconds"] = "Max Request Time (ms)";
-    metricToDisplay["base:cpu_process_cpu_load_percent"] = "System CPU Usage (%)";
-    metricToDisplay["base:memory_used_heap_bytes"] = "System Heap Usage (MB)";
+    var SRgetPropertiesTime = "application_io_openliberty_sample_system_SystemResource_getPropertiesTime";
+    metricToDisplay["application_getProperties_total"] = "Request Count";
+    metricToDisplay[SRgetPropertiesTime + "_min_seconds"] = "Min Request Time (ms)";
+    metricToDisplay[SRgetPropertiesTime + "_mean_seconds"] = "Mean Request Time (ms)";
+    metricToDisplay[SRgetPropertiesTime + "_max_seconds"] = "Max Request Time (ms)";
+    metricToDisplay["base_cpu_processCpuLoad_percent"] = "System CPU Usage (%)";
+    metricToDisplay["base_memory_usedHeap_bytes"] = "System Heap Usage (MB)";
 
     var metricToMatch = "^(";
     for (var metricKey in metricToDisplay) {
         metricToMatch += metricKey + "|"
     }
     // remove the last |
-    metricToMatch = metricToMatch.substring(0, metricToMatch.length-1);
+    metricToMatch = metricToMatch.substring(0, metricToMatch.length - 1);
     metricToMatch += ")\\s*(\\S*)$"
 
-    req.onreadystatechange = function() {
+    req.onreadystatechange = function () {
         if (req.readyState != 4) return; // Not there yet
         if (req.status != 200) {
             document.getElementById("metricsText").innerHTML = req.statusText;
@@ -45,14 +46,14 @@ function getSystemMetrics() {
 
         var keyValPairs = {};
         for (var metricKey in metricToDisplay) {
-            matchMetrics.forEach(function(line) {
+            matchMetrics.forEach(function (line) {
                 var keyToMatch = metricKey + " (.*)";
                 var keyVal = line.match(new RegExp(keyToMatch));
                 if (keyVal) {
                     var val = keyVal[1];
-                    if (metricKey.indexOf("application:io_openliberty_sample_system_system_resource_get_properties_time") === 0) {
+                    if (metricKey.indexOf(SRgetPropertiesTime) === 0) {
                         val = val * 1000;
-                    } else if (metricKey.indexOf("base:memory_used_heap_bytes") === 0) {
+                    } else if (metricKey.indexOf("base_memory_usedHeap_bytes") === 0) {
                         val = val / 1000000;
                     }
                     keyValPairs[metricToDisplay[metricKey]] = val;
@@ -84,7 +85,7 @@ function displaySystemProperties() {
 }
 
 function getSystemPropertiesRequest() {
-    var propToDisplay = ["java.vendor", "java.version", "user.name", "os.name", "wlp.install.dir", "wlp.server.name" ];
+    var propToDisplay = ["java.vendor", "java.version", "user.name", "os.name", "wlp.install.dir", "wlp.server.name"];
     var url = location.origin + "/system/properties";
     var req = new XMLHttpRequest();
     var table = document.getElementById("systemPropertiesTable");
@@ -148,9 +149,9 @@ function getHealth() {
 
             resp.checks.forEach(function (service) {
                 serviceName.innerText = service.name;
-                healthStatus.innerText = service.state;
+                healthStatus.innerText = service.status;
 
-                if (service.state === "UP") {
+                if (service.status === "UP") {
                     healthBox.style.backgroundColor = "#f0f7e1";
                     healthIcon.setAttribute("src", "img/systemUp.svg");
                 } else {
@@ -236,7 +237,7 @@ function addSourceRow(table, url) {
     sourceRow.classList.add("sourceRow");
     var sourceText = document.createElement("td");
     sourceText.setAttribute("colspan", "100%");
-    sourceText.innerHTML = "API Source\: <a href='"+url+"'>"+url+"</a>";
+    sourceText.innerHTML = "API Source\: <a href='" + url + "'>" + url + "</a>";
     sourceRow.appendChild(sourceText);
     table.appendChild(sourceRow);
 }

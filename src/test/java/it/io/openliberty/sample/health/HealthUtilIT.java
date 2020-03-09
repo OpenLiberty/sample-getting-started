@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2018 IBM Corporation and others.
+ * Copyright (c) 2018, 2020 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,13 +11,12 @@
 
 package it.io.openliberty.sample.health;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
-import java.io.IOException;
 
 import javax.json.JsonArray;
 import javax.json.JsonObject;
@@ -27,37 +26,38 @@ import javax.ws.rs.core.Response;
 
 import org.apache.cxf.jaxrs.provider.jsrjsonp.JsrJsonpProvider;
 
-public class HealthTestUtil {
+public class HealthUtilIT {
 
   private static String port;
+  private static String contextRoot;
   private static String baseUrl;
   private final static String HEALTH_ENDPOINT = "health";
   public static final String INV_MAINTENANCE_FALSE = "io_openliberty_sample_system_inMaintenance\":false";
   public static final String INV_MAINTENANCE_TRUE = "io_openliberty_sample_system_inMaintenance\":true";
 
   static {
-    port = System.getProperty("liberty.test.port");
-    baseUrl = "http://localhost:" + port + "/";
+    port = System.getProperty("http.port");
+    contextRoot = System.getProperty("app.context.root");
+    baseUrl = "http://localhost:" + port + contextRoot;
   }
 
   public static JsonArray connectToHealthEnpoint(int expectedResponseCode) {
     String healthURL = baseUrl + HEALTH_ENDPOINT;
     Client client = ClientBuilder.newClient().register(JsrJsonpProvider.class);
     Response response = client.target(healthURL).request().get();
-    assertEquals("Response code is not matching " + healthURL, expectedResponseCode,
-                 response.getStatus());
-    JsonArray servicesStates = response.readEntity(JsonObject.class).getJsonArray("checks");
+    assertEquals(expectedResponseCode, response.getStatus(), "Response code is not matching " + healthURL);
+    JsonArray servicesstatus = response.readEntity(JsonObject.class).getJsonArray("checks");
     response.close();
     client.close();
-    return servicesStates;
+    return servicesstatus;
   }
 
-  public static String getActualState(String service, JsonArray servicesStates) {
+  public static String getActualState(String service, JsonArray servicesstatus) {
     String state = "";
-    for (Object obj : servicesStates) {
+    for (Object obj : servicesstatus) {
       if (obj instanceof JsonObject) {
         if (service.equals(((JsonObject) obj).getString("name"))) {
-          state = ((JsonObject) obj).getString("state");
+          state = ((JsonObject) obj).getString("status");
         }
       }
     }
@@ -66,8 +66,7 @@ public class HealthTestUtil {
 
   public static void changeProperty(String oldValue, String newValue) {
     try {
-      String fileName = System.getProperty("user.dir").split("target")[0]
-          + "/resources/CustomConfigSource.json";
+      String fileName = System.getProperty("user.dir").split("target")[0] + "/resources/CustomConfigSource.json";
       BufferedReader reader = new BufferedReader(new FileReader(new File(fileName)));
       String line = "";
       String oldContent = "", newContent = "";
