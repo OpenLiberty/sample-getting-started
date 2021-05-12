@@ -7,4 +7,4 @@ The sample application contains a system microservice to retrieve the system pro
 
 ### Open URL in browser
     http://localhost:9080
-    ![image](https://user-images.githubusercontent.com/3076261/117993383-4f34c980-b305-11eb-94b5-fa7319bc2850.png)
+![image](https://user-images.githubusercontent.com/3076261/117993383-4f34c980-b305-11eb-94b5-fa7319bc2850.png)
