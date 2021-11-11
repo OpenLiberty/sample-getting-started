@@ -12,6 +12,7 @@ test:
     #!/usr/bin/env bash
 
     cd ../"$(load_repo app-repo path)"
+    mvn package
     mvn test
 
 containerize:
@@ -26,8 +27,8 @@ containerize:
       set -x
     fi
 
-    source scripts/build_setup.sh
-    source scripts/build.sh
+    docker pull icr.io/appcafe/open-liberty:kernel-slim-java11-openj9-ubi
+    docker build
 
 deploy:
   image: icr.io/continuous-delivery/pipeline/pipeline-base-image:2.12@sha256:ff4053b0bca784d6d105fee1d008cfb20db206011453071e86b69ca3fde706a4
