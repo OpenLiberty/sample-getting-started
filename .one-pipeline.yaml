@@ -11,9 +11,8 @@ test:
   script: |
     #!/usr/bin/env bash
 
-    cd ../"$(load_repo app-repo path)"
-    mvn package
-    mvn test
+    #cd ../"$(load_repo app-repo path)"
+    #mvn test
 
 containerize:
   dind: true
