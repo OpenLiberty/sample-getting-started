@@ -39,6 +39,9 @@ containerize:
       set -x
     fi
 
+    cd ../"$(load_repo app-repo path)"
+    mvn package
+    
     docker pull icr.io/appcafe/open-liberty:kernel-slim-java11-openj9-ubi
     docker build .
 
