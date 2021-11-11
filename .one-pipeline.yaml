@@ -20,8 +20,7 @@ test:
     #!/usr/bin/env bash
 
     cd ../"$(load_repo app-repo path)"
-    npm ci
-    npm test
+    mvn test
 
 containerize:
   dind: true
