@@ -18,8 +18,7 @@ test:
     #!/usr/bin/env bash
 
     cd ../"$(load_repo app-repo path)"
-    mvn package
-    mvn test
+    mvn clean package liberty:create liberty:install-feature liberty:test-start liberty:deploy failsafe:integration-test failsafe:verify liberty:test-stop
     
 static-scan:
   abort_on_failure: false
