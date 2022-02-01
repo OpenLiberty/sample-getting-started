@@ -8,10 +8,13 @@ setup:
     GH_TOKEN=$(cat "$WORKSPACE/git-token")
     OWNER=$(jq -r '.services[] | select(.toolchain_binding.name=="app-repo") | .parameters.owner_id' /toolchain/toolchain.json)
     REPO=$(jq -r '.services[] | select(.toolchain_binding.name=="app-repo") | .parameters.repo_name' /toolchain/toolchain.json)
+    REPO=sample-getting-started
     REPO=${REPO%.git}
+    BRANCH=$(get_env branch)
     echo "Owner: $OWNER"
     echo "REPO: $REPO"
-    curl -u ":$GH_TOKEN" https://github.ibm.com/api/v3/repos/AppPlatformOps/$REPO/branches/onepipeline/protection -XPUT -d '{"required_pull_request_reviews":{"dismiss_stale_reviews":true},"enforce_admins":null,"restrictions":null}'
+    echo "BRANCH: $BRANCH"
+    curl -u ":$GH_TOKEN" https://github.ibm.com/api/v3/repos/$OWNER/$REPO/branches/$BRANCH/protection -XPUT -d '{"required_pull_request_reviews":{"dismiss_stale_reviews":true},"enforce_admins":null,"restrictions":null}'
 
 test:
   abort_on_failure: false
