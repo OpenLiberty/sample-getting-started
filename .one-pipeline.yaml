@@ -48,8 +48,8 @@ sign-artifact:
   abort_on_failure: false
   image: icr.io/continuous-delivery/pipeline/image-signing:1.0.0@sha256:e9d8e354668ba3d40be2aaee08298d2aa7f0e1c8a1829cca4094ec93830e3e6a
   script: |
-  #!/usr/bin/env bash
-  echo Skipping step because it doesn't make sense to sign an image at this step in the flow
+    #!/usr/bin/env bash
+    echo Skipping step because it doesn't make sense to sign an image at this step in the flow
 
 deploy:
   image: icr.io/continuous-delivery/pipeline/pipeline-base-image:2.12@sha256:ff4053b0bca784d6d105fee1d008cfb20db206011453071e86b69ca3fde706a4
