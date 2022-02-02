@@ -10,7 +10,7 @@ setup:
     OWNER=$(jq -r '.services[] | select(.toolchain_binding.name=="app-repo") | .parameters.owner_id' /toolchain/toolchain.json)
     REPO=$(jq -r '.services[] | select(.toolchain_binding.name=="app-repo") | .parameters.repo_name' /toolchain/toolchain.json)
     REPO=${REPO%.git}
-    REPO=sample-getting-started.git
+    REPO=sample-getting-started
     BRANCH=$(get_env branch)
     OWNER=OpenLiberty
     echo "Owner: $OWNER"
