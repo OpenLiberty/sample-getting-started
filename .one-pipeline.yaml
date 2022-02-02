@@ -18,7 +18,7 @@ setup:
     echo "REPO: $REPO"
     echo "BRANCH: $BRANCH"
     
-    curl -u :$GH_TOKEN https://api.github.com/repos/$OWNER/$REPO/branches/$BRANCH/protection -H "Accept: application/vnd.github.v3+json" -X PUT -d '{"required_pull_request_reviews":{"dismiss_stale_reviews":true,required_approving_review_count:2},"enforce_admins":null,"restrictions":null,"required_status_checks":null}'
+    curl -u :$GH_TOKEN https://api.github.com/repos/$OWNER/$REPO/branches/$BRANCH/protection -H "Accept: application/vnd.github.v3+json" -X PUT -d '{"required_pull_request_reviews":{"dismiss_stale_reviews":true,"required_approving_review_count":2},"enforce_admins":null,"restrictions":null,"required_status_checks":null}'
 
 test:
   abort_on_failure: false
