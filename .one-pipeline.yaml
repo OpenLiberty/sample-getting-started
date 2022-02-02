@@ -12,6 +12,7 @@ setup:
     REPO=${REPO%.git}
     REPO=sample-getting-started.git
     BRANCH=$(get_env branch)
+    OWNER=OpenLiberty
     echo "Owner: $OWNER"
     echo "REPO: $REPO"
     echo "BRANCH: $BRANCH"
