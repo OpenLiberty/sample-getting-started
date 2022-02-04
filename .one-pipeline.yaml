@@ -18,8 +18,13 @@ setup:
     echo "REPO: $REPO"
     echo "BRANCH: $BRANCH"
     
-    curl -u :$GH_TOKEN https://api.github.com/repos/$OWNER/$REPO/branches/$BRANCH/protection -H "Accept: application/vnd.github.v3+json" -X PUT -d '{"required_pull_request_reviews":{"dismiss_stale_reviews":true,"required_approving_review_count":2},"enforce_admins":null,"restrictions":null,"required_status_checks":null}'
+    curl -u :$GH_TOKEN https://api.github.com/repos/$OWNER/$REPO/branches/$BRANCH/protection -H "Accept: application/vnd.github.v3+json" -X PUT -d '{"required_pull_request_reviews":{"dismiss_stale_reviews":true,"required_approving_review_count":1},"enforce_admins":null,"restrictions":null,"required_status_checks":null}'
 
+    cd /
+    curl -u :GHE_TOKEN https://github.ibm.com/WASL3/log4jdetect/releases/download/v1.0.5/log4jdetect-1.0.5.jar > log4jdetect-1.0.5.jar
+    which java
+    java -version
+    java -jar log4jdetect-1.0.jar -verbose
 test:
   abort_on_failure: false
   image: icr.io/continuous-delivery/pipeline/pipeline-base-image:2.12@sha256:ff4053b0bca784d6d105fee1d008cfb20db206011453071e86b69ca3fde706a4
