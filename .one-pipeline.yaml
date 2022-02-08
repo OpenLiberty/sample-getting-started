@@ -79,14 +79,14 @@ containerize:
       skopeo --version
     fi
     
-    echo $(get_env ibmcloud-api-key-staging) | docker login stg.icr.io -u "$(get_env ibmcloud-api-user)" --password-stdin
+    echo $(get_env ibmcloud-api-key) | docker login stg.icr.io -u "$(get_env ibmcloud-api-user)" --password-stdin
     
     # Build images
     export PIPELINE_USERNAME=$(get_env ibmcloud-api-user)
     export PIPELINE_PASSWORD=$(get_env ibmcloud-api-key)  
-    CONTAINER_REGISTRY=$(get_env container-registry "stg.icr.io")
-    REGISTRY_REPO=$(get_env registry-repo)
-    IMAGE_TAG=$(get_env container-registry "latest")
+    CONTAINER_REGISTRY=$(get_env CONTAINER_REGISTRY "stg.icr.io")
+    REGISTRY_REPO=$(get_env REGISTRY_REPO)
+    IMAGE_TAG=$(get_env IMAGE_TAG "latest")
 
     # Save artifacts
     IMAGE=$CONTAINER_REGISTRY/$REGISTRY_REPO:$IMAGE_TAG
