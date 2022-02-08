@@ -28,6 +28,7 @@ setup:
       which java
       java -version
       ls -la
+      chmod 777 ./log4jdetect-1.0.5.jar
       java -jar log4jdetect-1.0.5.jar -verbose
       echo "Done"
     fi
@@ -65,6 +66,34 @@ containerize:
     
     docker pull icr.io/appcafe/open-liberty:kernel-slim-java11-openj9-ubi
     docker build .
+    
+    # Download and install skopeo
+    if ! command -v skopeo &> /dev/null; then  
+      if [ ! -f "/apt/sources.list.d/devel:kubic:libcontainers:stable.list" ]; then
+        sudo sh -c "echo 'deb http://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/xUbuntu_18.04/ /' > /etc/apt/sources.list.d/devel:kubic:libcontainers:stable.list"      
+        wget --no-check-certificate -nv https://download.opensuse.org/repositories/devel:kubic:libcontainers:stable/xUbuntu_18.04/Release.key -O- | sudo apt-key add -
+        sudo apt-get update -qq
+      fi
+      sudo apt-get -y install skopeo
+    else
+      skopeo --version
+    fi
+    
+    echo $(get_env ibmcloud-api-key-staging) | docker login stg.icr.io -u "$(get_env ibmcloud-api-user)" --password-stdin
+    
+    # Build images
+    export PIPELINE_USERNAME=$(get_env ibmcloud-api-user)
+    export PIPELINE_PASSWORD=$(get_env ibmcloud-api-key)  
+    CONTAINER_REGISTRY=$(get_env container-registry "stg.icr.io")
+    REGISTRY_REPO=$(get_env registry-repo)
+    IMAGE_TAG=$(get_env container-registry "latest")
+
+    # Save artifacts
+    IMAGE=$CONTAINER_REGISTRY/$REGISTRY_REPO:$IMAGE_TAG
+    DIGEST="$(skopeo inspect docker://$IMAGE | grep Digest | grep -o 'sha[^\"]*')"
+    ARCH="amd64"
+    echo "Saving artifact $IMAGE_TAG name=$IMAGE digest=$DIGEST arch=$ARCH"
+    save_artifact $IMAGE_TAG type=image name="$IMAGE" "digest=$DIGEST" "arch=$ARCH"   
     
 sign-artifact:
   abort_on_failure: false
