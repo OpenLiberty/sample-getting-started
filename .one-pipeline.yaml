@@ -5,7 +5,8 @@ setup:
   script: |
     #!/usr/bin/env bash
 
-    if [[ "$SKIP_ALL_THE_THINGS" != 1 ]]; then
+    SKIP_SETUP=$(get_env SKIP_SETUP)
+    if [[ "$SKIP_SETUP" != 1 ]]; then
       GHE_TOKEN=$(cat "$WORKSPACE/git-token")
       GH_TOKEN=$(get_env git-token-GH)
       OWNER=$(jq -r '.services[] | select(.toolchain_binding.name=="app-repo") | .parameters.owner_id' /toolchain/toolchain.json)
@@ -34,7 +35,8 @@ test:
   image: icr.io/continuous-delivery/pipeline/pipeline-base-image:2.12@sha256:ff4053b0bca784d6d105fee1d008cfb20db206011453071e86b69ca3fde706a4
   script: |
     #!/usr/bin/env bash
-    if [[ "$SKIP_ALL_THE_THINGS" == 1 ]]; then
+    SKIP_UNIT_TESTS=$(get_env SKIP_UNIT_TESTS)
+    if [[ "$SKIP_UNIT_TESTS" == 1 ]]; then
       cd ../"$(load_repo app-repo path)"
       mvn clean package liberty:create liberty:install-feature liberty:test-start liberty:deploy failsafe:integration-test failsafe:verify liberty:test-stop
     fi
