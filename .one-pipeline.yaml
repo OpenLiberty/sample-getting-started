@@ -113,8 +113,7 @@ deploy:
       set -x
     fi
 
-    source scripts/deploy_setup.sh
-    source scripts/deploy.sh
+    echo "Skipping Deploy"
 
 dynamic-scan: 
   abort_on_failure: false
