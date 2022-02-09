@@ -155,6 +155,9 @@ acceptance-test:
     
     docker run -d --name getting-started-sample -p 9080:9080 $IMAGE
     docker ps
+    
+    sleep 30
+    docker ps
     curl -X GET -k 0.0.0.0:9080
     
 
