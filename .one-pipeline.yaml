@@ -167,7 +167,7 @@ acceptance-test:
     curl -f -s -I "0.0.0.0:9080/broz" &>/dev/null && echo "OK: /broz did return 200" || raise error "FAIL: /broz did not return 200"
     
 scan-artifact:
-  abort_on_failure: false
+  abort_on_failure: true
   image: icr.io/continuous-delivery/pipeline/pipeline-base-image:2.6@sha256:7f588468622a981f89cf5e1212aaf75fface9da6169b5345ca52ab63d8215907
   script: |
     #!/usr/bin/env bash
