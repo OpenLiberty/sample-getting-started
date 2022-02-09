@@ -153,7 +153,7 @@ acceptance-test:
     docker pull $IMAGE
     docker images
     
-    docker run -d --name getting-started-sample -p 9080:9080 $REGISTRY_REPO:$IMAGE_TAG
+    docker run -d --name getting-started-sample -p 9080:9080 getting-started:latest
     docker ps
     curl -k http://localhost:9080
     
