@@ -50,6 +50,7 @@ static-scan:
     #!/usr/bin/env bash
 
 containerize:
+  abort_on_failure: true
   dind: true
   image: icr.io/continuous-delivery/pipeline/pipeline-base-image:2.12@sha256:ff4053b0bca784d6d105fee1d008cfb20db206011453071e86b69ca3fde706a4
   script: |
@@ -128,13 +129,11 @@ dynamic-scan:
     echo "Skipping dynamic-scan"
 
 acceptance-test:
-  abort_on_failure: false
+  abort_on_failure: true
   dind: true
   image: icr.io/continuous-delivery/pipeline/pipeline-base-image:2.12@sha256:ff4053b0bca784d6d105fee1d008cfb20db206011453071e86b69ca3fde706a4
   script: |
     #!/usr/bin/env bash
-
-    echo "Sample currently has no Functional/Acceptence tests, only unit tests which run in the 'test task."
     
     if [[ "$PIPELINE_DEBUG" == 1 ]]; then
       trap env EXIT
@@ -156,11 +155,17 @@ acceptance-test:
     docker run -d --name getting-started-sample -p 9080:9080 $IMAGE
     docker ps
     
+    # Test the endpoints for 200 response code
     sleep 30
     docker ps
-    curl -X GET -k 0.0.0.0:9080
+    curl -f -s -I "0.0.0.0:9080" &>/dev/null && echo "OK: Landing page did return 200" || raise error "FAIL: Landing page did not return 200"
+    curl -f -s -I "0.0.0.0:9080/system/properties" &>/dev/null && echo "OK: /system/properties did return 200" || raise error "FAIL: /system/properties did not return 200"
+    curl -f -s -I "0.0.0.0:9080/health" &>/dev/null && echo "OK: /health did return 200" || raise error "FAIL: /health did not return 200"
+    curl -f -s -I "0.0.0.0:9080/system/config" &>/dev/null && echo "OK: /system/config did return 200" || raise error "FAIL: /system/config did not return 200"
+    curl -f -s -I "0.0.0.0:9080/metrics" &>/dev/null && echo "OK: /metrics did return 200" || raise error "FAIL: /metrics did not return 200"
     
-
+    curl -f -s -I "0.0.0.0:9080/broz" &>/dev/null && echo "OK: /broz did return 200" || raise error "FAIL: /broz did not return 200"
+    
 scan-artifact:
   abort_on_failure: false
   image: icr.io/continuous-delivery/pipeline/pipeline-base-image:2.6@sha256:7f588468622a981f89cf5e1212aaf75fface9da6169b5345ca52ab63d8215907
