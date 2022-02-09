@@ -162,10 +162,7 @@ acceptance-test:
     curl -f -s -I "0.0.0.0:9080/system/properties" &>/dev/null && echo "OK: /system/properties did return 200" || raise error "FAIL: /system/properties did not return 200"
     curl -f -s -I "0.0.0.0:9080/health" &>/dev/null && echo "OK: /health did return 200" || raise error "FAIL: /health did not return 200"
     curl -f -s -I "0.0.0.0:9080/system/config" &>/dev/null && echo "OK: /system/config did return 200" || raise error "FAIL: /system/config did not return 200"
-    curl -f -s "0.0.0.0:9080/metrics" &>/dev/null && echo "OK: /metrics did return 200" || raise error "FAIL: /metrics did not return 200"
-    curl -v -I "0.0.0.0:9080/metrics" &>/dev/null && echo "OK: /metrics did return 200" || raise error "FAIL: /metrics did not return 200"
-    
-    curl -f -s -I "0.0.0.0:9080/broz" &>/dev/null && echo "OK: /broz did return 200" || raise error "FAIL: /broz did not return 200"
+    curl -f -s -I "0.0.0.0:9080/metrics" &>/dev/null && echo "OK: /metrics did return 200" || raise error "FAIL: /metrics did not return 200"
     
 scan-artifact:
   abort_on_failure: true
