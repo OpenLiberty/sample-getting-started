@@ -155,7 +155,7 @@ acceptance-test:
     
     docker run -d --name getting-started-sample -p 9080:9080 $IMAGE
     docker ps
-    curl -k http://localhost:9080
+    curl -X GET -k 0.0.0.0:9080
     
 
 scan-artifact:
