@@ -135,6 +135,12 @@ acceptance-test:
 
     echo "Sample currently has no Functional/Acceptence tests, only unit tests which run in the 'test task."
     
+    if [[ "$PIPELINE_DEBUG" == 1 ]]; then
+      trap env EXIT
+      env
+      set -x
+    fi
+    
     PIPELINE_USERNAME=$(get_env ibmcloud-api-user)
     PIPELINE_PASSWORD=$(get_env ibmcloud-api-key-staging)  
     CONTAINER_REGISTRY=$(get_env CONTAINER_REGISTRY "stg.icr.io")
