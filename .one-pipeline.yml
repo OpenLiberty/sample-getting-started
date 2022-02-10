@@ -1,0 +1,261 @@
+version: '1'
+
+setup:
+  image: icr.io/continuous-delivery/pipeline/pipeline-base-image:2.12@sha256:ff4053b0bca784d6d105fee1d008cfb20db206011453071e86b69ca3fde706a4
+  script: |
+    #!/usr/bin/env bash
+
+    SKIP_SETUP=$(get_env SKIP_SETUP)
+    if [[ "$SKIP_SETUP" != 1 ]]; then
+      GHE_TOKEN=$(cat "$WORKSPACE/git-token")
+      GHE_TOKEN=$(get_env git-token)
+      GH_TOKEN=$(get_env git-token-GH)
+      OWNER=$(jq -r '.services[] | select(.toolchain_binding.name=="app-repo") | .parameters.owner_id' /toolchain/toolchain.json)
+      REPO=$(jq -r '.services[] | select(.toolchain_binding.name=="app-repo") | .parameters.repo_name' /toolchain/toolchain.json)
+      REPO=${REPO%.git}
+      REPO=sample-getting-started
+      BRANCH=$(get_env branch)
+      # The 'owner' is really the org, not the user with admin access to repo
+      OWNER=OpenLiberty
+      echo "Owner: $OWNER"
+      echo "REPO: $REPO"
+      echo "BRANCH: $BRANCH"
+
+      curl -u :$GH_TOKEN https://api.github.com/repos/$OWNER/$REPO/branches/$BRANCH/protection -H "Accept: application/vnd.github.v3+json" -X PUT -d '{"required_pull_request_reviews":{"dismiss_stale_reviews":true,"required_approving_review_count":1},"enforce_admins":null,"restrictions":null,"required_status_checks":null}'
+    fi
+
+test:
+  abort_on_failure: true
+  image: icr.io/continuous-delivery/pipeline/pipeline-base-image:2.12@sha256:ff4053b0bca784d6d105fee1d008cfb20db206011453071e86b69ca3fde706a4
+  script: |
+    #!/usr/bin/env bash
+    SKIP_UNIT_TESTS=$(get_env SKIP_UNIT_TESTS)
+    if [[ "$SKIP_UNIT_TESTS" != 1 ]]; then
+      cd ../"$(load_repo app-repo path)"
+      mvn clean package liberty:create liberty:install-feature liberty:test-start liberty:deploy failsafe:integration-test failsafe:verify liberty:test-stop
+    fi
+    
+static-scan:
+  abort_on_failure: false
+  dind: true
+  image: icr.io/continuous-delivery/pipeline/pipeline-base-image:2.12@sha256:ff4053b0bca784d6d105fee1d008cfb20db206011453071e86b69ca3fde706a4
+  script: |
+    #!/usr/bin/env bash
+    SKIP_STATIC_SCAN=$(get_env SKIP_STATIC_SCAN)
+    if [[ "$SKIP_STATIC_SCAN" != 1 ]]; then
+      read -r SONAR_HOST_URL <<< "$(get_env sonarqube | jq -r '.parameters.dashboard_url' | sed 's:/*$::')"
+      read -r SONAR_USER <<< "$(get_env sonarqube | jq -r '.parameters.user_login')"
+      SONARQUBE_INSTANCE_ID=$(get_env sonarqube | jq -r '.instance_id')
+      read -r SONAR_PASS <<< "$(jq -r --arg sonar_instance "$SONARQUBE_INSTANCE_ID" '[.services[] | select(."service_id"=="sonarqube")][] | select(."instance_id"==$sonar_instance) | .parameters.user_password' /toolchain/toolchain.json)"
+      touch "$WORKSPACE"/liberty-getting-started/sonar-project.properties
+      cat << EOF > "$WORKSPACE"/liberty-getting-started/sonar-project.properties
+      sonar.projectKey=liberty-getting-started
+      sonar.host.url=$SONAR_HOST_URL
+      sonar.sources=.
+      sonar.login=$SONAR_USER
+      sonar.password=$SONAR_PASS
+      sonar.c.file.suffixes=-
+      sonar.cpp.file.suffixes=-
+      sonar.objc.file.suffixes=-
+      EOF
+      chmod -x "$WORKSPACE"/liberty-getting-started/sonar-project.properties
+      #echo "$SONAR_PASS" >> /tmp/sonarqube-token
+      "${ONE_PIPELINE_PATH}"/internal/sonarqube/sonarqube_run
+    fi
+
+containerize:
+  abort_on_failure: true
+  dind: true
+  image: icr.io/continuous-delivery/pipeline/pipeline-base-image:2.12@sha256:ff4053b0bca784d6d105fee1d008cfb20db206011453071e86b69ca3fde706a4
+  script: |
+    #!/usr/bin/env bash
+
+    if [[ "$PIPELINE_DEBUG" == 1 ]]; then
+      trap env EXIT
+      env
+      set -x
+    fi
+    
+    # Build images
+    PIPELINE_USERNAME=$(get_env ibmcloud-api-user)
+    PIPELINE_PASSWORD=$(get_env ibmcloud-api-key-staging)  
+    CONTAINER_REGISTRY=$(get_env CONTAINER_REGISTRY)
+    REGISTRY_REPO=$(get_env REGISTRY_REPO)
+    IMAGE_TAG=$(get_env IMAGE_TAG)
+    IMAGE=$CONTAINER_REGISTRY/$REGISTRY_REPO:$IMAGE_TAG
+
+    cd ../"$(load_repo app-repo path)"
+    mvn package
+    
+    docker pull icr.io/appcafe/open-liberty:kernel-slim-java11-openj9-ubi
+    docker build -t $IMAGE .
+    
+    # Push image to staging
+    echo $PIPELINE_PASSWORD | docker login stg.icr.io -u "$PIPELINE_USERNAME" --password-stdin
+    docker push $IMAGE
+    
+    # Download and install skopeo
+    if ! command -v skopeo &> /dev/null; then  
+      if [ ! -f "/apt/sources.list.d/devel:kubic:libcontainers:stable.list" ]; then
+        sudo sh -c "echo 'deb http://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/xUbuntu_18.04/ /' > /etc/apt/sources.list.d/devel:kubic:libcontainers:stable.list"      
+        wget --no-check-certificate -nv https://download.opensuse.org/repositories/devel:kubic:libcontainers:stable/xUbuntu_18.04/Release.key -O- | sudo apt-key add -
+        sudo apt-get update -qq
+      fi
+      sudo apt-get -y install skopeo
+    else
+      skopeo --version
+    fi        
+
+    # Save artifacts
+    DIGEST="$(skopeo inspect docker://$IMAGE | grep Digest | grep -o 'sha[^\"]*')"
+    DIGEST_DOCKER_INSPECT="$(docker inspect --format='{{index .RepoDigests 0}}' "${IMAGE}" | awk -F@ '{print $2}')"
+    echo "skopeo digest=$DIGEST, DIGEST_DOCKER_INSPECT=$DIGEST_DOCKER_INSPECT" 
+    ARCH="amd64"
+    echo "Saving artifact $IMAGE_TAG name=$IMAGE digest=$DIGEST arch=$ARCH"
+    save_artifact $IMAGE_TAG type=image name="$IMAGE" "digest=$DIGEST" "arch=$ARCH"   
+    
+sign-artifact:
+  abort_on_failure: false
+  image: icr.io/continuous-delivery/pipeline/image-signing:1.0.0@sha256:e9d8e354668ba3d40be2aaee08298d2aa7f0e1c8a1829cca4094ec93830e3e6a
+  script: |
+    #!/usr/bin/env bash
+    echo "Skipping step because it doesn't make sense to sign an image at this step in the flow"
+
+deploy:
+  image: icr.io/continuous-delivery/pipeline/pipeline-base-image:2.12@sha256:ff4053b0bca784d6d105fee1d008cfb20db206011453071e86b69ca3fde706a4
+  script: |
+    #!/usr/bin/env bash
+
+    if [[ "$PIPELINE_DEBUG" == 1 ]]; then
+      trap env EXIT
+      env
+      set -x
+    fi
+
+    echo "Skipping Deploy"
+
+dynamic-scan: 
+  abort_on_failure: false
+  image: icr.io/continuous-delivery/pipeline/pipeline-base-image:2.12@sha256:ff4053b0bca784d6d105fee1d008cfb20db206011453071e86b69ca3fde706a4
+  script: |
+    #!/usr/bin/env bash
+
+    echo "Skipping dynamic-scan"
+
+acceptance-test:
+  abort_on_failure: true
+  dind: true
+  image: icr.io/continuous-delivery/pipeline/pipeline-base-image:2.12@sha256:ff4053b0bca784d6d105fee1d008cfb20db206011453071e86b69ca3fde706a4
+  script: |
+    #!/usr/bin/env bash
+    
+    if [[ "$PIPELINE_DEBUG" == 1 ]]; then
+      trap env EXIT
+      env
+      set -x
+    fi
+    
+    PIPELINE_USERNAME=$(get_env ibmcloud-api-user)
+    PIPELINE_PASSWORD=$(get_env ibmcloud-api-key-staging)  
+    CONTAINER_REGISTRY=$(get_env CONTAINER_REGISTRY "stg.icr.io")
+    REGISTRY_REPO=$(get_env REGISTRY_REPO)
+    IMAGE_TAG=$(get_env IMAGE_TAG)
+    IMAGE=$CONTAINER_REGISTRY/$REGISTRY_REPO:$IMAGE_TAG
+    
+    echo $PIPELINE_PASSWORD | docker login stg.icr.io -u "$PIPELINE_USERNAME" --password-stdin
+    docker pull $IMAGE
+    docker images
+    
+    docker run -d --name getting-started-sample -p 9080:9080 $IMAGE
+    docker ps
+    
+    # Test the endpoints for 200 response code
+    sleep 30
+    docker ps
+    curl -f -s -I "0.0.0.0:9080" &>/dev/null && echo "OK: Landing page did return 200" || raise error "FAIL: Landing page did not return 200"
+    curl -f -s -I "0.0.0.0:9080/system/properties" &>/dev/null && echo "OK: /system/properties did return 200" || raise error "FAIL: /system/properties did not return 200"
+    curl -f -s -I "0.0.0.0:9080/health" &>/dev/null && echo "OK: /health did return 200" || raise error "FAIL: /health did not return 200"
+    curl -f -s -I "0.0.0.0:9080/system/config" &>/dev/null && echo "OK: /system/config did return 200" || raise error "FAIL: /system/config did not return 200"
+    curl -f -s "0.0.0.0:9080/metrics" &>/dev/null && echo "OK: /metrics did return 200" || raise error "FAIL: /metrics did not return 200"
+    
+scan-artifact:
+  abort_on_failure: true
+  image: icr.io/continuous-delivery/pipeline/pipeline-base-image:2.6@sha256:7f588468622a981f89cf5e1212aaf75fface9da6169b5345ca52ab63d8215907
+  script: |
+    #!/usr/bin/env bash
+    SKIP_SCAN_ARTIFACT=$(get_env SKIP_SCAN_ARTIFACT)
+    if [[ "$SKIP_SCAN_ARTIFACT" != 1 ]]; then
+      export PIPELINE_PASSWORD=$(get_env ibmcloud-api-key-staging)
+      echo "twistlock-scan"
+      ./scripts/twistlock-scan.sh
+      echo "Finished Twistlock scan" 
+      
+      echo "Starting VA scan"
+      . scripts/va_scan
+      if which list_artifacts >/dev/null; then
+        list_artifacts | while IFS= read -r artifact; do
+          image="$(load_artifact "$artifact" "name")"
+          type="$(load_artifact "$artifact" "type")"
+          digest="$(load_artifact "$artifact" "digest")"
+          name="$(echo "$artifact" | awk '{print $1}')"
+          if [[ "$type" == "image" ]]; then
+            if [[ "$image" == *"icr.io"* ]]; then
+              start_va_scan "$name" "$image" "$digest"
+            fi
+          fi
+        done
+      fi
+      echo "Finished VA scan"
+    fi
+    
+release:
+  abort_on_failure: false
+  image: wcp-compliance-automation-team-docker-local.artifactory.swg-devops.com/ibm-compliance-automation:1.9.1@sha256:3f3e344a1efb160d83c48cf2ee878a39cbad058c8640c423472e0546316232fd
+  script: |
+    #!/usr/bin/env bash
+
+    PUBLISH_IMAGES=$(get_env PUBLISH_IMAGES)
+    if [[ "$PUBLISH_IMAGES" == 1 ]]; then
+      # Download and install skopeo
+      if ! command -v skopeo &> /dev/null; then  
+        if [ ! -f "/apt/sources.list.d/devel:kubic:libcontainers:stable.list" ]; then
+          sudo sh -c "echo 'deb http://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/xUbuntu_18.04/ /' > /etc/apt/sources.list.d/devel:kubic:libcontainers:stable.list"      
+          wget --no-check-certificate -nv https://download.opensuse.org/repositories/devel:kubic:libcontainers:stable/xUbuntu_18.04/Release.key -O- | sudo apt-key add -
+          sudo apt-get update -qq
+        fi
+        sudo apt-get -y install skopeo
+      else
+        skopeo --version
+      fi
+      
+      PIPELINE_USERNAME=$(get_env ibmcloud-api-user)
+      PIPELINE_PASSWORD=$(get_env ibmcloud-api-key-staging)  
+      CONTAINER_REGISTRY=$(get_env CONTAINER_REGISTRY)
+      REGISTRY_REPO=$(get_env REGISTRY_REPO)
+      IMAGE_TAG=$(get_env IMAGE_TAG)
+      STAGING_IMAGE=$CONTAINER_REGISTRY/$REGISTRY_REPO:$IMAGE_TAG
+      
+      PROD_CONTAINER_REGISTRY=$(get_env CONTAINER_REGISTRY)
+      PROD_REGISTRY_REPO=$(get_env REGISTRY_REPO)
+      PROD_IMAGE=$PROD_CONTAINER_REGISTRY/$PROD_REGISTRY_REPO:$IMAGE_TAG
+
+      # Copy image to prod
+      echo $PIPELINE_PASSWORD | docker login stg.icr.io -u "$PIPELINE_USERNAME" --password-stdin
+      echo $PIPELINE_PASSWORD | docker login icr.io -u "$PIPELINE_USERNAME" --password-stdin
+      
+      skopeo copy --src-creds $PIPELINE_USERNAME:$PIPELINE_PASSWORD --dest-creds $PIPELINE_USERNAME:$PIPELINE_PASSWORD docker://$STAGING_IMAGE docker://$PROD_IMAGE
+    fi
+
+owasp-zap-api:
+  dind: true
+  abort_on_failure: false
+  image: icr.io/continuous-delivery/pipeline/pipeline-base-image:2.12@sha256:ff4053b0bca784d6d105fee1d008cfb20db206011453071e86b69ca3fde706a4
+  script: |
+    #!/usr/bin/env bash
+    if [[ "$PIPELINE_DEBUG" == 1 ]]; then
+      trap env EXIT
+      env
+      set -x
+    fi
+    
+    echo "Skipping OWASP ZAP API"
