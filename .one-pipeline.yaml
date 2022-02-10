@@ -35,6 +35,7 @@ setup:
         echo "Done"
       fi
     fi
+
 test:
   abort_on_failure: false
   image: icr.io/continuous-delivery/pipeline/pipeline-base-image:2.12@sha256:ff4053b0bca784d6d105fee1d008cfb20db206011453071e86b69ca3fde706a4
@@ -52,6 +53,12 @@ static-scan:
   image: icr.io/continuous-delivery/pipeline/pipeline-base-image:2.12@sha256:ff4053b0bca784d6d105fee1d008cfb20db206011453071e86b69ca3fde706a4
   script: |
     #!/usr/bin/env bash
+    if [[ "$PIPELINE_DEBUG" == 1 ]]; then
+      trap env EXIT
+      env
+      set -x
+    fi
+    
     SKIP_STATIC_SCAN=$(get_env SKIP_STATIC_SCAN)
     if [[ "$SKIP_STATIC_SCAN" != 1 ]]; then
       read -r SONAR_HOST_URL <<< "$(get_env sonarqube | jq -r '.parameters.dashboard_url' | sed 's:/*$::')"
@@ -90,9 +97,9 @@ containerize:
     # Build images
     PIPELINE_USERNAME=$(get_env ibmcloud-api-user)
     PIPELINE_PASSWORD=$(get_env ibmcloud-api-key-staging)  
-    CONTAINER_REGISTRY=$(get_env CONTAINER_REGISTRY "stg.icr.io")
+    CONTAINER_REGISTRY=$(get_env CONTAINER_REGISTRY)
     REGISTRY_REPO=$(get_env REGISTRY_REPO)
-    IMAGE_TAG=$(get_env IMAGE_TAG "latest")
+    IMAGE_TAG=$(get_env IMAGE_TAG)
     IMAGE=$CONTAINER_REGISTRY/$REGISTRY_REPO:$IMAGE_TAG
 
     cd ../"$(load_repo app-repo path)"
@@ -154,9 +161,9 @@ acceptance-test:
     
     PIPELINE_USERNAME=$(get_env ibmcloud-api-user)
     PIPELINE_PASSWORD=$(get_env ibmcloud-api-key-staging)  
-    CONTAINER_REGISTRY=$(get_env CONTAINER_REGISTRY "stg.icr.io")
+    CONTAINER_REGISTRY=$(get_env CONTAINER_REGISTRY)
     REGISTRY_REPO=$(get_env REGISTRY_REPO)
-    IMAGE_TAG=$(get_env IMAGE_TAG "latest")
+    IMAGE_TAG=$(get_env IMAGE_TAG)
     IMAGE=$CONTAINER_REGISTRY/$REGISTRY_REPO:$IMAGE_TAG
     
     echo $PIPELINE_PASSWORD | docker login stg.icr.io -u "$PIPELINE_USERNAME" --password-stdin
@@ -227,9 +234,9 @@ release:
       
       PIPELINE_USERNAME=$(get_env ibmcloud-api-user)
       PIPELINE_PASSWORD=$(get_env ibmcloud-api-key-staging)  
-      CONTAINER_REGISTRY=$(get_env CONTAINER_REGISTRY "stg.icr.io")
+      CONTAINER_REGISTRY=$(get_env CONTAINER_REGISTRY)
       REGISTRY_REPO=$(get_env REGISTRY_REPO)
-      IMAGE_TAG=$(get_env IMAGE_TAG "latest")
+      IMAGE_TAG=$(get_env IMAGE_TAG)
       STAGING_IMAGE=$CONTAINER_REGISTRY/$REGISTRY_REPO:$IMAGE_TAG
       
       PROD_CONTAINER_REGISTRY=$(get_env CONTAINER_REGISTRY)
