@@ -49,7 +49,7 @@ static-scan:
   image: icr.io/continuous-delivery/pipeline/pipeline-base-image:2.12@sha256:ff4053b0bca784d6d105fee1d008cfb20db206011453071e86b69ca3fde706a4
   script: |
     #!/usr/bin/env bash
-    SKIP_UNIT_TESTS=$(get_env SKIP_UNIT_TESTS)
+    SKIP_STATIC_SCAN=$(get_env SKIP_STATIC_SCAN)
     if [[ "$SKIP_STATIC_SCAN" != 1 ]]; then
       read -r SONAR_HOST_URL <<< "$(get_env sonarqube | jq -r '.parameters.dashboard_url' | sed 's:/*$::')"
       read -r SONAR_USER <<< "$(get_env sonarqube | jq -r '.parameters.user_login')"
