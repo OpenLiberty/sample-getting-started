@@ -23,14 +23,17 @@ setup:
 
       curl -u :$GH_TOKEN https://api.github.com/repos/$OWNER/$REPO/branches/$BRANCH/protection -H "Accept: application/vnd.github.v3+json" -X PUT -d '{"required_pull_request_reviews":{"dismiss_stale_reviews":true,"required_approving_review_count":1},"enforce_admins":null,"restrictions":null,"required_status_checks":null}'
 
-      cd /
-      curl -v -u ":$GHE_TOKEN" -H "Accept: application/zip" https://github.ibm.com/WASL3/log4jdetect/releases/download/v1.0.5/log4jdetect-1.0.5.jar -o log4jdetect-1.0.5.jar
-      which java
-      java -version
-      ls -la
-      chmod 777 ./log4jdetect-1.0.5.jar -v
-      java -jar log4jdetect-1.0.5.jar -verbose
-      echo "Done"
+      SKIP_LOG4J_DETECT=$(get_env SKIP_LOG4J_DETECT)
+      if [[ "$SKIP_LOG4J_DETECT" != 1 ]]; then
+        cd /
+        curl -v -u ":$GHE_TOKEN" -H "Accept: application/zip" https://github.ibm.com/WASL3/log4jdetect/releases/download/v1.0.5/log4jdetect-1.0.5.jar -o log4jdetect-1.0.5.jar
+        which java
+        java -version
+        ls -la
+        chmod 777 ./log4jdetect-1.0.5.jar -v
+        java -jar log4jdetect-1.0.5.jar -verbose
+        echo "Done"
+      fi
     fi
 test:
   abort_on_failure: false
