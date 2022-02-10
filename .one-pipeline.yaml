@@ -199,7 +199,7 @@ scan-artifact:
       export PIPELINE_PASSWORD=$(get_env ibmcloud-api-key-staging)
       echo "twistlock-scan"
       ./scripts/twistlock-scan.sh
-      echo "Finished Twistlock scan"
+      echo "Finished Twistlock scan" 
       
       echo "Starting VA scan"
       . scripts/va_scan
