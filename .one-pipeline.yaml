@@ -195,9 +195,9 @@ scan-artifact:
     if [[ "$SKIP_SCAN_ARTIFACT" != 1 ]]; then
       export PIPELINE_PASSWORD=$(get_env ibmcloud-api-key-staging)
       echo "twistlock-scan"
-      ./scripts/pipeline/twistlock-scan.sh
+      ./scripts/twistlock-scan.sh
       echo "VA scan"
-      . scripts/pipeline/va_scan
+      . scripts/va_scan
       if which list_artifacts >/dev/null; then
         list_artifacts | while IFS= read -r artifact; do
           image="$(load_artifact "$artifact" "name")"
