@@ -221,7 +221,34 @@ release:
 
     PUBLISH_IMAGES=$(get_env PUBLISH_IMAGES)
     if [[ "$PUBLISH_IMAGES" == 1 ]]; then
-      source scripts/release.sh
+      # Download and install skopeo
+      if ! command -v skopeo &> /dev/null; then  
+        if [ ! -f "/apt/sources.list.d/devel:kubic:libcontainers:stable.list" ]; then
+          sudo sh -c "echo 'deb http://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/xUbuntu_18.04/ /' > /etc/apt/sources.list.d/devel:kubic:libcontainers:stable.list"      
+          wget --no-check-certificate -nv https://download.opensuse.org/repositories/devel:kubic:libcontainers:stable/xUbuntu_18.04/Release.key -O- | sudo apt-key add -
+          sudo apt-get update -qq
+        fi
+        sudo apt-get -y install skopeo
+      else
+        skopeo --version
+      fi
+      
+      PIPELINE_USERNAME=$(get_env ibmcloud-api-user)
+      PIPELINE_PASSWORD=$(get_env ibmcloud-api-key-staging)  
+      CONTAINER_REGISTRY=$(get_env CONTAINER_REGISTRY "stg.icr.io")
+      REGISTRY_REPO=$(get_env REGISTRY_REPO)
+      IMAGE_TAG=$(get_env IMAGE_TAG "latest")
+      STAGING_IMAGE=$CONTAINER_REGISTRY/$REGISTRY_REPO:$IMAGE_TAG
+      
+      PROD_CONTAINER_REGISTRY=$(get_env CONTAINER_REGISTRY)
+      PROD_REGISTRY_REPO=$(get_env REGISTRY_REPO)
+      PROD_IMAGE=$PROD_CONTAINER_REGISTRY/$PROD_REGISTRY_REPO:$IMAGE_TAG
+
+      # Copy image to prod
+      echo $PIPELINE_PASSWORD | docker login stg.icr.io -u "$PIPELINE_USERNAME" --password-stdin
+      echo $PIPELINE_PASSWORD | docker login icr.io -u "$PIPELINE_USERNAME" --password-stdin
+      
+      skopeo copy --src-creds $PIPELINE_USERNAME:$PIPELINE_PASSWORD --dest-creds $PIPELINE_USERNAME:$PIPELINE_PASSWORD docker://$STAGING_IMAGE docker://$PROD_IMAGE
     fi
 
 owasp-zap-api:
