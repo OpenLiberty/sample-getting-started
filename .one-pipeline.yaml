@@ -215,6 +215,12 @@ release:
   script: |
     #!/usr/bin/env bash
 
+    if [[ "$PIPELINE_DEBUG" == 1 ]]; then
+      trap env EXIT
+      env
+      set -x
+    fi
+
     PUBLISH_IMAGES=$(get_env PUBLISH_IMAGES)
     if [[ "$PUBLISH_IMAGES" == 1 ]]; then
       # Download and install skopeo
