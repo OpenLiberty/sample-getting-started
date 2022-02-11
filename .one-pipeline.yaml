@@ -211,7 +211,7 @@ scan-artifact:
 release:
   abort_on_failure: false
   dind: true
-  image: wcp-compliance-automation-team-docker-local.artifactory.swg-devops.com/ibm-compliance-automation:1.9.1@sha256:3f3e344a1efb160d83c48cf2ee878a39cbad058c8640c423472e0546316232fd
+  image: icr.io/continuous-delivery/pipeline/pipeline-base-image:2.12@sha256:ff4053b0bca784d6d105fee1d008cfb20db206011453071e86b69ca3fde706a4
   script: |
     #!/usr/bin/env bash
 
