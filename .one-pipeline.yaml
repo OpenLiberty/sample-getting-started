@@ -96,7 +96,6 @@ containerize:
 
     # Save artifacts
     DIGEST="$(docker inspect --format='{{index .RepoDigests 0}}' "${IMAGE}" | awk -F@ '{print $2}')"
-    echo "skopeo digest=$DIGEST, DIGEST_DOCKER_INSPECT=$DIGEST_DOCKER_INSPECT" 
     ARCH="amd64"
     echo "Saving artifact $IMAGE_TAG name=$IMAGE digest=$DIGEST arch=$ARCH"
     save_artifact $IMAGE_TAG type=image name="$IMAGE" "digest=$DIGEST" "arch=$ARCH"   
@@ -157,6 +156,7 @@ acceptance-test:
     docker ps
     
     # Test the endpoints for 200 response code
+    # TODO: change sleep to check for log that server is ready
     sleep 30
     docker ps
     curl -f -s -I "0.0.0.0:9080" &>/dev/null && echo "OK: Landing page did return 200" || raise error "FAIL: Landing page did not return 200"
@@ -249,6 +249,7 @@ release:
 
       # Push image to prod
       echo $PIPELINE_PROD_PASSWORD | docker login icr.io -u "$PIPELINE_USERNAME" --password-stdin
+      docker tag $STAGING_IMAGE $PROD_IMAGE
       docker push $PROD_IMAGE
 
     fi
