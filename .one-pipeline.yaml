@@ -92,23 +92,10 @@ containerize:
     
     # Push image to staging
     echo $PIPELINE_PASSWORD | docker login stg.icr.io -u "$PIPELINE_USERNAME" --password-stdin
-    docker push $IMAGE
-    
-    # Download and install skopeo
-    if ! command -v skopeo &> /dev/null; then  
-      if [ ! -f "/apt/sources.list.d/devel:kubic:libcontainers:stable.list" ]; then
-        sudo sh -c "echo 'deb http://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/xUbuntu_18.04/ /' > /etc/apt/sources.list.d/devel:kubic:libcontainers:stable.list"      
-        wget --no-check-certificate -nv https://download.opensuse.org/repositories/devel:kubic:libcontainers:stable/xUbuntu_18.04/Release.key -O- | sudo apt-key add -
-        sudo apt-get update -qq
-      fi
-      sudo apt-get -y install skopeo
-    else
-      skopeo --version
-    fi        
+    docker push $IMAGE       
 
     # Save artifacts
-    DIGEST="$(skopeo inspect docker://$IMAGE | grep Digest | grep -o 'sha[^\"]*')"
-    DIGEST_DOCKER_INSPECT="$(docker inspect --format='{{index .RepoDigests 0}}' "${IMAGE}" | awk -F@ '{print $2}')"
+    DIGEST="$(docker inspect --format='{{index .RepoDigests 0}}' "${IMAGE}" | awk -F@ '{print $2}')"
     echo "skopeo digest=$DIGEST, DIGEST_DOCKER_INSPECT=$DIGEST_DOCKER_INSPECT" 
     ARCH="amd64"
     echo "Saving artifact $IMAGE_TAG name=$IMAGE digest=$DIGEST arch=$ARCH"
@@ -249,11 +236,21 @@ release:
 
       # Copy image to prod
       echo $PIPELINE_STAGING_PASSWORD | docker login stg.icr.io -u "$PIPELINE_USERNAME" --password-stdin
-      echo $PIPELINE_PROD_PASSWORD | docker login icr.io -u "$PIPELINE_USERNAME" --password-stdin
+      # echo $PIPELINE_PROD_PASSWORD | docker login icr.io -u "$PIPELINE_USERNAME" --password-stdin
 
       echo "Copying staged image $STAGING_IMAGE to prod at $PROD_IMAGE as user $PIPELINE_USERNAME"
       
-      skopeo copy --src-creds $PIPELINE_USERNAME:$PIPELINE_STAGING_PASSWORD --dest-creds $PIPELINE_USERNAME:$PIPELINE_PROD_PASSWORD docker://$STAGING_IMAGE docker://$PROD_IMAGE
+      # Instead of skopeo, try docker push
+      #skopeo copy --src-creds $PIPELINE_USERNAME:$PIPELINE_STAGING_PASSWORD --dest-creds $PIPELINE_USERNAME:$PIPELINE_PROD_PASSWORD docker://$STAGING_IMAGE docker://$PROD_IMAGE
+
+      # Pull image from staging
+      docker pull $STAGING_IMAGE
+      docker images
+
+      # Push image to prod
+      echo $PIPELINE_PROD_PASSWORD | docker login icr.io -u "$PIPELINE_USERNAME" --password-stdin
+      docker push $PROD_IMAGE
+
     fi
 
 owasp-zap-api:
