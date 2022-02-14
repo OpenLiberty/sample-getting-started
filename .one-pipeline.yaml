@@ -239,18 +239,7 @@ release:
       # echo $PIPELINE_PROD_PASSWORD | docker login icr.io -u "$PIPELINE_USERNAME" --password-stdin
 
       echo "Copying staged image $STAGING_IMAGE to prod at $PROD_IMAGE as user $PIPELINE_USERNAME"
-      
-      # Instead of skopeo, try docker push
-      #skopeo copy --src-creds $PIPELINE_USERNAME:$PIPELINE_STAGING_PASSWORD --dest-creds $PIPELINE_USERNAME:$PIPELINE_PROD_PASSWORD docker://$STAGING_IMAGE docker://$PROD_IMAGE
-
-      # Pull image from staging
-      docker pull $STAGING_IMAGE
-      docker images
-
-      # Push image to prod
-      echo $PIPELINE_PROD_PASSWORD | docker login icr.io -u "$PIPELINE_USERNAME" --password-stdin
-      docker tag $STAGING_IMAGE $PROD_IMAGE
-      docker push $PROD_IMAGE
+      skopeo copy --src-creds $PIPELINE_USERNAME:$PIPELINE_STAGING_PASSWORD --dest-creds $PIPELINE_USERNAME:$PIPELINE_PROD_PASSWORD docker://$STAGING_IMAGE docker://$PROD_IMAGE
 
     fi
 
