@@ -1,6 +1,6 @@
-# Contributing to openliberty.io
+# Contributing to Open Liberty Sample Getting Started
 
-Anyone can contribute to the openliberty.io project and we welcome your contributions!
+Anyone can contribute to the Sample Getting Started project and we welcome your contributions!
 
 ## Contributor License Agreement
 
