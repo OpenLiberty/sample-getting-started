@@ -1,5 +1,5 @@
 <!--
-  Copyright (c) 2016 IBM Corp.
+  Copyright (c) 2018, 2022 IBM Corp.
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -20,11 +20,12 @@
         <link rel="stylesheet" href="css/main.css">
         <link href="img/favicon.ico" rel="icon" />
         <link href="img/favicon.ico" rel="shortcut icon" />
+        <title>Open Liberty - Getting Started Sample</title>
     </head>
     <body>
         <section id="appIntro">
             <div id="titleSection">
-                <h1 id="appTitle">System Properties Sample</h1>
+                <h1 id="appTitle">Open Liberty System Properties Sample</h1>
                 <div class="line"></div>
                 <div class="headerImage"></div>
                 <h2>Congrats on your shiny, new Open Liberty sample app!</h2>
@@ -127,16 +128,61 @@
                 </div>
 
                 <div id="learnMore">
-                        <h2>Want to learn more about Open Liberty and MicroProfile?</h2>
-                        <p>Continue your winning streak and keep building successful apps with the help of our guides. Our MicroProfile guides are a great place to start if you want to build something similar to this sample app.</p>
-                        <a href="https://openliberty.io/guides/?search=MicroProfile&key=tag"><button id="mpGuidesButton">Check out our MicroProfile guides</button></a>
-                    </div>
+                    <h2>Want to learn more about Open Liberty, MicroProfile, and Jakarta EE?</h2>
+                    <p>Continue your winning streak and keep building successful apps with the help of our guides. Our MicroProfile and Jakarta EE guides are a great place to start if you want to build something similar to this sample app.</p>
+                    <span>
+                        <a href="https://openliberty.io/guides/?search=MicroProfile&key=tag"><button class="checkOutGuidesButton">Check out our MicroProfile guides</button></a>
+                        <a href="https://openliberty.io/guides/?search=jakarta%20ee&key=tag"><button class="checkOutGuidesButton">Check out our Jakarta EE guides</button></a>
+                    </span>
+                </div>
             </div>
-
-
         </section>
 
+        <section class="resources">
+			<div id="first_row" class="row">
+				<div class="resource">
+					<a href="https://openliberty.io/docs/" target="_blank" rel="noopener">
+						<img class="resource__logo" src="/img/open_liberty_logo.png">
+						<p>Docs</p>
+					</a>
+				</div>
+				<div class="resource">
+					<a href="https://github.com/OpenLiberty/open-liberty" target="_blank" rel="noopener">
+						<img class="resource__logo" src="/img/github_logo.png">
+						<p>GitHub</p>
+					</a>
+				</div>
+				<div class="resource">
+					<a href="https://stackoverflow.com/questions/tagged/open-liberty" target="_blank" rel="noopener">
+						<img class="resource__logo circle" src="/img/stack_overflow_logo.png">
+						<p>Stack Overflow</p>
+					</a>
+				</div>
+			</div>
+			<div id="second_row" class="row">
+				<div class="resource">
+					<a href="https://groups.io/g/openliberty" target="_blank" rel="noopener">
+						<img class="resource__logo circle" src="/img/groups_io_logo.jpeg">
+						<p>Groups.io</p>
+					</a>
+				</div>
+				<div class="resource">
+					<a href="https://twitter.com/OpenLibertyIO" target="_blank" rel="noopener">
+						<img class="resource__logo" src="/img/twitter_logo.png">
+						<p>Twitter</p>
+					</a>
+				</div>
+				<div class="resource">
+					<a href="https://gitter.im/OpenLiberty/" target="_blank" rel="noopener">
+						<img id="gitter_logo" class="resource__logo" src="/img/gitter_logo.png">
+						<p>Gitter</p>
+					</a>
+				</div>
+			</div>
+		</section>
+
         <script>
+            displayLibertyVersion();
             displaySystemProperties(); // this calls displayMetrics() because it is a dependency
             displayHealth();
             displayConfigProperties();
@@ -145,12 +191,10 @@
 
     <footer class="bodyFooter">
         <div class="bodyFooterLink">
-          <a id="licenseLink"href="https://github.com/OpenLiberty/open-liberty/blob/master/LICENSE">License</a>
-          <a href="https://twitter.com/OpenLibertyIO">Twitter</a>
-          <a href="https://github.com/OpenLiberty">GitHub</a>
-          <a href="https://openliberty.io/">openliberty.io</a>
+          <a href="https://github.com/OpenLiberty/open-liberty/blob/master/LICENSE" target="_blank" rel="noopener">License</a>
+          <a href="https://openliberty.io/" target="_blank" rel="noopener">openliberty.io</a>
         </div>
         <p id="footer_text">an IBM open source project</p>
-        <p id="footer_copyright">&copy;Copyright IBM Corp. 2018</p>
+        <p id="footer_copyright">&copy;Copyright IBM Corp. 2018, 2022</p>
     </footer>
 </html>
