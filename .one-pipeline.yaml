@@ -163,8 +163,9 @@ acceptance-test:
     curl -f -s -I "0.0.0.0:9080" &>/dev/null && echo "OK: Landing page did return 200" || { echo 'FAIL: Sample App landing page did not return 200' ; exit 1; }
     curl -f -s "0.0.0.0:9080" | grep -q '<title>Open Liberty - Getting Started Sample</title>' && echo "OK: Sample App landing page contained '<title>Open Liberty - Getting Started Sample</title>'" || { echo 'FAIL: Did not find "<title>Open Liberty - Getting Started Sample</title>" in response' ; exit 1; }
     curl -f -s -I "0.0.0.0:9080/system/properties" &>/dev/null && echo "OK: /system/properties did return 200" || { echo 'FAIL: /system/properties did not return 200' ; exit 1; }
-    curl -f -s -I "0.0.0.0:9080/health" &>/dev/null && echo "OK: /health did return 200" || { echo 'FAIL: /health did not return 200' ; exit 1; }
     curl -f -s -I "0.0.0.0:9080/system/config" &>/dev/null && echo "OK: /system/config did return 200" || { echo 'FAIL: /system/config did not return 200' ; exit 1; }
+    curl -f -s -I "0.0.0.0:9080/system/runtime" &>/dev/null && echo "OK: /system/runtime did return 200" || { echo 'FAIL: /system/runtime did not return 200' ; exit 1; }
+    curl -f -s -I "0.0.0.0:9080/health" &>/dev/null && echo "OK: /health did return 200" || { echo 'FAIL: /health did not return 200' ; exit 1; }
     curl -f -s "0.0.0.0:9080/metrics" &>/dev/null && echo "OK: /metrics did return 200" || { echo 'FAIL: /metrics did not return 200' ; exit 1; }
     
 scan-artifact:
