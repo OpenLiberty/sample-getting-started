@@ -155,15 +155,18 @@ acceptance-test:
     docker run -d --name getting-started-sample -p 9080:9080 $IMAGE
     docker ps
     
+    # Wait for starter planet
+    docker exec -it getting-started-sample /bin/bash
+    timeout -k 10 30s tail -f ./logs/messages.log | grep -q "CWWKF0011I" || { echo 'Did not find CWWKF0011I (Smarter Planet msg) in log within 30sec' ; exit 1; }
+
     # Test the endpoints for 200 response code
-    # TODO: change sleep to check for log that server is ready
-    sleep 30
-    docker ps
-    curl -f -s -I "0.0.0.0:9080" &>/dev/null && echo "OK: Landing page did return 200" || raise error "FAIL: Landing page did not return 200"
-    curl -f -s -I "0.0.0.0:9080/system/properties" &>/dev/null && echo "OK: /system/properties did return 200" || raise error "FAIL: /system/properties did not return 200"
-    curl -f -s -I "0.0.0.0:9080/health" &>/dev/null && echo "OK: /health did return 200" || raise error "FAIL: /health did not return 200"
-    curl -f -s -I "0.0.0.0:9080/system/config" &>/dev/null && echo "OK: /system/config did return 200" || raise error "FAIL: /system/config did not return 200"
-    curl -f -s "0.0.0.0:9080/metrics" &>/dev/null && echo "OK: /metrics did return 200" || raise error "FAIL: /metrics did not return 200"
+    curl -f -s -I "0.0.0.0:9080" &>/dev/null && echo "OK: Landing page did return 200" || { echo 'FAIL: Sample App landing page did not return 200' ; exit 1; }
+    curl -f -s "0.0.0.0:9080" | grep -q '<title>Open Liberty - Getting Started Sample</title>' && echo "OK: Sample App landing page contained '<title>Open Liberty - Getting Started Sample</title>'" || { echo 'FAIL: Did not find "<title>Open Liberty - Getting Started Sample</title>" in response' ; exit 1; }
+    curl -f -s -I "0.0.0.0:9080/system/properties" &>/dev/null && echo "OK: /system/properties did return 200" || { echo 'FAIL: /system/properties did not return 200' ; exit 1; }
+    curl -f -s -I "0.0.0.0:9080/system/config" &>/dev/null && echo "OK: /system/config did return 200" || { echo 'FAIL: /system/config did not return 200' ; exit 1; }
+    curl -f -s -I "0.0.0.0:9080/system/runtime" &>/dev/null && echo "OK: /system/runtime did return 200" || { echo 'FAIL: /system/runtime did not return 200' ; exit 1; }
+    curl -f -s -I "0.0.0.0:9080/health" &>/dev/null && echo "OK: /health did return 200" || { echo 'FAIL: /health did not return 200' ; exit 1; }
+    curl -f -s "0.0.0.0:9080/metrics" &>/dev/null && echo "OK: /metrics did return 200" || { echo 'FAIL: /metrics did not return 200' ; exit 1; }
     
 scan-artifact:
   abort_on_failure: true
@@ -212,6 +215,7 @@ release:
     if [[ "$PUBLISH_IMAGES" == 1 ]]; then
       # Download and install skopeo
       if ! command -v skopeo &> /dev/null; then  
+            sudo apt-get update -qq
         if [ ! -f "/apt/sources.list.d/devel:kubic:libcontainers:stable.list" ]; then
           sudo sh -c "echo 'deb http://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/xUbuntu_18.04/ /' > /etc/apt/sources.list.d/devel:kubic:libcontainers:stable.list"      
           wget --no-check-certificate -nv https://download.opensuse.org/repositories/devel:kubic:libcontainers:stable/xUbuntu_18.04/Release.key -O- | sudo apt-key add -

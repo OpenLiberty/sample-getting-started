@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (c) 2018 IBM Corporation and others.
+* Copyright (c) 2018, 2022 IBM Corporation and others.
 * All rights reserved. This program and the accompanying materials
 * are made available under the terms of the Eclipse Public License v1.0
 * which accompanies this distribution, and is available at
@@ -223,12 +223,12 @@ a {
 
 button {
     border-radius:100px;
-    height:44px;
+    min-height:44px;
     color:#24253a;
     text-align:center;
     font-family: Asap;
     margin-top: 25px;
-    margin-bottom: 70px;
+    margin-bottom: 25px;
     cursor: pointer;
     border: none;
 }
@@ -248,17 +248,18 @@ button a {
 #guidesButton:hover {
     background-color: #C7EE63;
 }
-#mpGuidesButton {
+.checkOutGuidesButton {
     border:2px solid #f4914d8c;
     border-radius:100px;
     font-size:20px;
     letter-spacing:0;
-    padding-left: 40px;
-    padding-right: 40px;
+    padding-left: 30px;
+    padding-right: 30px;
+    margin-right: 20px;
     background-color: white;
     transition: background-color .2s, color .2s;
 }
-#mpGuidesButton:hover {
+.checkOutGuidesButton:hover {
     background-color: #f4914d;
     color: white;
 }
@@ -381,6 +382,186 @@ td {
     color:#5e6b8d;
 }
 
+@media (max-width:991px) {
+    #learnMore {
+        margin-top: 100px;
+        padding: 0px 100px 50px;
+    }
+}
+
+.resourcesRow {
+    padding: 0px 40px;
+    width: 100%;
+    max-width: 1150px;
+    margin: 0 auto;
+    display: -webkit-box;
+    display: -moz-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-flex-wrap: wrap;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+}
+
+.column {
+    flex: 100%;
+}
+
+@media (min-width: 767px) {
+    .resourcesRow {
+        -webkit-flex-wrap: nowrap;
+        -ms-flex-wrap: none;
+        flex-wrap: nowrap;
+    }
+    
+    .column {
+        flex: 50%;
+        max-width: 50%;
+    }
+}
+
+.resources {
+    padding: 25px 20px 0px 20px;
+}
+
+.resources .row {
+    width: 100%;
+    max-width: 1150px;
+    margin: 0 auto;
+    display: -webkit-box;
+    display: -moz-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-flex-wrap: wrap;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+    -webkit-box-direction: normal;
+    -webkit-box-orient: vertical;
+    -moz-box-direction: normal;
+    -moz-box-orient: vertical;
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    padding: 0px 20px;
+}
+
+.resource {
+    width: 90px;
+    text-align: center;
+    padding-top: 15px;
+    padding-bottom: 0px;
+    cursor: pointer;
+    margin: 0 auto;
+}
+
+.resource:hover {
+    background-color: #f4f4f4;
+}
+
+.resource p {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.resource__logo {
+    height: 40px;
+}
+
+.circle {
+    border-radius: 50%;
+    border: 1px solid #C8D2D2;
+    background-color: #ffffff;
+}
+
+#gitter_logo {
+    border-radius: 50%;
+}
+
+#first_row {
+    padding-top: 20px;
+}
+
+@media (min-width: 320px) {
+    .resources .row {
+        -webkit-box-direction: normal;
+        -webkit-box-orient: horizontal;
+        -moz-box-direction: normal;
+        -moz-box-orient: horizontal;
+        -webkit-flex-direction: row;
+        -ms-flex-direction: row;
+        flex-direction: row;
+        padding: 0px;
+    }
+}
+
+@media (min-width: 400px) {
+    .resource {
+        width: 100px;
+    }
+
+    .resource__logo {
+        height: 50px;
+    }
+}
+
+@media (min-width: 500px) {
+    .resource {
+        width: 120px;
+    }
+
+    .resource__logo {
+        height: 70px;
+    }
+
+    .resource p {
+        margin-top: 15px;
+        margin-bottom: 15px;
+    }
+}
+
+@media (min-width: 767px) {
+    .resources .row {
+        -webkit-flex-wrap: nowrap;
+        -ms-flex-wrap: none;
+        flex-wrap: nowrap;
+    }
+
+    .resource {
+        width: 140px;
+    }
+
+    .resource__logo {
+        height: 80px;
+    }
+}
+
+@media (min-width: 992px) {
+
+    #first_row {
+        float: left;
+        width: 50%;
+        padding-top: 0px;
+    }
+
+    #second_row {
+        float: right;
+        width: 50%;
+    }
+
+    .resources {
+        height: 150px;
+        padding-left: 80px;
+        padding-right: 80px;
+    }
+
+    .resource {
+        padding-top: 30px;
+        padding-bottom: 10px;
+    }
+}
+
 .bodyFooter {
   padding: 5px 8%;
   background-image: url(/img/footer_main.png);
@@ -408,11 +589,6 @@ td {
     text-decoration: none;
     padding: 10px;
     color: #96bc32;
-}
-
-#licenseLink {
-  color: #5E6B8D;
-  text-align: left;
 }
 
 #footer_text {

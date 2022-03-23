@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (c) 2018, 2020 IBM Corporation and others.
+* Copyright (c) 2018, 2022 IBM Corporation and others.
 * All rights reserved. This program and the accompanying materials
 * are made available under the terms of the Eclipse Public License v1.0
 * which accompanies this distribution, and is available at
@@ -8,6 +8,28 @@
 * Contributors:
 *     IBM Corporation - initial API and implementation
 *******************************************************************************/
+function displayLibertyVersion() {
+    getRuntimeRequest();
+}
+
+function getRuntimeRequest() {
+    var url = location.origin + "/system/runtime";
+    var req = new XMLHttpRequest();
+    var table = document.getElementById("systemPropertiesTable");
+
+    req.onreadystatechange = function () {
+        if (req.status === 200) {
+            var version = req.responseText;
+            if (version != "") {
+                var appTitle = document.getElementById("appTitle");
+                appTitle.innerText = "Open Liberty " + version + " System Properties Sample";
+            }
+        }
+    };
+    req.open("GET", url, true);
+    req.send();
+}
+
 function displayMetrics() {
     getSystemMetrics();
 }
