@@ -11,20 +11,19 @@ The sample application provides a simple example of how to get started with Open
   - `io/openliberty/sample`
     - `config`
       - `ConfigResource.java` - A REST Resource that exposes MicroProfile Config via a /rest/config GET request
-      - `CustomConfigSource.java` - A MicroProfile Config  ConfigSource that reads a json file.
+      - `CustomConfigSource.java` - A MicroProfile Config ConfigSource that reads a json file.
     - `system`
-      - `SystemConfig.java` - A CDI bean that will report if the
-      application is in maintenance. This supports the config variable changing dynamically via an update to a json file.
-      - `SystemHealth.java` - A MicroProfile Health check that  reports DOWN if the application is in maintenance and UP otherwise.
+      - `SystemConfig.java` - A CDI bean that will report if the application is in maintenance. This supports the config variable changing dynamically via an update to a json file.
+      - `SystemHealth.java` - A MicroProfile Health check that reports DOWN if the application is in maintenance and UP otherwise.
       - `SystemResource.java` - A REST Resource that exposes the System properties via a /rest/properties GET request. Calls to this GET method have MicroProfile Timer and Count metrics applied.
       - `SystemRuntime.java` - A REST Resource that exposes the version of the Open Liberty runtime via a /rest/runtime GET request.
-    - `SystemApplication.java` - The Jakarta RESTful Web services Application class
-  - `liberty/config/server.xml` - The server configuration for liberty
-  - `META-INF` - Contains the metadata files for MicroProfile config including how to load CustomConfigSource.Java
+    - `SystemApplication.java` - The Jakarta RESTful Web Services Application class
+  - `liberty/config/server.xml` - The server configuration for the liberty runtime
+  - `META-INF` - Contains the metadata files for MicroProfile Config including how to load CustomConfigSource.java
   - `webapp` - Contains the Web UI for the application.
 - `resources/CustomConfigSource.json` - Contains the data that is read by the MicroProfile Config ConfigSource.
-- `Dockerfile` - The docker file for building the sample
-- `pom.xml` - The maven pom file
+- `Dockerfile` - The Dockerfile for building the sample
+- `pom.xml` - The Maven POM file
 
 ## Build and Run the Sample locally
 
