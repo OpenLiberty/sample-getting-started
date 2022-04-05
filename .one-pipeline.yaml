@@ -157,7 +157,10 @@ acceptance-test:
     
     # Wait for starter planet (Since tail -f doesn't hit when grep finds the string, this currently always waits the full 30sec TODO: change this to a loop)
     # timeout -k 10 30s docker exec getting-started-sample tail -f ./logs/messages.log | grep -q "CWWKF0011I" || { echo 'Did not find CWWKF0011I (Smarter Planet msg) in log within 30sec' ; exit 1; }
-    docker exec getting-started-sample timeout -k 10 30s tail -f ./logs/messages.log | grep -q "CWWKF0011I" || { echo 'Did not find CWWKF0011I (Smarter Planet msg) in log within 30sec' ; exit 1; }
+    # docker exec getting-started-sample timeout -k 10 30s tail -f ./logs/messages.log | grep -q "CWWKF0011I" || { echo 'Did not find CWWKF0011I (Smarter Planet msg) in log within 30sec' ; exit 1; }
+    # TODO: change sleep to check for log that server is ready; above seems to run before the messages.log is even created so can't be done without a sleep.  Perhaps use docker logs instead
+    sleep 15
+    docker ps
 
     # Test the endpoints for 200 response code
     curl -f -s -I "0.0.0.0:9080" &>/dev/null && echo "OK: Landing page did return 200" || { echo 'FAIL: Sample App landing page did not return 200' ; exit 1; }
