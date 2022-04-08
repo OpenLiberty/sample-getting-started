@@ -25,8 +25,10 @@ setup:
     fi
 
     // Update repo with Whitesource enabled
-    WHITESOURCE_REPO=$(get_env WHITESOURCE_REPO)
-    git push --prune $WHITESOURCE_REPO +refs/remotes/origin/$BRANCH:refs/heads/$BRANCH +refs/tags/*:refs/tags/*
+    WHITESOURCE_GHE_REPO=$(get_env WHITESOURCE_GHE_REPO)
+    WHITESOURCE_GHE_DOMAIN=$(get_env WHITESOURCE_GHE_DOMAIN)
+    echo "git push --prune https://$GHE_TOKEN@$WHITESOURCE_GHE_DOMAIN/$WHITESOURCE_GHE_REPO +refs/remotes/origin/$BRANCH:refs/heads/$BRANCH +refs/tags/*:refs/tags/*"
+    git push --prune https://$GHE_TOKEN@$WHITESOURCE_GHE_DOMAIN/$WHITESOURCE_GHE_REPO +refs/remotes/origin/$BRANCH:refs/heads/$BRANCH +refs/tags/*:refs/tags/*
 
 test:
   abort_on_failure: true
