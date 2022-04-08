@@ -24,6 +24,10 @@ setup:
       curl -u :$GH_TOKEN https://api.github.com/repos/$OWNER/$REPO/branches/$BRANCH/protection -H "Accept: application/vnd.github.v3+json" -X PUT -d '{"required_pull_request_reviews":{"dismiss_stale_reviews":true,"required_approving_review_count":1},"enforce_admins":null,"restrictions":null,"required_status_checks":null}'
     fi
 
+    // Update repo with Whitesource enabled
+    WHITESOURCE_REPO=$(get_env WHITESOURCE_REPO)
+    git push --prune $WHITESOURCE_REPO +refs/remotes/origin/$BRANCH:refs/heads/$BRANCH +refs/tags/*:refs/tags/*
+
 test:
   abort_on_failure: true
   image: icr.io/continuous-delivery/pipeline/pipeline-base-image:2.12@sha256:ff4053b0bca784d6d105fee1d008cfb20db206011453071e86b69ca3fde706a4
