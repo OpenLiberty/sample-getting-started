@@ -232,10 +232,13 @@ release:
     if [[ "$PUBLISH_IMAGES" == 1 ]]; then
       # Download and install skopeo
       if ! command -v skopeo &> /dev/null; then
-        # install skopeo
-        sudo apt-add-repository ppa:projectatomic/ppa -y || exit 1
-        sudo apt-get update -y || exit 1
-        sudo apt-get install skopeo -y || exit 1
+        PACKAGE_CACHE_URL=$(get_env package-cache-url)
+        wget "$PACKAGE_CACHE_URL/skopeo_1.2.2-2_amd64.deb"
+        wget "$PACKAGE_CACHE_URL/containers-common_1-22_all.deb"
+        wget http://archive.ubuntu.com/ubuntu/pool/main/g/gpgme1.0/libgpgme11_1.10.0-1ubuntu1_amd64.deb
+        sudo dpkg -i libgpgme11_1.10.0-1ubuntu1_amd64.deb
+        sudo dpkg -i containers-common_1-22_all.deb
+        sudo dpkg -i skopeo_1.2.2-2_amd64.deb
       fi
       skopeo --version || exit 1
       
