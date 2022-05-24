@@ -231,17 +231,13 @@ release:
     PUBLISH_IMAGES=$(get_env PUBLISH_IMAGES)
     if [[ "$PUBLISH_IMAGES" == 1 ]]; then
       # Download and install skopeo
-      if ! command -v skopeo &> /dev/null; then  
-            sudo apt-get update -qq
-        if [ ! -f "/apt/sources.list.d/devel:kubic:libcontainers:stable.list" ]; then
-          sudo sh -c "echo 'deb http://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/xUbuntu_18.04/ /' > /etc/apt/sources.list.d/devel:kubic:libcontainers:stable.list"      
-          wget --no-check-certificate -nv https://download.opensuse.org/repositories/devel:kubic:libcontainers:stable/xUbuntu_18.04/Release.key -O- | sudo apt-key add -
-          sudo apt-get update -qq
-        fi
-        sudo apt-get -y install skopeo
-      else
-        skopeo --version
+      if ! command -v skopeo &> /dev/null; then
+        # install skopeo
+        sudo apt-add-repository ppa:projectatomic/ppa -y || exit 1
+        sudo apt-get update -y || exit 1
+        sudo apt-get install skopeo -y || exit 1
       fi
+      skopeo --version || exit 1
       
       PIPELINE_USERNAME=$(get_env ibmcloud-api-user)
       PIPELINE_STAGING_PASSWORD=$(get_env ibmcloud-api-key-staging)  
