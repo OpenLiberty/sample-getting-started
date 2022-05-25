@@ -53,4 +53,10 @@ for artifact_image in $(list_artifacts); do
 
   # save the artifact
   for i in twistlock-scan-results*; do save_result scan-artifact ${i}; done
+
+  # Scan the base java image 
+  tt images pull-and-scan icr.io/appcafe/ibm-semeru-runtimes:open-11-jdk-ubi --iam-api-key $IBMCLOUD_API_KEY -u "$(get_env twistlock-user-id):$(get_env twistlock-api-key)" -g "websphere"   
+
+  # save the artifact for the base java image
+  for i in twistlock-scan-results*; do save_result scan-artifact ${i}; done
 done
