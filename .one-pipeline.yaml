@@ -213,6 +213,18 @@ scan-artifact:
         done
       fi
       echo "Finished VA scan"
+
+      echo "aqua scan"
+      # install docker
+      curl -fsSL https://get.docker.com -o get-docker.sh
+      sudo sh get-docker.sh
+      # get aqua scan executables
+      git clone https://$(get_env git-token-GH)@github.ibm.com/CICD-CPP/cpp-pipelines.git
+      chmod -R +x cpp-pipelines
+      # setup and execute aqua scan
+      cd cpp-pipelines
+      export CUSTOM_SCRIPTS_PATH=/workspace/app/one-pipeline-config-repo/cpp-pipelines
+      ./commons/aqua/aqua-local-scan
     fi
     
 release:
