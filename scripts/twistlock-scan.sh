@@ -49,13 +49,22 @@ for artifact_image in $(list_artifacts); do
   # the results will be dumped to file here.
 
   # twistlock command
+  echo "Scan the image " ${IMAGE_LOCATION}
   tt images pull-and-scan ${IMAGE_LOCATION} --iam-api-key $IBMCLOUD_API_KEY -u "$(get_env twistlock-user-id):$(get_env twistlock-api-key)" -g "websphere"   
 
   # save the artifact
   for i in twistlock-scan-results*; do save_result scan-artifact ${i}; done
 
   # Scan the base java image 
+  echo "Scan the base image icr.io/appcafe/ibm-semeru-runtimes:open-11-jdk-ubi"
   tt images pull-and-scan icr.io/appcafe/ibm-semeru-runtimes:open-11-jdk-ubi --iam-api-key $IBMCLOUD_API_KEY -u "$(get_env twistlock-user-id):$(get_env twistlock-api-key)" -g "websphere"   
+
+  # save the artifact for the base java image
+  for i in twistlock-scan-results*; do save_result scan-artifact ${i}; done
+
+  # Scan the base ubi image 
+  echo "Scan the base image registry.access.redhat.com/ubi8/ubi:latest"
+  tt images pull-and-scan registry.access.redhat.com/ubi8/ubi:latest --iam-api-key $IBMCLOUD_API_KEY -u "$(get_env twistlock-user-id):$(get_env twistlock-api-key)" -g "websphere"   
 
   # save the artifact for the base java image
   for i in twistlock-scan-results*; do save_result scan-artifact ${i}; done
