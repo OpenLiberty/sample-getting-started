@@ -50,9 +50,17 @@ for artifact_image in $(list_artifacts); do
 
   # twistlock command
   echo "Scan the image " ${IMAGE_LOCATION}
-  tt images pull-and-scan ${IMAGE_LOCATION} --iam-api-key $IBMCLOUD_API_KEY -u "$(get_env twistlock-user-id):$(get_env twistlock-api-key)" -g "websphere"   
+  tt images pull-and-scan ${IMAGE_LOCATION} --iam-api-key $IBMCLOUD_API_KEY -u "$(get_env twistlock-user-id):$(get_env twistlock-api-key)" -g "websphere" --details --output-file scan-results.json
 
   # save the artifact
+  for i in twistlock-scan-results*; do save_result scan-artifact ${i}; done
+
+  # The following scans are here to make it easy to figure out which layer is causing TwistLock to report a vulnerability
+  # Scan the base Liberty image 
+  echo "Scan the base image icr.io/appcafe/open-liberty:kernel-slim-java11-openj9-ubi"
+  tt images pull-and-scan icr.io/appcafe/ibm-semeru-runtimes:open-11-jdk-ubi --iam-api-key $IBMCLOUD_API_KEY -u "$(get_env twistlock-user-id):$(get_env twistlock-api-key)" -g "websphere"   
+
+  # save the artifact for the base Liberty image
   for i in twistlock-scan-results*; do save_result scan-artifact ${i}; done
 
   # Scan the base java image 
