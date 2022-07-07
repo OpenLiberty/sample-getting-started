@@ -21,6 +21,9 @@ The sample application provides a simple example of how to get started with Open
   - `liberty/config/server.xml` - The server configuration for the liberty runtime
   - `META-INF` - Contains the metadata files for MicroProfile Config including how to load CustomConfigSource.java
   - `webapp` - Contains the Web UI for the application.
+  - `test/java/it/io/openliberty/sample/health`
+    - `HealthIT.java` - Test cases for a sample application running on `localhost`
+    - `HealthUtilIT.java` - Utility methods for functional tests
 - `resources/CustomConfigSource.json` - Contains the data that is read by the MicroProfile Config ConfigSource.
 - `Dockerfile` - The Dockerfile for building the sample
 - `pom.xml` - The Maven POM file
@@ -64,3 +67,22 @@ podman run -p 9080:9080 icr.io/appcafe/open-liberty/samples/getting-started
 Open a browser to http://localhost:9080
 
 ![image](https://user-images.githubusercontent.com/3076261/117993383-4f34c980-b305-11eb-94b5-fa7319bc2850.png)
+
+## Run the functional tests
+
+The test cases uses [JUnit 5](https://junit.org/junit5/) and 
+[Maven Failsafe Plugin](https://maven.apache.org/surefire/maven-failsafe-plugin/index.html) defined 
+in [`pom.xml`](pom.xml).
+
+> Note: Sample appplication must be running on `http://localhost` before running the test cases. 
+> <br>
+> See [`HealthUtilIT.java`](src/test/java/it/io/openliberty/sample/health/HealthUtilIT.java) to change 
+> the change the sample application target URL.
+
+To run the test cases against a running sample application, use the following command
+```
+mvnw failsafe:integration-test
+```
+
+To view the test results, look at the console output or look under 
+directory  `target/failsafe-reports`
