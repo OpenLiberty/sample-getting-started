@@ -22,13 +22,14 @@ setup:
       echo "BRANCH: $BRANCH"
 
       curl -u :$GH_TOKEN https://api.github.com/repos/$OWNER/$REPO/branches/$BRANCH/protection -H "Accept: application/vnd.github.v3+json" -X PUT -d '{"required_pull_request_reviews":{"dismiss_stale_reviews":true,"required_approving_review_count":1},"enforce_admins":null,"restrictions":null,"required_status_checks":null}'
-    fi
+   
 
-    // Update repo with Whitesource enabled
-    WHITESOURCE_GHE_REPO=$(get_env WHITESOURCE_GHE_REPO)
-    WHITESOURCE_GHE_DOMAIN=$(get_env WHITESOURCE_GHE_DOMAIN)
-    echo "git push --prune https://$GHE_TOKEN@$WHITESOURCE_GHE_DOMAIN/$WHITESOURCE_GHE_REPO +refs/remotes/origin/$BRANCH:refs/heads/$BRANCH +refs/tags/*:refs/tags/*"
-    git push --prune https://$GHE_TOKEN@$WHITESOURCE_GHE_DOMAIN/$WHITESOURCE_GHE_REPO +refs/remotes/origin/$BRANCH:refs/heads/$BRANCH +refs/tags/*:refs/tags/*
+      // Update repo with Whitesource enabled
+      WHITESOURCE_GHE_REPO=$(get_env WHITESOURCE_GHE_REPO)
+      WHITESOURCE_GHE_DOMAIN=$(get_env WHITESOURCE_GHE_DOMAIN)
+      echo "git push --prune https://$GHE_TOKEN@$WHITESOURCE_GHE_DOMAIN/$WHITESOURCE_GHE_REPO +refs/remotes/origin/$BRANCH:refs/heads/$BRANCH +refs/tags/*:refs/tags/*"
+      git push --prune https://$GHE_TOKEN@$WHITESOURCE_GHE_DOMAIN/$WHITESOURCE_GHE_REPO +refs/remotes/origin/$BRANCH:refs/heads/$BRANCH +refs/tags/*:refs/tags/*
+    fi
 
 test:
   abort_on_failure: true
