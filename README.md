@@ -1,4 +1,4 @@
-![image](https://github.com/OpenLiberty/open-liberty/raw/release/logos/logo_horizontal_light_navy.png)
+![Open Liberty logo](https://github.com/OpenLiberty/logos/blob/main/combomark/png/OL_logo_green_on_white.png)
 
 # Open Liberty Getting Started sample
 
