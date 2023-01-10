@@ -1,7 +1,7 @@
 version: '1'
 
 setup:
-  image: icr.io/continuous-delivery/pipeline/pipeline-base-image:2.12@sha256:ff4053b0bca784d6d105fee1d008cfb20db206011453071e86b69ca3fde706a4
+  image: icr.io/continuous-delivery/pipeline/pipeline-base-ubi:3.12
   script: |
     #!/usr/bin/env bash
 
@@ -33,7 +33,7 @@ setup:
 
 test:
   abort_on_failure: true
-  image: icr.io/continuous-delivery/pipeline/pipeline-base-image:2.12@sha256:ff4053b0bca784d6d105fee1d008cfb20db206011453071e86b69ca3fde706a4
+  image: icr.io/continuous-delivery/pipeline/pipeline-base-ubi:3.12
   script: |
     #!/usr/bin/env bash
     SKIP_UNIT_TESTS=$(get_env SKIP_UNIT_TESTS)
@@ -45,7 +45,7 @@ test:
 static-scan:
   abort_on_failure: false
   dind: true
-  image: icr.io/continuous-delivery/pipeline/pipeline-base-image:2.12@sha256:ff4053b0bca784d6d105fee1d008cfb20db206011453071e86b69ca3fde706a4
+  image: icr.io/continuous-delivery/pipeline/pipeline-base-ubi:3.12
   script: |
     #!/usr/bin/env bash
     SKIP_STATIC_SCAN=$(get_env SKIP_STATIC_SCAN)
@@ -73,7 +73,7 @@ static-scan:
 containerize:
   abort_on_failure: true
   dind: true
-  image: icr.io/continuous-delivery/pipeline/pipeline-base-image:2.12@sha256:ff4053b0bca784d6d105fee1d008cfb20db206011453071e86b69ca3fde706a4
+  image: icr.io/continuous-delivery/pipeline/pipeline-base-ubi:3.12
   script: |
     #!/usr/bin/env bash
 
@@ -109,13 +109,13 @@ containerize:
     
 sign-artifact:
   abort_on_failure: false
-  image: icr.io/continuous-delivery/pipeline/image-signing:1.0.0@sha256:e9d8e354668ba3d40be2aaee08298d2aa7f0e1c8a1829cca4094ec93830e3e6a
+  image: icr.io/continuous-delivery/pipeline/pipeline-base-ubi:3.12
   script: |
     #!/usr/bin/env bash
     echo "Skipping step because it doesn't make sense to sign an image at this step in the flow"
 
 deploy:
-  image: icr.io/continuous-delivery/pipeline/pipeline-base-image:2.12@sha256:ff4053b0bca784d6d105fee1d008cfb20db206011453071e86b69ca3fde706a4
+  image: icr.io/continuous-delivery/pipeline/pipeline-base-ubi:3.12
   script: |
     #!/usr/bin/env bash
 
@@ -129,7 +129,7 @@ deploy:
 
 dynamic-scan: 
   abort_on_failure: false
-  image: icr.io/continuous-delivery/pipeline/pipeline-base-image:2.12@sha256:ff4053b0bca784d6d105fee1d008cfb20db206011453071e86b69ca3fde706a4
+  image: icr.io/continuous-delivery/pipeline/pipeline-base-ubi:3.12
   script: |
     #!/usr/bin/env bash
 
@@ -138,7 +138,7 @@ dynamic-scan:
 acceptance-test:
   abort_on_failure: true
   dind: true
-  image: icr.io/continuous-delivery/pipeline/pipeline-base-image:2.12@sha256:ff4053b0bca784d6d105fee1d008cfb20db206011453071e86b69ca3fde706a4
+  image: icr.io/continuous-delivery/pipeline/pipeline-base-ubi:3.12
   script: |
     #!/usr/bin/env bash
     
@@ -188,7 +188,7 @@ acceptance-test:
     
 scan-artifact:
   abort_on_failure: true
-  image: icr.io/continuous-delivery/pipeline/pipeline-base-image:2.6@sha256:7f588468622a981f89cf5e1212aaf75fface9da6169b5345ca52ab63d8215907
+  image: icr.io/continuous-delivery/pipeline/pipeline-base-ubi:3.12
   script: |
     #!/usr/bin/env bash
     SKIP_SCAN_ARTIFACT=$(get_env SKIP_SCAN_ARTIFACT)
@@ -231,7 +231,7 @@ scan-artifact:
 release:
   abort_on_failure: false
   dind: true
-  image: icr.io/continuous-delivery/pipeline/pipeline-base-image:2.12@sha256:ff4053b0bca784d6d105fee1d008cfb20db206011453071e86b69ca3fde706a4
+  image: icr.io/continuous-delivery/pipeline/pipeline-base-ubi:3.12
   script: |
     #!/usr/bin/env bash
 
@@ -243,17 +243,7 @@ release:
 
     PUBLISH_IMAGES=$(get_env PUBLISH_IMAGES)
     if [[ "$PUBLISH_IMAGES" == 1 ]]; then
-      # Download and install skopeo
-      if ! command -v skopeo &> /dev/null; then
-        PACKAGE_CACHE_URL=$(get_env package-cache-url)
-        wget "$PACKAGE_CACHE_URL/skopeo_1.2.2-2_amd64.deb"
-        wget "$PACKAGE_CACHE_URL/containers-common_1-22_all.deb"
-        wget http://archive.ubuntu.com/ubuntu/pool/main/g/gpgme1.0/libgpgme11_1.10.0-1ubuntu1_amd64.deb
-        sudo dpkg -i libgpgme11_1.10.0-1ubuntu1_amd64.deb
-        sudo dpkg -i containers-common_1-22_all.deb
-        sudo dpkg -i skopeo_1.2.2-2_amd64.deb
-      fi
-      skopeo --version || exit 1
+      skopeo --version
       
       PIPELINE_USERNAME=$(get_env ibmcloud-api-user)
       PIPELINE_STAGING_PASSWORD=$(get_env ibmcloud-api-key-staging)  
@@ -287,7 +277,7 @@ release:
 owasp-zap-api:
   dind: true
   abort_on_failure: false
-  image: icr.io/continuous-delivery/pipeline/pipeline-base-image:2.12@sha256:ff4053b0bca784d6d105fee1d008cfb20db206011453071e86b69ca3fde706a4
+  image: icr.io/continuous-delivery/pipeline/pipeline-base-ubi:3.12
   script: |
     #!/usr/bin/env bash
     if [[ "$PIPELINE_DEBUG" == 1 ]]; then
