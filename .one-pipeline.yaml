@@ -99,17 +99,17 @@ containerize:
     #   ./scripts/pipeline/request-ciorchestrator.sh --command "make build-sample REGISTRY=${CONTAINER_REGISTRY}" --user "$W3_USERNAME" --password "$W3_PASSWORD" --branch "$RELEASE_TARGET" --repository "sample-getting-started" --org "OpenLiberty" --trigger "sample-liberty" --configFile ".ci-orchestrator/sample-liberty-build.yml" 
     #   pipelineid=$(cat ciorchestrator-submit.id)
     # fi
-
+    make build-sample
     # preferably next 6 instructions ported to Makefile
-    cd ../"$(load_repo app-repo path)"
-    mvn package
+    # cd ../"$(load_repo app-repo path)"
+    # mvn package
     
-    docker pull icr.io/appcafe/open-liberty:kernel-slim-java11-openj9-ubi
-    docker build -t $IMAGE .
+    # docker pull icr.io/appcafe/open-liberty:kernel-slim-java11-openj9-ubi
+    # docker build -t $IMAGE .
     
-    # Push image to staging
-    echo $PIPELINE_PASSWORD | docker login stg.icr.io -u "$PIPELINE_USERNAME" --password-stdin
-    docker push $IMAGE  
+    # # Push image to staging
+    # echo $PIPELINE_PASSWORD | docker login stg.icr.io -u "$PIPELINE_USERNAME" --password-stdin
+    # docker push $IMAGE  
 
     #wait on build for P and Z  
     # if [[ "$arch" == "ZXP" ]]; then
