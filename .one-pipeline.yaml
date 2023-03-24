@@ -253,6 +253,9 @@ release:
       CONTAINER_REGISTRY=$(get_env CONTAINER_REGISTRY)
       REGISTRY_REPO=$(get_env REGISTRY_REPO)
       IMAGE_TAG=$(get_env IMAGE_TAG)
+      RELEASE_TARGET=$IMAGE_TAG
+
+
       STAGING_IMAGE=$CONTAINER_REGISTRY/$REGISTRY_REPO:$IMAGE_TAG
       
       PROD_CONTAINER_REGISTRY=$(get_env PROD_CONTAINER_REGISTRY)
@@ -263,17 +266,25 @@ release:
       echo $PIPELINE_STAGING_PASSWORD | docker login stg.icr.io -u "$PIPELINE_USERNAME" --password-stdin
       # echo $PIPELINE_PROD_PASSWORD | docker login icr.io -u "$PIPELINE_USERNAME" --password-stdin
 
-      echo "Copying staged image $STAGING_IMAGE to prod at $PROD_IMAGE as user $PIPELINE_USERNAME"
-      skopeo copy --src-creds $PIPELINE_USERNAME:$PIPELINE_STAGING_PASSWORD --dest-creds $PIPELINE_USERNAME:$PIPELINE_PROD_PASSWORD docker://$STAGING_IMAGE docker://$PROD_IMAGE
 
-      echo "Validate image is available on icr.io"
-      echo $PIPELINE_PROD_PASSWORD | docker login "$PROD_CONTAINER_REGISTRY" -u "$PIPELINE_USERNAME" --password-stdin
-      docker pull $PROD_IMAGE
-      docker images
-      
-      docker run -d --name getting-started-sample -p 9080:9080 $PROD_IMAGE
-      sleep 5
-      docker logs getting-started-sample
+      if [[ "$arch" == "ZXP" ]]; then
+        declare -a tags=("${RELEASE_TARGET}" "${RELEASE_TARGET}-amd64" "${RELEASE_TARGET}-ppc64le" "${RELEASE_TARGET}-s390x")
+      else
+       declare -a tags=("${RELEASE_TARGET}" "${RELEASE_TARGET}-amd64")
+      fi
+      for i in "${tags[@]}"
+        echo "Copying staged image $STAGING_IMAGE to prod at $PROD_IMAGE as user $PIPELINE_USERNAME"
+        skopeo copy --src-creds $PIPELINE_USERNAME:$PIPELINE_STAGING_PASSWORD --dest-creds $PIPELINE_USERNAME:$PIPELINE_PROD_PASSWORD docker://$STAGING_IMAGE docker://$PROD_IMAGE
+
+        echo "Validate image is available on icr.io"
+        echo $PIPELINE_PROD_PASSWORD | docker login "$PROD_CONTAINER_REGISTRY" -u "$PIPELINE_USERNAME" --password-stdin
+        docker pull $PROD_IMAGE
+        docker images
+        
+        docker run -d --name getting-started-sample -p 9080:9080 $PROD_IMAGE
+        sleep 5
+        docker logs getting-started-sample
+      do
     fi
 
 owasp-zap-api:
