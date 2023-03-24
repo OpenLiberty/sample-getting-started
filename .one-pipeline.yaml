@@ -91,6 +91,7 @@ containerize:
     RELEASE_TARGET=$(get_env IMAGE_TAG)
     SAVE_IMAGE=$IMAGE
     IMAGE=$CONTAINER_REGISTRY/$REGISTRY_REPO:$RELEASE_TARGET
+    ARCH=$(get_env architecture)
 
     # # build P and Z
     # if [[ "$arch" == "ZXP" ]]; then
@@ -137,17 +138,7 @@ containerize:
       fi
     do
     
-
-    # Modify to work in the future for P and Z
-    # declare -a tags=("${RELEASE_TARGET}" "${RELEASE_TARGET}-amd64" "${RELEASE_TARGET}-ppc64le" "${RELEASE_TARGET}-s390x")
-    # for i in "${tags[@]}"
-    # do
-    #   IMAGE=$CONTAINER_REGISTRY/$IMAGE:$i
-    #   DIGEST="$(skopeo inspect docker://$IMAGE | grep Digest | grep -o 'sha[^\"]*')"
-    #   { ARCH="$(echo $i | grep -o '\(amd64\|s390x\|ppc64le\)$')" && TYPE="image"; } || { ARCH="amd64" && TYPE="manifest"; }
-    #   echo "Saving artifact $i name=$IMAGE digest=$DIGEST type=$TYPE"
-    #   save_artifact $i type=$TYPE name="$IMAGE" "digest=$DIGEST" "arch=$ARCH" 
-    # done  
+ 
     
 sign-artifact:
   abort_on_failure: false
