@@ -1,12 +1,12 @@
 #!/bin/bash
 
 GH_API_ROOT="https://api.github.com"
-GH_BRANCH="main"
-GH_REPOSITORY="websphere-liberty-operator"
-GH_ORG="WASdev"
-CI_TRIGGER="wlodocker"
-CI_CONFIG_FILE=".ci-orchestrator/websphere-liberty-operator-build.yml"
-pipelineName="Websphere Liberty Operator Docker Build"
+GH_BRANCH="mult_arch"
+GH_REPOSITORY="sample-getting-started"
+GH_ORG="OpenLiberty"
+CI_TRIGGER="lgsdocker"
+CI_CONFIG_FILE=".ci-orchestrator/sample-liberty-build.yml"
+pipelineName="Liberty Getting Started Build"
 command="make build-pipeline-releases"
 
 

@@ -7,17 +7,13 @@ properties([
       string(name: 'ebcBranch', defaultValue: "${env.ecosystem_branch}", description: 'Git branch used for ebc code'),
       // Container build relevant properties
       //name: 'scriptBranch', defaultValue: "main", description: 'Git branch containing docker build scripts'),
-      string(name: 'scriptOrg', defaultValue: "WASdev", description: 'Git org containing docker build scripts'),
-      string(name: 'command', defaultValue: "make build-operator-pipeline REGISTRY=cp.stg.icr.io", description: 'Build command to execute on target arch machine, e.g. make build-pipeline-releases'),
-      string(name: 'PIPELINE_OPERATOR_IMAGE', defaultValue: "cp/websphere-liberty-operator", description: 'namespace to push image to in registry'),
+      string(name: 'scriptOrg', defaultValue: "OpenLiberty", description: 'Git org containing docker build scripts'),
+      string(name: 'command', defaultValue: "make build-sample REGISTRY=cp.stg.icr.io", description: 'Build command to execute on target arch machine, e.g. make build-pipeline-releases'),
+      string(name: 'PIPELINE_OPERATOR_IMAGE', defaultValue: "cp/liberty-getting-started-sample", description: 'namespace to push image to in registry'),
       string(name: 'RELEASE_TARGET', defaultValue: "main", description: 'release branch to use'),
       string(name: 'OPM_VERSION', defaultValue: "4.10", description: 'Redhat CLI OPM version'),
-      string(name: 'PIPELINE_PRODUCTION_IMAGE', defaultValue: "icr.io/cpopen/websphere-liberty-operator", description: 'namespace in prod registry'),
-      string(name: 'REDHAT_BASE_IMAGE', defaultValue: "registry.redhat.io/openshift4/ose-operator-registry", description: 'base image for operator'),
-      string(name: 'REDHAT_REGISTRY', defaultValue: "registry.redhat.io", description: 'RH registry used for docker login'),
-      string(name: 'PIPELINE_REGISTRY', defaultValue: "cp.stg.icr.io", description: 'staging registry to push images to'),
-      string(name: 'ARTIFACTORY_REPO_URL', defaultValue: "hyc-taas-onepipeline-team-docker-local.artifactory.swg-devops.com", description: 'artifactory repo url [only used if disable artifactory is false]]'),
-      string(name: 'DISABLE_ARTIFACTORY', defaultValue: "false", description: 'whether to back up container images to artifactorys')
+      string(name: 'PIPELINE_PRODUCTION_IMAGE', defaultValue: "icr.io/cpopen/liberty-getting-started-sample", description: 'namespace in prod registry'),
+      string(name: 'PIPELINE_REGISTRY', defaultValue: "cp.stg.icr.io", description: 'staging registry to push images to')
    ])
 ])
 timestamps {
@@ -103,8 +99,12 @@ def void doWork(){
    // Unstash the git repo
    unstash(name: 'websphere-liberty-operator')
    sh "./scripts/build/build-initialize.sh"
-   sh "${command}"
+   withMaven(maven: '3.6.3') {
+        sh "${COMMAND}"
+   } 
+   # sh "${command}"
 }
+
 
 // EBC Functions
 def void ebcDemand(){

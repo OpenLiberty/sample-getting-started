@@ -275,15 +275,18 @@ release:
       for i in "${tags[@]}"
         echo "Copying staged image $STAGING_IMAGE to prod at $PROD_IMAGE as user $PIPELINE_USERNAME"
         skopeo copy --src-creds $PIPELINE_USERNAME:$PIPELINE_STAGING_PASSWORD --dest-creds $PIPELINE_USERNAME:$PIPELINE_PROD_PASSWORD docker://$STAGING_IMAGE docker://$PROD_IMAGE
-
-        echo "Validate image is available on icr.io"
-        echo $PIPELINE_PROD_PASSWORD | docker login "$PROD_CONTAINER_REGISTRY" -u "$PIPELINE_USERNAME" --password-stdin
-        docker pull $PROD_IMAGE
-        docker images
-        
-        docker run -d --name getting-started-sample -p 9080:9080 $PROD_IMAGE
-        sleep 5
-        docker logs getting-started-sample
+        make check-build
+        # if [[ "$arch" == "ZXP" ]]; then
+        #   echo "<ciorchestrator> Sending request to build P and Z"
+        #   ./scripts/pipeline/request-ciorchestrator.sh --command "make check-build REGISTRY=${CONTAINER_REGISTRY}" --user "$W3_USERNAME" --password "$W3_PASSWORD" --branch "$RELEASE_TARGET" --repository "sample-getting-started" --org "OpenLiberty" --trigger "sample-liberty" --configFile ".ci-orchestrator/sample-liberty-build.yml" 
+        #   pipelineid=$(cat ciorchestrator-submit.id)
+        # fi
+        # #wait on build for P and Z  
+        # if [[ "$arch" == "ZXP" ]]; then
+        #   # wait for build ppc64le and s390x images
+        #   echo "<ciorchestrator> waiting on request to build P and Z"
+        #   ./scripts/pipeline/await-ciorchestrator.sh --user "$W3_USERNAME" --password "$W3_PASSWORD" --pipelineId "$pipelineid"
+        # fi         
       do
     fi
 
