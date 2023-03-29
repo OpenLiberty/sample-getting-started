@@ -77,14 +77,14 @@ timestamps {
 
 // Clone the git repo and stash it, so that the jenkins agent machine can grab it later
 def gitCloneAndStash() {
-  dir('websphere-liberty-operator') {
+  dir('sample-getting-started') {
       git branch: RELEASE_TARGET, url: "git@github.com:${scriptOrg}/sample-getting-started.git"
   }
   dir('operators') {
       git branch: "main", url: "git@github.ibm.com:websphere/operators.git"
   }
   sh "cp -rf operators/scripts/build sample-getting-started/scripts/"
-  dir('websphere-liberty-operator') {
+  dir('sample-getting-started') {
       stash(name: 'sample-getting-started')
    }
    sh "ls -l"
