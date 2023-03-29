@@ -12,7 +12,7 @@ properties([
       string(name: 'PIPELINE_OPERATOR_IMAGE', defaultValue: "cp/liberty-getting-started-sample", description: 'namespace to push image to in registry'),
       string(name: 'RELEASE_TARGET', defaultValue: "main", description: 'release branch to use'),
       string(name: 'OPM_VERSION', defaultValue: "4.10", description: 'Redhat CLI OPM version'),
-      string(name: 'PIPELINE_PRODUCTION_IMAGE', defaultValue: "icr.io/cpopen/liberty-getting-started-sample", description: 'namespace in prod registry'),
+      string(name: 'PIPELINE_PRODUCTION_IMAGE', defaultValue: "icr.io/appcafe/open-liberty/samples/getting-started", description: 'namespace in prod registry'),
       string(name: 'PIPELINE_REGISTRY', defaultValue: "cp.stg.icr.io", description: 'staging registry to push images to')
    ])
 ])
@@ -47,9 +47,7 @@ timestamps {
       node(label: "ebc_${executionId}"){
          stage("Running Job"){
             withCredentials([usernamePassword(credentialsId: 'operator_icrId', usernameVariable: 'PIPELINE_USERNAME', passwordVariable: 'PIPELINE_PASSWORD'),
-                             usernamePassword(credentialsId: 'operatorRH_REG_ID', usernameVariable: 'REDHAT_USERNAME', passwordVariable: 'REDHAT_PASSWORD'),
-                             usernamePassword(credentialsId: 'operator_artifactory_ID', usernameVariable: 'ARTIFACTORY_USERNAME', passwordVariable: 'ARTIFACTORY_TOKEN'),
-                             usernamePassword(credentialsId: 'dockerId', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
+                             usernamePassword(credentialsId: 'sample_prod_icrId', usernameVariable: '_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
                //This is executing on ebc dynamic machine
                doWork();
             } // withCredentials() end
@@ -80,14 +78,14 @@ timestamps {
 // Clone the git repo and stash it, so that the jenkins agent machine can grab it later
 def gitCloneAndStash() {
   dir('websphere-liberty-operator') {
-      git branch: RELEASE_TARGET, url: "git@github.com:${scriptOrg}/websphere-liberty-operator.git"
+      git branch: RELEASE_TARGET, url: "git@github.com:${scriptOrg}/sample-getting-started.git"
   }
   dir('operators') {
       git branch: "main", url: "git@github.ibm.com:websphere/operators.git"
   }
-  sh "cp -rf operators/scripts/build websphere-liberty-operator/scripts/"
+  sh "cp -rf operators/scripts/build sample-getting-started/scripts/"
   dir('websphere-liberty-operator') {
-      stash(name: 'websphere-liberty-operator')
+      stash(name: 'sample-getting-started')
    }
    sh "ls -l"
 }
@@ -97,12 +95,13 @@ def void doWork(){
    // Setup global variables
    
    // Unstash the git repo
-   unstash(name: 'websphere-liberty-operator')
-   sh "./scripts/build/build-initialize.sh"
+   unstash(name: 'sample-getting-started')
+   
    withMaven(maven: '3.6.3') {
+        sh "./scripts/build/build-initialize.sh"
         sh "${COMMAND}"
    } 
-   # sh "${command}"
+   
 }
 
 

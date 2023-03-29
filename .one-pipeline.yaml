@@ -88,35 +88,26 @@ containerize:
     PIPELINE_PASSWORD=$(get_env ibmcloud-api-key-staging)  
     CONTAINER_REGISTRY=$(get_env CONTAINER_REGISTRY)
     REGISTRY_REPO=$(get_env REGISTRY_REPO)
-    RELEASE_TARGET=$(get_env IMAGE_TAG)
+    RELEASE_TARGET=$(get_env RELEASE_TARGET)
     SAVE_IMAGE=$IMAGE
     IMAGE=$CONTAINER_REGISTRY/$REGISTRY_REPO:$RELEASE_TARGET
     ARCH=$(get_env architecture)
 
-    # # build P and Z
-    # if [[ "$arch" == "ZXP" ]]; then
-    #   echo "<ciorchestrator> Sending request to build P and Z"
-    #   ./scripts/pipeline/request-ciorchestrator.sh --command "make build-sample REGISTRY=${CONTAINER_REGISTRY}" --user "$W3_USERNAME" --password "$W3_PASSWORD" --branch "$RELEASE_TARGET" --repository "sample-getting-started" --org "OpenLiberty" --trigger "sample-liberty" --configFile ".ci-orchestrator/sample-liberty-build.yml" 
-    #   pipelineid=$(cat ciorchestrator-submit.id)
-    # fi
-    make build-sample
-    # preferably next 6 instructions ported to Makefile
-    # cd ../"$(load_repo app-repo path)"
-    # mvn package
+    # build P and Z
+    if [[ "$arch" == "ZXP" ]]; then
+      echo "<ciorchestrator> Sending request to build P and Z"
+      ./scripts/pipeline/request-ciorchestrator.sh --command "make build-app-pipeline REGISTRY=${CONTAINER_REGISTRY}" --user "$W3_USERNAME" --password "$W3_PASSWORD" --branch "$RELEASE_TARGET" --repository "sample-getting-started" --org "OpenLiberty" --trigger "sample-liberty" --configFile ".ci-orchestrator/sample-liberty-build.yml" 
+      pipelineid=$(cat ciorchestrator-submit.id)
+    fi
     
-    # docker pull icr.io/appcafe/open-liberty:kernel-slim-java11-openj9-ubi
-    # docker build -t $IMAGE .
-    
-    # # Push image to staging
-    # echo $PIPELINE_PASSWORD | docker login stg.icr.io -u "$PIPELINE_USERNAME" --password-stdin
-    # docker push $IMAGE  
-
+    make build-app-pipeline REGISTRY=${CONTAINER_REGISTRY}
+  
     #wait on build for P and Z  
-    # if [[ "$arch" == "ZXP" ]]; then
-    #   # wait for build ppc64le and s390x images
-    #   echo "<ciorchestrator> waiting on request to build P and Z"
-    #   ./scripts/pipeline/await-ciorchestrator.sh --user "$W3_USERNAME" --password "$W3_PASSWORD" --pipelineId "$pipelineid"
-    # fi   
+    if [[ "$arch" == "ZXP" ]]; then
+      # wait for build ppc64le and s390x images
+      echo "<ciorchestrator> waiting on request to build P and Z"
+      ./scripts/pipeline/await-ciorchestrator.sh --user "$W3_USERNAME" --password "$W3_PASSWORD" --pipelineId "$pipelineid"
+    fi   
 
     # Save artifacts
     echo "**** Saving Artifacts ****"
@@ -185,39 +176,60 @@ acceptance-test:
     PIPELINE_PASSWORD=$(get_env ibmcloud-api-key-staging)  
     CONTAINER_REGISTRY=$(get_env CONTAINER_REGISTRY "stg.icr.io")
     REGISTRY_REPO=$(get_env REGISTRY_REPO)
-    IMAGE_TAG=$(get_env IMAGE_TAG)
-    IMAGE=$CONTAINER_REGISTRY/$REGISTRY_REPO:$IMAGE_TAG
-    
-    echo $PIPELINE_PASSWORD | docker login stg.icr.io -u "$PIPELINE_USERNAME" --password-stdin
-    docker pull $IMAGE
-    docker images
-    
-    docker run -d --name getting-started-sample -p 9080:9080 $IMAGE
-    docker ps
-    
-    # Wait for starter planet
-    maxWait=30
-    count=0
-    while [ "$count" != "$maxWait" ] && ! docker logs getting-started-sample | grep -q "CWWKF0011I";
-    do
-        count=$(( $count + 1 ))
-        echo "Waiting for CWWKF0011I (Smarter Planet msg) in log. $count / $maxWait seconds."
-        sleep 1
-    done
+    RELEASE_TARGET=$(get_env RELEASE_TARGET)
+    IMAGE=$CONTAINER_REGISTRY/$REGISTRY_REPO:$RELEASE_TARGET
 
-    if [[ "$count" == "$maxWait" ]]; then
-      echo "Did not find CWWKF0011I (Smarter Planet msg) in log within $maxWait seconds."
-      exit 1;
+    export PIPELINE_USERNAME=$PIPELINE_USERNAME
+    export PIPELINE_PASSWORD=$PIPELINE_PASSWORD
+    export REGISTRY_REPO=$REGISTRY_REPO
+    export CONTAINER_REGISTRY=$CONTAINER_REGISTRY
+    
+
+    # check P and Z
+    if [[ "$arch" == "ZXP" ]]; then
+      echo "<ciorchestrator> Sending request to build P and Z"
+      ./scripts/pipeline/request-ciorchestrator.sh --command "make check-build REGISTRY=${CONTAINER_REGISTRY}" --user "$W3_USERNAME" --password "$W3_PASSWORD" --branch "$RELEASE_TARGET" --repository "sample-getting-started" --org "OpenLiberty" --trigger "sample-liberty" --configFile ".ci-orchestrator/sample-liberty-build.yml" 
+      pipelineid=$(cat ciorchestrator-submit.id)
     fi
+    
+    make check-build REGISTRY=${CONTAINER_REGISTRY}
+  
+    #wait on build for P and Z  
+    if [[ "$arch" == "ZXP" ]]; then
+      # wait for build ppc64le and s390x images
+      echo "<ciorchestrator> waiting on request to build P and Z"
+      ./scripts/pipeline/await-ciorchestrator.sh --user "$W3_USERNAME" --password "$W3_PASSWORD" --pipelineId "$pipelineid"
+    fi   
+    # echo $PIPELINE_PASSWORD | docker login stg.icr.io -u "$PIPELINE_USERNAME" --password-stdin
+    # docker pull $IMAGE
+    # docker images
+    
+    # docker run -d --name getting-started-sample -p 9080:9080 $IMAGE
+    # docker ps
+    
+    # # Wait for starter planet
+    # maxWait=30
+    # count=0
+    # while [ "$count" != "$maxWait" ] && ! docker logs getting-started-sample | grep -q "CWWKF0011I";
+    # do
+    #     count=$(( $count + 1 ))
+    #     echo "Waiting for CWWKF0011I (Smarter Planet msg) in log. $count / $maxWait seconds."
+    #     sleep 1
+    # done
 
-    # Test the endpoints for 200 response code
-    curl -f -s -I "0.0.0.0:9080" &>/dev/null && echo "OK: Landing page did return 200" || { echo 'FAIL: Sample App landing page did not return 200' ; exit 1; }
-    curl -f -s "0.0.0.0:9080" | grep -q '<title>Open Liberty - Getting Started Sample</title>' && echo "OK: Sample App landing page contained '<title>Open Liberty - Getting Started Sample</title>'" || { echo 'FAIL: Did not find "<title>Open Liberty - Getting Started Sample</title>" in response' ; exit 1; }
-    curl -f -s -I "0.0.0.0:9080/system/properties" &>/dev/null && echo "OK: /system/properties did return 200" || { echo 'FAIL: /system/properties did not return 200' ; exit 1; }
-    curl -f -s -I "0.0.0.0:9080/system/config" &>/dev/null && echo "OK: /system/config did return 200" || { echo 'FAIL: /system/config did not return 200' ; exit 1; }
-    curl -f -s -I "0.0.0.0:9080/system/runtime" &>/dev/null && echo "OK: /system/runtime did return 200" || { echo 'FAIL: /system/runtime did not return 200' ; exit 1; }
-    curl -f -s -I "0.0.0.0:9080/health" &>/dev/null && echo "OK: /health did return 200" || { echo 'FAIL: /health did not return 200' ; exit 1; }
-    curl -f -s "0.0.0.0:9080/metrics" &>/dev/null && echo "OK: /metrics did return 200" || { echo 'FAIL: /metrics did not return 200' ; exit 1; }
+    # if [[ "$count" == "$maxWait" ]]; then
+    #   echo "Did not find CWWKF0011I (Smarter Planet msg) in log within $maxWait seconds."
+    #   exit 1;
+    # fi
+
+    # # Test the endpoints for 200 response code
+    # curl -f -s -I "0.0.0.0:9080" &>/dev/null && echo "OK: Landing page did return 200" || { echo 'FAIL: Sample App landing page did not return 200' ; exit 1; }
+    # curl -f -s "0.0.0.0:9080" | grep -q '<title>Open Liberty - Getting Started Sample</title>' && echo "OK: Sample App landing page contained '<title>Open Liberty - Getting Started Sample</title>'" || { echo 'FAIL: Did not find "<title>Open Liberty - Getting Started Sample</title>" in response' ; exit 1; }
+    # curl -f -s -I "0.0.0.0:9080/system/properties" &>/dev/null && echo "OK: /system/properties did return 200" || { echo 'FAIL: /system/properties did not return 200' ; exit 1; }
+    # curl -f -s -I "0.0.0.0:9080/system/config" &>/dev/null && echo "OK: /system/config did return 200" || { echo 'FAIL: /system/config did not return 200' ; exit 1; }
+    # curl -f -s -I "0.0.0.0:9080/system/runtime" &>/dev/null && echo "OK: /system/runtime did return 200" || { echo 'FAIL: /system/runtime did not return 200' ; exit 1; }
+    # curl -f -s -I "0.0.0.0:9080/health" &>/dev/null && echo "OK: /health did return 200" || { echo 'FAIL: /health did not return 200' ; exit 1; }
+    # curl -f -s "0.0.0.0:9080/metrics" &>/dev/null && echo "OK: /metrics did return 200" || { echo 'FAIL: /metrics did not return 200' ; exit 1; }
     
 scan-artifact:
   abort_on_failure: true
@@ -252,19 +264,20 @@ release:
       PIPELINE_PROD_PASSWORD=$(get_env ibmcloud-api-key)  
       CONTAINER_REGISTRY=$(get_env CONTAINER_REGISTRY)
       REGISTRY_REPO=$(get_env REGISTRY_REPO)
-      IMAGE_TAG=$(get_env IMAGE_TAG)
-      RELEASE_TARGET=$IMAGE_TAG
+      RELEASE_TARGET=$(get_env RELEASE_TARGET)
+      
 
 
-      STAGING_IMAGE=$CONTAINER_REGISTRY/$REGISTRY_REPO:$IMAGE_TAG
+      STAGING_IMAGE=$CONTAINER_REGISTRY/$REGISTRY_REPO
       
       PROD_CONTAINER_REGISTRY=$(get_env PROD_CONTAINER_REGISTRY)
       PROD_REGISTRY_REPO=$(get_env PROD_REGISTRY_REPO)
-      PROD_IMAGE=$PROD_CONTAINER_REGISTRY/$PROD_REGISTRY_REPO:$IMAGE_TAG
+      PROD_IMAGE=$PROD_CONTAINER_REGISTRY/$PROD_REGISTRY_REPO
 
       # Copy image to prod
       echo $PIPELINE_STAGING_PASSWORD | docker login stg.icr.io -u "$PIPELINE_USERNAME" --password-stdin
-      # echo $PIPELINE_PROD_PASSWORD | docker login icr.io -u "$PIPELINE_USERNAME" --password-stdin
+      echo $PIPELINE_PROD_PASSWORD | docker login icr.io -u "$PIPELINE_USERNAME" --password-stdin
+      
 
 
       if [[ "$arch" == "ZXP" ]]; then
@@ -273,20 +286,17 @@ release:
        declare -a tags=("${RELEASE_TARGET}" "${RELEASE_TARGET}-amd64")
       fi
       for i in "${tags[@]}"
+        STAGING_IMAGE=$STAGING_IMAGE$i
+        PROD_IMAGE=$PROD_IMAGE$i
         echo "Copying staged image $STAGING_IMAGE to prod at $PROD_IMAGE as user $PIPELINE_USERNAME"
         skopeo copy --src-creds $PIPELINE_USERNAME:$PIPELINE_STAGING_PASSWORD --dest-creds $PIPELINE_USERNAME:$PIPELINE_PROD_PASSWORD docker://$STAGING_IMAGE docker://$PROD_IMAGE
-        make check-build
-        # if [[ "$arch" == "ZXP" ]]; then
-        #   echo "<ciorchestrator> Sending request to build P and Z"
-        #   ./scripts/pipeline/request-ciorchestrator.sh --command "make check-build REGISTRY=${CONTAINER_REGISTRY}" --user "$W3_USERNAME" --password "$W3_PASSWORD" --branch "$RELEASE_TARGET" --repository "sample-getting-started" --org "OpenLiberty" --trigger "sample-liberty" --configFile ".ci-orchestrator/sample-liberty-build.yml" 
-        #   pipelineid=$(cat ciorchestrator-submit.id)
-        # fi
-        # #wait on build for P and Z  
-        # if [[ "$arch" == "ZXP" ]]; then
-        #   # wait for build ppc64le and s390x images
-        #   echo "<ciorchestrator> waiting on request to build P and Z"
-        #   ./scripts/pipeline/await-ciorchestrator.sh --user "$W3_USERNAME" --password "$W3_PASSWORD" --pipelineId "$pipelineid"
-        # fi         
+        if [[ "$i" == "${RELEASE_TARGET}-amd64" ]]; then
+          export PIPELINE_USERNAME=$PIPELINE_USERNAME
+          export PIPELINE_PASSWORD=$PIPELINE_PROD_PASSWORD
+          export REGISTRY_REPO=$PROD_REGISTRY_REPO
+          export CONTAINER_REGISTRY=$PROD_CONTAINER_REGISTRY
+          make check-build 
+        fi     
       do
     fi
 

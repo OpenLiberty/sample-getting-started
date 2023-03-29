@@ -15,4 +15,4 @@ build-app-pipeline: docker-login
 build-manifest-pipeline:
 	./scripts/build-manifest.sh --image "${IMAGE}"
 check-build:
-	./scripts/pipeline/check-build.sh
+	./scripts/pipeline/check-build.sh --image "${IMAGE}"
