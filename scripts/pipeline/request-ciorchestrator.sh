@@ -7,7 +7,7 @@ GH_ORG="OpenLiberty"
 CI_TRIGGER="lgsdocker"
 CI_CONFIG_FILE=".ci-orchestrator/sample-liberty-build.yml"
 pipelineName="Liberty Getting Started Build"
-command="make build-pipeline-releases"
+command="make build-app-pipeline"
 
 
 function main() {
@@ -99,13 +99,8 @@ function request_ciorchestrator() {
         "requestor": "${USER}",
         "properties": {
             "RELEASE_TARGET": "${GH_BRANCH}",
-            "DISABLE_ARTIFACTORY": "${DISABLE_ARTIFACTORY}",
-            "ARTIFACTORY_REPO_URL": "${ARTIFACTORY_REPO_URL}",
             "PIPELINE_OPERATOR_IMAGE": "${PIPELINE_OPERATOR_IMAGE}",
             "OPM_VERSION": "${OPM_VERSION}",
-            "PIPELINE_PRODUCTION_IMAGE": "${PIPELINE_PRODUCTION_IMAGE}",
-            "REDHAT_BASE_IMAGE": "${REDHAT_BASE_IMAGE}",
-            "REDHAT_REGISTRY": "${REDHAT_REGISTRY}",
             "PIPELINE_REGISTRY": "${PIPELINE_REGISTRY}",
             "scriptOrg": "${GH_ORG}",
             "command": "${COMMAND}"

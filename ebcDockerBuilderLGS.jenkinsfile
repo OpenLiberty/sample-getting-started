@@ -12,7 +12,6 @@ properties([
       string(name: 'PIPELINE_OPERATOR_IMAGE', defaultValue: "cp/liberty-getting-started-sample", description: 'namespace to push image to in registry'),
       string(name: 'RELEASE_TARGET', defaultValue: "main", description: 'release branch to use'),
       string(name: 'OPM_VERSION', defaultValue: "4.10", description: 'Redhat CLI OPM version'),
-      string(name: 'PIPELINE_PRODUCTION_IMAGE', defaultValue: "icr.io/appcafe/open-liberty/samples/getting-started", description: 'namespace in prod registry'),
       string(name: 'PIPELINE_REGISTRY', defaultValue: "cp.stg.icr.io", description: 'staging registry to push images to')
    ])
 ])

@@ -84,9 +84,9 @@ containerize:
     fi
     
     # Build images
-    PIPELINE_USERNAME=$(get_env ibmcloud-api-user)
-    PIPELINE_PASSWORD=$(get_env ibmcloud-api-key-staging)  
-    CONTAINER_REGISTRY=$(get_env CONTAINER_REGISTRY)
+    export PIPELINE_USERNAME=$(get_env ibmcloud-api-user)
+    export PIPELINE_PASSWORD=$(get_env ibmcloud-api-key-staging)  
+    export CONTAINER_REGISTRY=$(get_env CONTAINER_REGISTRY)
     REGISTRY_REPO=$(get_env REGISTRY_REPO)
     RELEASE_TARGET=$(get_env RELEASE_TARGET)
     SAVE_IMAGE=$IMAGE
@@ -232,9 +232,9 @@ release:
     if [[ "$PUBLISH_IMAGES" == 1 ]]; then
       skopeo --version
       
-      PIPELINE_USERNAME=$(get_env ibmcloud-api-user)
+      export PIPELINE_USERNAME=$(get_env ibmcloud-api-user)
       PIPELINE_STAGING_PASSWORD=$(get_env ibmcloud-api-key-staging)  
-      PIPELINE_PROD_PASSWORD=$(get_env ibmcloud-api-key)  
+      export PIPELINE_PROD_PASSWORD=$(get_env ibmcloud-api-key)  
       CONTAINER_REGISTRY=$(get_env CONTAINER_REGISTRY)
       REGISTRY_REPO=$(get_env REGISTRY_REPO)
       RELEASE_TARGET=$(get_env RELEASE_TARGET)
@@ -264,8 +264,6 @@ release:
         echo "Copying staged image $STAGING_IMAGE to prod at $PROD_IMAGE as user $PIPELINE_USERNAME"
         skopeo copy --src-creds $PIPELINE_USERNAME:$PIPELINE_STAGING_PASSWORD --dest-creds $PIPELINE_USERNAME:$PIPELINE_PROD_PASSWORD docker://$STAGING_IMAGE docker://$PROD_IMAGE
         if [[ "$i" == "${RELEASE_TARGET}-amd64" ]]; then
-          export PIPELINE_USERNAME=$PIPELINE_USERNAME
-          export PIPELINE_PASSWORD=$PIPELINE_PROD_PASSWORD
           export REGISTRY_REPO=$PROD_REGISTRY_REPO
           export CONTAINER_REGISTRY=$PROD_CONTAINER_REGISTRY
           make check-build 
