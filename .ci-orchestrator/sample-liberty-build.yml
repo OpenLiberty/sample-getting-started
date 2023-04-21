@@ -1,0 +1,32 @@
+type: pipeline_definition
+product: Liberty
+name: Liberty Getting Started Build
+description: To build to Liberty Getting started sample in a container
+triggers:
+- type: manual
+  triggerName: "sample-liberty"
+  propertyDefinitions:
+  - name: BRANCH
+    defaultValue: "main"        
+  - name: command
+    defaultValue: "make build-app-pipeline IMAGE=${IMAGE}"
+  - name: IMAGE
+    defaultValue: "stg.icr.io/cp/olc-sample/open-liberty/samples/getting-started:latest"
+
+steps:
+- stepName: Z Build
+  workType: Jenkins
+  projectName: ebcDockerBuilderLGS
+  timeoutInMinutes: 1440
+  # Need properties for Makefile or build script for WLO
+  properties:  
+    ebcPlan: svl-dockerJenkins-ubuntu20_s390x.yml
+    
+
+- stepName: P Build
+  workType: Jenkins
+  projectName: ebcDockerBuilderLGS
+  timeoutInMinutes: 1440
+  # Need properties for Makefile or build script for WLO
+  properties:  
+    ebcPlan: svl-dockerJenkins-ubuntu20_ppcle.yml
