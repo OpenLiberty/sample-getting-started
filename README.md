@@ -1,6 +1,6 @@
 ![Open Liberty logo](https://github.com/OpenLiberty/logos/blob/main/combomark/png/OL_logo_green_on_white.png)
 
-# Open Liberty Getting Started sample
+# Open Liberty Getting Started Sample
 
 ## Overview
 The sample application provides a simple example of how to get started with Open Liberty. It provides a REST API that retrieves the system properties in the JVM and a web based UI for viewing them. It also uses MicroProfile Config, MicroProfile Health and MicroProfile Metrics to demonstrate how to use these specifications in an application that maybe deployed to kubernetes.
