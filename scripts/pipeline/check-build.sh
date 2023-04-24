@@ -35,6 +35,8 @@ main() {
         exit 1;
     fi
 
+    docker logs getting-started-sample | grep "^Launching"
+
     # Test the endpoints for 200 response code
     curl -f -s -I "0.0.0.0:9080" &>/dev/null && echo "OK: Landing page did return 200" || { echo 'FAIL: Sample App landing page did not return 200' ; exit 1; }
     curl -f -s "0.0.0.0:9080" | grep -q '<title>Open Liberty - Getting Started Sample</title>' && echo "OK: Sample App landing page contained '<title>Open Liberty - Getting Started Sample</title>'" || { echo 'FAIL: Did not find "<title>Open Liberty - Getting Started Sample</title>" in response' ; exit 1; }
