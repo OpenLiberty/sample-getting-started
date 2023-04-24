@@ -273,6 +273,11 @@ release:
       echo "Copying staged image $STAGING_IMAGE to prod at $PROD_IMAGE as user $PIPELINE_USERNAME"
       skopeo copy --src-creds $PIPELINE_USERNAME:$PIPELINE_STAGING_PASSWORD --dest-creds $PIPELINE_USERNAME:$PIPELINE_PROD_PASSWORD --all docker://$STAGING_IMAGE docker://$PROD_IMAGE
 
+      echo "Manifest list of $PROD_IMAGE"
+      docker manifest inspect "$PROD_IMAGE"
+      digest="$(skopeo inspect docker://$PROD_IMAGE | grep Digest | grep -o 'sha[^\"]*')"
+      echo "$digest"
+
       export CONTAINER_REGISTRY=$PROD_CONTAINER_REGISTRY
       export PIPELINE_PASSWORD=$PIPELINE_PROD_PASSWORD
 
