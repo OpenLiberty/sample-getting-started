@@ -23,7 +23,6 @@ setup:
 
       curl -u :$GH_TOKEN https://api.github.com/repos/$OWNER/$REPO/branches/$BRANCH/protection -H "Accept: application/vnd.github.v3+json" -X PUT -d '{"required_pull_request_reviews":{"dismiss_stale_reviews":true,"required_approving_review_count":1},"enforce_admins":null,"restrictions":null,"required_status_checks":null}'
    
-
       // Update repo with Whitesource enabled
       WHITESOURCE_GHE_REPO=$(get_env WHITESOURCE_GHE_REPO)
       WHITESOURCE_GHE_DOMAIN=$(get_env WHITESOURCE_GHE_DOMAIN)
@@ -82,34 +81,81 @@ containerize:
       env
       set -x
     fi
-    
+
+    apt-get update
+    apt-get -qq -y install build-essential software-properties-common uidmap
+
+    # Download and install skopeo
+    if ! command -v skopeo &> /dev/null; then
+      if [ ! -f "/apt/sources.list.d/devel:kubic:libcontainers:stable.list" ]; then
+        sudo sh -c "echo 'deb http://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/xUbuntu_18.04/ /' > /etc/apt/sources.list.d/devel:kubic:libcontainers:stable.list"
+        wget --no-check-certificate -nv https://download.opensuse.org/repositories/devel:kubic:libcontainers:stable/xUbuntu_18.04/Release.key -O- | sudo apt-key add -
+        sudo apt-get update -qq
+      fi
+      sudo apt-get -y install skopeo
+    else
+      skopeo --version
+    fi
+
     # Build images
-    PIPELINE_USERNAME=$(get_env ibmcloud-api-user)
-    PIPELINE_PASSWORD=$(get_env ibmcloud-api-key-staging)  
-    CONTAINER_REGISTRY=$(get_env CONTAINER_REGISTRY)
+    export PIPELINE_USERNAME=$(get_env ibmcloud-api-user)
+    export PIPELINE_PASSWORD=$(get_env ibmcloud-api-key-staging)
+    export CONTAINER_REGISTRY=$(get_env CONTAINER_REGISTRY "stg.icr.io")
     REGISTRY_REPO=$(get_env REGISTRY_REPO)
     IMAGE_TAG=$(get_env IMAGE_TAG)
     IMAGE=$CONTAINER_REGISTRY/$REGISTRY_REPO:$IMAGE_TAG
+    BRANCH=$(get_env branch)
 
-    cd ../"$(load_repo app-repo path)"
-    mvn package
+    W3_USERNAME=$(get_env w3_username)
+    W3_PASSWORD=$(get_env w3_password)
+
+    export arch=$(get_env architecture)
+
+    # build P and Z
+    if [[ "$arch" == "ZXP" ]]; then
+      echo "<ciorchestrator> Sending request to build P and Z"
+      ./scripts/pipeline/request-ciorchestrator.sh --command "make build-app-pipeline IMAGE=${IMAGE}" --user "$W3_USERNAME" --password "$W3_PASSWORD" --branch "$BRANCH" --repository "sample-getting-started" --org "OpenLiberty" --trigger "sample-liberty" --configFile ".ci-orchestrator/sample-liberty-build.yml"
+      pipelineid=$(cat ciorchestrator-submit.id)
+    fi
     
-    docker pull icr.io/appcafe/open-liberty:kernel-slim-java11-openj9-ubi
-    docker build -t $IMAGE .
-    
-    # Push image to staging
-    echo $PIPELINE_PASSWORD | docker login stg.icr.io -u "$PIPELINE_USERNAME" --password-stdin
-    docker push $IMAGE       
+    # Build X
+    make build-app-pipeline IMAGE=${IMAGE}
+  
+    #wait on build for P and Z  
+    if [[ "$arch" == "ZXP" ]]; then
+      # wait for build ppc64le and s390x images
+      echo "<ciorchestrator> waiting on request to build P and Z"
+      ./scripts/pipeline/await-ciorchestrator.sh --user "$W3_USERNAME" --password "$W3_PASSWORD" --pipelineId "$pipelineid"
+    fi   
+
+    # Build manifest
+    make build-manifest-pipeline IMAGE=${IMAGE}
 
     # Save artifacts
-    DIGEST="$(docker inspect --format='{{index .RepoDigests 0}}' "${IMAGE}" | awk -F@ '{print $2}')"
-    ARCH="amd64"
-    echo "Saving artifact $IMAGE_TAG name=$IMAGE digest=$DIGEST arch=$ARCH"
-    save_artifact $IMAGE_TAG type=image name="$IMAGE" "digest=$DIGEST" "arch=$ARCH"   
-    
+    echo "**** Saving Artifacts ****"
+    if [[ "$arch" == "ZXP" ]]; then
+      declare -a tags=("${IMAGE_TAG}" "${IMAGE_TAG}-amd64" "${IMAGE_TAG}-ppc64le" "${IMAGE_TAG}-s390x")
+    else
+      declare -a tags=("${IMAGE_TAG}" "${IMAGE_TAG}-amd64")
+    fi
+
+    for i in "${tags[@]}"
+    do
+      IMAGE=$CONTAINER_REGISTRY/$REGISTRY_REPO:$i
+      DIGEST="$(skopeo inspect docker://$IMAGE | grep Digest | grep -o 'sha[^\"]*')"
+      { ARCH="$(echo $i | grep -o '\(amd64\|s390x\|ppc64le\)$')" && TYPE="image"; } || { TYPE="manifest"; }
+      if [[ "$TYPE" == "manifest" ]]; then
+        echo "Saving artifact $i type=$TYPE name=$IMAGE digest=$DIGEST"
+        save_artifact $i type=$TYPE name="$IMAGE" "digest=$DIGEST"
+      else
+        echo "Saving artifact $i type=$TYPE name=$IMAGE digest=$DIGEST arch=$ARCH"
+        save_artifact $i type=$TYPE name="$IMAGE" "digest=$DIGEST" "arch=$ARCH"
+      fi
+    done
+
 sign-artifact:
   abort_on_failure: false
-  image: icr.io/continuous-delivery/pipeline/image-signing:1.0.0@sha256:e9d8e354668ba3d40be2aaee08298d2aa7f0e1c8a1829cca4094ec93830e3e6a
+  image: icr.io/continuous-delivery/pipeline/pipeline-base-ubi:3.12
   script: |
     #!/usr/bin/env bash
     echo "Skipping step because it doesn't make sense to sign an image at this step in the flow"
@@ -147,86 +193,48 @@ acceptance-test:
       env
       set -x
     fi
-    
-    PIPELINE_USERNAME=$(get_env ibmcloud-api-user)
-    PIPELINE_PASSWORD=$(get_env ibmcloud-api-key-staging)  
-    CONTAINER_REGISTRY=$(get_env CONTAINER_REGISTRY "stg.icr.io")
+
+    export PIPELINE_USERNAME=$(get_env ibmcloud-api-user)
+    export PIPELINE_PASSWORD=$(get_env ibmcloud-api-key-staging)
+    export CONTAINER_REGISTRY=$(get_env CONTAINER_REGISTRY "stg.icr.io")
     REGISTRY_REPO=$(get_env REGISTRY_REPO)
     IMAGE_TAG=$(get_env IMAGE_TAG)
     IMAGE=$CONTAINER_REGISTRY/$REGISTRY_REPO:$IMAGE_TAG
-    
-    echo $PIPELINE_PASSWORD | docker login stg.icr.io -u "$PIPELINE_USERNAME" --password-stdin
-    docker pull $IMAGE
-    docker images
-    
-    docker run -d --name getting-started-sample -p 9080:9080 $IMAGE
-    docker ps
-    
-    # Wait for starter planet
-    maxWait=30
-    count=0
-    while [ "$count" != "$maxWait" ] && ! docker logs getting-started-sample | grep -q "CWWKF0011I";
-    do
-        count=$(( $count + 1 ))
-        echo "Waiting for CWWKF0011I (Smarter Planet msg) in log. $count / $maxWait seconds."
-        sleep 1
-    done
+    BRANCH=$(get_env branch)
 
-    if [[ "$count" == "$maxWait" ]]; then
-      echo "Did not find CWWKF0011I (Smarter Planet msg) in log within $maxWait seconds."
-      exit 1;
+    W3_USERNAME=$(get_env w3_username)
+    W3_PASSWORD=$(get_env w3_password)
+
+    export arch=$(get_env architecture)
+
+    # check P and Z
+    if [[ "$arch" == "ZXP" ]]; then
+      echo "<ciorchestrator> Sending request to build P and Z"
+      ./scripts/pipeline/request-ciorchestrator.sh --command "make check-build IMAGE=${IMAGE}" --user "$W3_USERNAME" --password "$W3_PASSWORD" --branch "$BRANCH" --repository "sample-getting-started" --org "OpenLiberty" --trigger "sample-liberty" --configFile ".ci-orchestrator/sample-liberty-build.yml"
+      pipelineid=$(cat ciorchestrator-submit.id)
     fi
-
-    # Test the endpoints for 200 response code
-    curl -f -s -I "0.0.0.0:9080" &>/dev/null && echo "OK: Landing page did return 200" || { echo 'FAIL: Sample App landing page did not return 200' ; exit 1; }
-    curl -f -s "0.0.0.0:9080" | grep -q '<title>Open Liberty - Getting Started Sample</title>' && echo "OK: Sample App landing page contained '<title>Open Liberty - Getting Started Sample</title>'" || { echo 'FAIL: Did not find "<title>Open Liberty - Getting Started Sample</title>" in response' ; exit 1; }
-    curl -f -s -I "0.0.0.0:9080/system/properties" &>/dev/null && echo "OK: /system/properties did return 200" || { echo 'FAIL: /system/properties did not return 200' ; exit 1; }
-    curl -f -s -I "0.0.0.0:9080/system/config" &>/dev/null && echo "OK: /system/config did return 200" || { echo 'FAIL: /system/config did not return 200' ; exit 1; }
-    curl -f -s -I "0.0.0.0:9080/system/runtime" &>/dev/null && echo "OK: /system/runtime did return 200" || { echo 'FAIL: /system/runtime did not return 200' ; exit 1; }
-    curl -f -s -I "0.0.0.0:9080/health" &>/dev/null && echo "OK: /health did return 200" || { echo 'FAIL: /health did not return 200' ; exit 1; }
-    curl -f -s "0.0.0.0:9080/metrics" &>/dev/null && echo "OK: /metrics did return 200" || { echo 'FAIL: /metrics did not return 200' ; exit 1; }
+    
+    # Check X
+    make check-build IMAGE=${IMAGE}
+  
+    #wait on build for P and Z  
+    if [[ "$arch" == "ZXP" ]]; then
+      # wait for build ppc64le and s390x images
+      echo "<ciorchestrator> waiting on request to build P and Z"
+      ./scripts/pipeline/await-ciorchestrator.sh --user "$W3_USERNAME" --password "$W3_PASSWORD" --pipelineId "$pipelineid"
+    fi   
+   
     
 scan-artifact:
   abort_on_failure: true
   image: icr.io/continuous-delivery/pipeline/pipeline-base-ubi:3.12
   script: |
     #!/usr/bin/env bash
-    SKIP_SCAN_ARTIFACT=$(get_env SKIP_SCAN_ARTIFACT)
-    if [[ "$SKIP_SCAN_ARTIFACT" != 1 ]]; then
-      export PIPELINE_PASSWORD=$(get_env ibmcloud-api-key-staging)
-      echo "twistlock-scan"
-      ./scripts/twistlock-scan.sh
-      echo "Finished Twistlock scan" 
-      
-      echo "Starting VA scan"
-      . scripts/va_scan
-      if which list_artifacts >/dev/null; then
-        list_artifacts | while IFS= read -r artifact; do
-          image="$(load_artifact "$artifact" "name")"
-          type="$(load_artifact "$artifact" "type")"
-          digest="$(load_artifact "$artifact" "digest")"
-          name="$(echo "$artifact" | awk '{print $1}')"
-          if [[ "$type" == "image" ]]; then
-            if [[ "$image" == *"icr.io"* ]]; then
-              start_va_scan "$name" "$image" "$digest"
-            fi
-          fi
-        done
-      fi
-      echo "Finished VA scan"
 
-      echo "aqua scan"
-      # install docker
-      curl -fsSL https://get.docker.com -o get-docker.sh
-      sudo sh get-docker.sh
-      # get aqua scan executables
-      git clone https://$(get_env git-token)@github.ibm.com/CICD-CPP/cpp-pipelines.git
-      chmod -R +x cpp-pipelines
-      # setup and execute aqua scan
-      cd cpp-pipelines
-      export CUSTOM_SCRIPTS_PATH=/workspace/app/one-pipeline-config-repo/cpp-pipelines
-      ./commons/aqua/aqua-local-scan
-    fi
+    echo $STAGE
+
+    # ========== Security Scanner ==========
+    ./scripts/pipeline/ci_to_secure_pipeline_scan.sh
     
 release:
   abort_on_failure: false
@@ -244,34 +252,37 @@ release:
     PUBLISH_IMAGES=$(get_env PUBLISH_IMAGES)
     if [[ "$PUBLISH_IMAGES" == 1 ]]; then
       skopeo --version
-      
-      PIPELINE_USERNAME=$(get_env ibmcloud-api-user)
-      PIPELINE_STAGING_PASSWORD=$(get_env ibmcloud-api-key-staging)  
-      PIPELINE_PROD_PASSWORD=$(get_env ibmcloud-api-key)  
-      CONTAINER_REGISTRY=$(get_env CONTAINER_REGISTRY)
-      REGISTRY_REPO=$(get_env REGISTRY_REPO)
+
       IMAGE_TAG=$(get_env IMAGE_TAG)
+
+      export PIPELINE_USERNAME=$(get_env ibmcloud-api-user)
+      PIPELINE_STAGING_PASSWORD=$(get_env ibmcloud-api-key-staging)
+      CONTAINER_REGISTRY=$(get_env CONTAINER_REGISTRY "stg.icr.io")
+      REGISTRY_REPO=$(get_env REGISTRY_REPO)
       STAGING_IMAGE=$CONTAINER_REGISTRY/$REGISTRY_REPO:$IMAGE_TAG
-      
+
+      PIPELINE_PROD_PASSWORD=$(get_env ibmcloud-api-key)
       PROD_CONTAINER_REGISTRY=$(get_env PROD_CONTAINER_REGISTRY)
       PROD_REGISTRY_REPO=$(get_env PROD_REGISTRY_REPO)
       PROD_IMAGE=$PROD_CONTAINER_REGISTRY/$PROD_REGISTRY_REPO:$IMAGE_TAG
 
-      # Copy image to prod
-      echo $PIPELINE_STAGING_PASSWORD | docker login stg.icr.io -u "$PIPELINE_USERNAME" --password-stdin
-      # echo $PIPELINE_PROD_PASSWORD | docker login icr.io -u "$PIPELINE_USERNAME" --password-stdin
+      # Copy image digests and manifest list to prod
+      echo $PIPELINE_STAGING_PASSWORD | docker login $CONTAINER_REGISTRY -u "$PIPELINE_USERNAME" --password-stdin
+      echo $PIPELINE_PROD_PASSWORD | docker login $PROD_CONTAINER_REGISTRY -u "$PIPELINE_USERNAME" --password-stdin
 
       echo "Copying staged image $STAGING_IMAGE to prod at $PROD_IMAGE as user $PIPELINE_USERNAME"
-      skopeo copy --src-creds $PIPELINE_USERNAME:$PIPELINE_STAGING_PASSWORD --dest-creds $PIPELINE_USERNAME:$PIPELINE_PROD_PASSWORD docker://$STAGING_IMAGE docker://$PROD_IMAGE
+      skopeo copy --src-creds $PIPELINE_USERNAME:$PIPELINE_STAGING_PASSWORD --dest-creds $PIPELINE_USERNAME:$PIPELINE_PROD_PASSWORD --all docker://$STAGING_IMAGE docker://$PROD_IMAGE
 
-      echo "Validate image is available on icr.io"
-      echo $PIPELINE_PROD_PASSWORD | docker login "$PROD_CONTAINER_REGISTRY" -u "$PIPELINE_USERNAME" --password-stdin
-      docker pull $PROD_IMAGE
-      docker images
-      
-      docker run -d --name getting-started-sample -p 9080:9080 $PROD_IMAGE
-      sleep 5
-      docker logs getting-started-sample
+      echo "Manifest list of $PROD_IMAGE"
+      docker manifest inspect "$PROD_IMAGE"
+      digest="$(skopeo inspect docker://$PROD_IMAGE | grep Digest | grep -o 'sha[^\"]*')"
+      echo "$digest"
+
+      export CONTAINER_REGISTRY=$PROD_CONTAINER_REGISTRY
+      export PIPELINE_PASSWORD=$PIPELINE_PROD_PASSWORD
+
+      # Check X image from prod registry
+      make check-build IMAGE=${PROD_IMAGE}
     fi
 
 owasp-zap-api:
