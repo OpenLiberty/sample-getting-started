@@ -11,6 +11,7 @@
 
 package io.openliberty.sample.system;
 
+import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 
@@ -31,6 +32,7 @@ public class SystemResource {
 	SystemConfig systemConfig;
 
 	@GET
+	@RolesAllowed({ "user" })
 	@Produces(MediaType.APPLICATION_JSON)
 	@Timed(name = "getPropertiesTime", description = "Time needed to get the properties of a system")
 	@Counted(absolute = true, description = "Number of times the properties of a systems is requested")

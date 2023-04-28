@@ -5,6 +5,8 @@
     <feature>mpConfig-2.0</feature>
     <feature>mpHealth-3.1</feature>
     <feature>mpMetrics-3.0</feature>
+    <feature>socialLogin-1.0</feature>
+    <feature>appSecurity-2.0</feature>
   </featureManager>
 
   <applicationManager autoExpand="true" />
@@ -14,6 +16,16 @@
   <variable name="default.http.port" defaultValue="9080"/>
   <variable name="default.https.port" defaultValue="9443"/>
   <variable name="app.context.root" defaultValue="/"/>
+
+  <keyStore id="defaultKeyStore" password="changeit" />
+  <ssl id="defaultSSLConfig" keyStoreRef="defaultKeyStore" trustDefaultCerts="true" />
+
+  <oidcLogin id="oidc"
+      discoveryEndpoint="${oidc.discovery.endpoint}"
+      clientId="${oidc.client.id}"
+      clientSecret="${oidc.client.secret}"
+      userNameAttribute="cognito:username"
+      groupNameAttribute="cognito:groups" />
 
   <httpEndpoint host="*" httpPort="${default.http.port}" httpsPort="${default.https.port}" id="defaultHttpEndpoint"/>
 
