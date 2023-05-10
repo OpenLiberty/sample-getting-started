@@ -37,14 +37,14 @@ public class HealthIT {
     checkServicesstatus(dataWhenServicesUP, servicesstatus);
   }
 
- // @Test
- // public void testIfServicesAreDown() {
- //   servicesstatus = HealthUtilIT.connectToHealthEnpoint(200);
- //   checkServicesstatus(dataWhenServicesUP, servicesstatus);
- //   HealthUtilIT.changeProperty(HealthUtilIT.INV_MAINTENANCE_FALSE, HealthUtilIT.INV_MAINTENANCE_TRUE);
- //   servicesstatus = HealthUtilIT.connectToHealthEnpoint(503);
- //   checkServicesstatus(dataWhenServicesDown, servicesstatus);
- // }
+  // @Test
+  // public void testIfServicesAreDown() {
+  //   servicesstatus = HealthUtilIT.connectToHealthEnpoint(200);
+  //   checkServicesstatus(dataWhenServicesUP, servicesstatus);
+  //   HealthUtilIT.changeProperty(HealthUtilIT.INV_MAINTENANCE_FALSE, HealthUtilIT.INV_MAINTENANCE_TRUE);
+  //   servicesstatus = HealthUtilIT.connectToHealthEnpoint(503);
+  //   checkServicesstatus(dataWhenServicesDown, servicesstatus);
+  // }
 
   private void checkServicesstatus(HashMap<String, String> testData, JsonArray servicesstatus) {
     testData.forEach((service, expectedState) -> {
