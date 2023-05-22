@@ -11,9 +11,9 @@
 
 package io.openliberty.sample.system;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-import javax.inject.Provider;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
+import jakarta.inject.Provider;
 
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 

@@ -12,7 +12,7 @@
 package it.io.openliberty.sample.health;
 
 import java.util.HashMap;
-import javax.json.JsonArray;
+import jakarta.json.JsonArray;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
