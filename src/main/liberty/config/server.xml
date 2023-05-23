@@ -1,10 +1,11 @@
 <server description="Sample Open Liberty server">
 
   <featureManager>
-    <feature>jaxrs-2.1</feature>
-    <feature>mpConfig-2.0</feature>
-    <feature>mpHealth-3.1</feature>
-    <feature>mpMetrics-3.0</feature>
+    <feature>restfulWS-3.1</feature>
+    <feature>jsonb-3.0</feature>
+    <feature>mpMetrics-5.0</feature>
+    <feature>mpHealth-4.0</feature>
+    <feature>mpConfig-3.0</feature>
   </featureManager>
 
   <applicationManager autoExpand="true" />

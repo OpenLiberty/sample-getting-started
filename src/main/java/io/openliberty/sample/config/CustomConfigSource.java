@@ -11,9 +11,9 @@
 
 package io.openliberty.sample.config;
 
-import javax.json.stream.JsonParser;
-import javax.json.stream.JsonParser.Event;
-import javax.json.Json;
+import jakarta.json.stream.JsonParser;
+import jakarta.json.stream.JsonParser.Event;
+import jakarta.json.Json;
 import java.math.BigDecimal;
 import java.util.*;
 import java.io.StringReader;

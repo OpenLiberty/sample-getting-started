@@ -18,13 +18,11 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 
-import javax.json.JsonArray;
-import javax.json.JsonObject;
-import javax.ws.rs.client.Client;
-import javax.ws.rs.client.ClientBuilder;
-import javax.ws.rs.core.Response;
-
-import org.apache.cxf.jaxrs.provider.jsrjsonp.JsrJsonpProvider;
+import jakarta.json.JsonArray;
+import jakarta.json.JsonObject;
+import jakarta.ws.rs.client.Client;
+import jakarta.ws.rs.client.ClientBuilder;
+import jakarta.ws.rs.core.Response;
 
 public class HealthUtilIT {
 
@@ -43,7 +41,7 @@ public class HealthUtilIT {
 
   public static JsonArray connectToHealthEnpoint(int expectedResponseCode) {
     String healthURL = baseUrl + HEALTH_ENDPOINT;
-    Client client = ClientBuilder.newClient().register(JsrJsonpProvider.class);
+    Client client = ClientBuilder.newClient();
     Response response = client.target(healthURL).request().get();
     assertEquals(expectedResponseCode, response.getStatus(), "Response code is not matching " + healthURL);
     JsonArray servicesstatus = response.readEntity(JsonObject.class).getJsonArray("checks");
