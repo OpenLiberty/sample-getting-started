@@ -48,7 +48,7 @@ if you just want to build it run:
 mvnw package
 ```
 
-## Run the Sample in a container
+## Run the Sample in a Container
 
 To run the sample using docker run:
 
