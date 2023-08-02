@@ -17,5 +17,5 @@
 
   <httpEndpoint host="*" httpPort="${default.http.port}" httpsPort="${default.https.port}" id="defaultHttpEndpoint"/>
 
-  <!-- <webApplication location="io.openliberty.sample.getting.started.war" contextRoot="${app.context.root}"/> -->
+  <webApplication location="io.openliberty.sample.getting.started.war" contextRoot="${app.context.root}"/>
 </server>
