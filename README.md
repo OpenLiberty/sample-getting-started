@@ -1,4 +1,4 @@
-![Open Liberty logo](https://github.com/OpenLiberty/logos/blob/main/combomark/png/OL_logo_green_on_white.png) Test 123
+![Open Liberty logo](https://github.com/OpenLiberty/logos/blob/main/combomark/png/OL_logo_green_on_white.png) Test 124
 
 # Open Liberty Getting Started Sample Test
 
