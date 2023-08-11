@@ -11,8 +11,8 @@
 
   <mpMetrics authentication="false" />
 
-  <variable name="default.http.port" defaultValue="9080"/>
-  <variable name="default.https.port" defaultValue="9443"/>
+  <variable name="default.http.port" defaultValue="9081"/>
+  <variable name="default.https.port" defaultValue="9444"/>
   <variable name="app.context.root" defaultValue="/"/>
 
   <httpEndpoint host="*" httpPort="${default.http.port}" httpsPort="${default.https.port}" id="defaultHttpEndpoint"/>
