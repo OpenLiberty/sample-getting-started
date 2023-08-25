@@ -21,7 +21,7 @@ fi
 echo -e "IMAGES_TO_SCAN:\n$IMAGES_TO_SCAN"
 
 # This must be an IBM Cloud API key that has permission to run the toolchain 
-IBMCLOUD_API_KEY="$(get_env ibmcloud-api-key)"
+IBMCLOUD_API_KEY="$(get_env ibmcloud-api-key)" # pragma: allowlist secret
 
 # The IBM Cloud region that is hosting the security scanning pipeline
 SECSCAN_TOOLCHAIN_REGION=$(get_env sescan-toolchain-region)
