@@ -4,7 +4,7 @@ Anyone can contribute to the Sample Getting Started project and we welcome your 
 
 ## Contributor License Agreement
 
-In order for us to accept pull requests, you must declare that you wrote the code or, at least, have the right to contribute it to the repo under the open source licence of the project in the repo. It's dead easy...
+In order for us to accept pull requests, you must declare that you wrote the code or, at least, have the right to contribute it to the repo under the open source licence of the project in the repo. It's dead easy... 
 
 1. Read this (from [developercertificate.org](http://developercertificate.org/)):
 
