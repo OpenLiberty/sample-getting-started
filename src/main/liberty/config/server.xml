@@ -1,4 +1,4 @@
-<server description="Sample Open Liberty server">
+<server description="Amys Sample Open Liberty server">
 
   <featureManager>
     <feature>restfulWS-3.1</feature>
