@@ -33,6 +33,7 @@ public class SystemRuntime {
 	@Produces(MediaType.TEXT_PLAIN)
 	public Response getRuntime() {
 		String libertyVersion = getServerVersion();
+                System.out.println("FW: SystemRuntime");
 		return Response.ok(libertyVersion).build();
 	}
 
