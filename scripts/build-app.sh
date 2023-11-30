@@ -28,7 +28,7 @@ main() {
     esac
 
     # Package and download base image
-    mvn clean package
+    mvnbreak clean package
     docker pull icr.io/appcafe/open-liberty:kernel-slim-java11-openj9-ubi
 
     # Build and push the app image
