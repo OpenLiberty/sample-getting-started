@@ -1,1 +1,2 @@
 BP_JAVA_APP_SERVER=liberty
+BP_MAVEN_BUILT_ARTIFACT="target/*.[ejw]ar src/main/liberty/config/*"
