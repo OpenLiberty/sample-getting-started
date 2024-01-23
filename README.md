@@ -16,6 +16,7 @@ The sample application provides a simple example of how to get started with Open
       - `SystemConfig.java` - A CDI bean that will report if the application is in maintenance. This supports the config variable changing dynamically via an update to a json file.
       - `SystemHealth.java` - A MicroProfile Health check that reports DOWN if the application is in maintenance and UP otherwise.
       - `SystemResource.java` - A REST Resource that exposes the System properties via a /rest/properties GET request. Calls to this GET method have MicroProfile Timer and Count metrics applied.
+      - `SystemEnvironment.java` - A REST Resource that returns the environment variables in the app process via a /system/environment GET request.
       - `SystemRuntime.java` - A REST Resource that exposes the version of the Open Liberty runtime via a /rest/runtime GET request.
     - `SystemApplication.java` - The Jakarta RESTful Web Services Application class
   - `liberty/config/server.xml` - The server configuration for the liberty runtime
