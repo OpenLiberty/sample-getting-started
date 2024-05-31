@@ -20,12 +20,14 @@ import java.io.StringReader;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+
 import org.eclipse.microprofile.config.spi.ConfigSource;
 
 public class CustomConfigSource implements ConfigSource {
 
-  String fileLocation = System.getProperty("user.dir").split("target")[0]
-      + "/resources/CustomConfigSource.json";
+  String fileLocation = "META-INF/CustomConfigSource.json";
 
   @Override
   public int getOrdinal() {
@@ -83,7 +85,8 @@ public class CustomConfigSource implements ConfigSource {
   public String readFile(String fileName) {
     String result = "";
     try {
-      BufferedReader br = new BufferedReader(new FileReader(fileName));
+      InputStream is = this.getClass().getClassLoader().getResourceAsStream(fileName);
+      BufferedReader br = new BufferedReader(new InputStreamReader(is, "UTF-8"));
       StringBuilder sb = new StringBuilder();
       String line = br.readLine();
       while (line != null) {
