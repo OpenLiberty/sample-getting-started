@@ -5,7 +5,7 @@
 ## Overview 
 The sample application provides a simple example of how to get started with Open Liberty. It provides a REST API that retrieves the system properties in the JVM and a web based UI for viewing them. It also uses MicroProfile Config, MicroProfile Health and MicroProfile Metrics to demonstrate how to use these specifications in an application that maybe deployed to kubernetes.
 
-## Project structure
+## Project structure 
 
 - `src/main/java` - the Java code for the Project
   - `io/openliberty/sample`
