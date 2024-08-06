@@ -9,6 +9,8 @@
  *     IBM Corporation - Initial implementation
  *******************************************************************************/
 
+ // Test build
+
 package io.openliberty.sample;
 
 import jakarta.ws.rs.ApplicationPath;
