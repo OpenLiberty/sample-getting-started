@@ -22,4 +22,8 @@ RUN features.sh
 
 COPY --chown=1001:0 target/*.war /config/apps/
 
+RUN rm /opt/ol/helpers/build/populate_scc.sh
+RUN rm /opt/ol/helpers/build/configure.sh
+COPY --chown=1001:0 populate_scc.sh /opt/ol/helpers/build/
+COPY --chown=1001:0 configure.sh /opt/ol/helpers/build/
 RUN configure.sh && rm -rf /output/resources/security/
