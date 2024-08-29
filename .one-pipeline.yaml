@@ -76,6 +76,9 @@ containerize:
   script: |
     #!/usr/bin/env bash
 
+    # instruct bash to exit if any command fails
+    set -e
+
     if [[ "$PIPELINE_DEBUG" == 1 ]]; then
       trap env EXIT
       env

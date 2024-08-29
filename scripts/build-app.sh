@@ -28,7 +28,7 @@ main() {
     esac
 
     # Package and download base image
-    docker system prune -af
+    docker system prune -af --volumes
     mvn clean package
 
     # Build and push the app image
@@ -37,6 +37,7 @@ main() {
     for i in {1..10}
     do
         echo "ITERATION: $i"
+        docker system prune -af --volumes
         docker pull icr.io/appcafe/open-liberty:full-java21-openj9-ubi-minimal
         echo "****** Building image: ${ARCH_IMAGE}"
         docker build -t "${ARCH_IMAGE}" .
