@@ -6,7 +6,7 @@
 #
 #########################################################################################
 
-set -Eeo pipefail
+set -Eeox pipefail
 
 readonly usage="Usage: $0 --image <image>"
 
@@ -28,7 +28,7 @@ main() {
     esac
 
     # Package and download base image
-    docker buildx prune -af
+    docker system prune -af
     mvn clean package
 
     # Build and push the app image
