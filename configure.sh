@@ -59,7 +59,7 @@ function main() {
 
   # Create a new SCC layer. This should be invoked when server configuration is complete.
   if [ "$OPENJ9_SCC" == "true" ]; then
-    cmd="populate_scc.sh -i 10"
+    cmd="populate_scc.sh -i 5"
     if [ "$TRIM_SCC" == "false" ]; then
       cmd+=" -d"
     fi

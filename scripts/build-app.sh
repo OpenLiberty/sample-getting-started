@@ -28,24 +28,32 @@ main() {
     esac
 
     # Package and download base image
+    docker buildx prune -af
     mvn clean package
-    docker pull icr.io/appcafe/open-liberty:kernel-slim-java11-openj9-ubi
 
     # Build and push the app image
     ARCH_IMAGE="${IMAGE}-${arch}"
-    echo "****** Building image: ${ARCH_IMAGE}"
-    docker build -t "${ARCH_IMAGE}" .
-    if [ "$?" != "0" ]; then
-        echo "Error building app image: ${ARCH_IMAGE}"
-        exit 1
-    fi 
 
-    echo "****** Pushing image: ${ARCH_IMAGE}"
-    docker push "${ARCH_IMAGE}"
-    if [ "$?" != "0" ]; then
-        echo "Error pushing app image: ${ARCH_IMAGE}"
-        exit 1
-    fi 
+    for i in {1..10}
+    do
+        echo "ITERATION: $i"
+        docker pull icr.io/appcafe/open-liberty:full-java21-openj9-ubi-minimal
+        echo "****** Building image: ${ARCH_IMAGE}"
+        docker build -t "${ARCH_IMAGE}" .
+        if [ "$?" != "0" ]; then
+            echo "Error building app image: ${ARCH_IMAGE}"
+            exit 1
+        fi 
+    done
+
+
+
+    # echo "****** Pushing image: ${ARCH_IMAGE}"
+    # docker push "${ARCH_IMAGE}"
+    # if [ "$?" != "0" ]; then
+    #     echo "Error pushing app image: ${ARCH_IMAGE}"
+    #     exit 1
+    # fi 
 }
 
 check_args() {

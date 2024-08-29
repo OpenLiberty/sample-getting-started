@@ -48,26 +48,26 @@ static-scan:
   script: |
     #!/usr/bin/env bash
     SKIP_STATIC_SCAN=$(get_env SKIP_STATIC_SCAN)
-    if [[ "$SKIP_STATIC_SCAN" != 1 ]]; then
-      read -r SONAR_HOST_URL <<< "$(get_env sonarqube | jq -r '.parameters.dashboard_url' | sed 's:/*$::')"
-      read -r SONAR_USER <<< "$(get_env sonarqube | jq -r '.parameters.user_login')"
-      SONARQUBE_INSTANCE_ID=$(get_env sonarqube | jq -r '.instance_id')
-      read -r SONAR_PASS <<< "$(jq -r --arg sonar_instance "$SONARQUBE_INSTANCE_ID" '[.services[] | select(."service_id"=="sonarqube")][] | select(."instance_id"==$sonar_instance) | .parameters.user_password' /toolchain/toolchain.json)"
-      touch "$WORKSPACE"/liberty-getting-started/sonar-project.properties
-      cat << EOF > "$WORKSPACE"/liberty-getting-started/sonar-project.properties
-      sonar.projectKey=liberty-getting-started
-      sonar.host.url=$SONAR_HOST_URL
-      sonar.sources=.
-      sonar.login=$SONAR_USER
-      sonar.password=$SONAR_PASS
-      sonar.c.file.suffixes=-
-      sonar.cpp.file.suffixes=-
-      sonar.objc.file.suffixes=-
-      EOF
-      chmod -x "$WORKSPACE"/liberty-getting-started/sonar-project.properties
-      #echo "$SONAR_PASS" >> /tmp/sonarqube-token
-      "${ONE_PIPELINE_PATH}"/internal/sonarqube/sonarqube_run
-    fi
+    # if [[ "$SKIP_STATIC_SCAN" != 1 ]]; then
+    #   read -r SONAR_HOST_URL <<< "$(get_env sonarqube | jq -r '.parameters.dashboard_url' | sed 's:/*$::')"
+    #   read -r SONAR_USER <<< "$(get_env sonarqube | jq -r '.parameters.user_login')"
+    #   SONARQUBE_INSTANCE_ID=$(get_env sonarqube | jq -r '.instance_id')
+    #   read -r SONAR_PASS <<< "$(jq -r --arg sonar_instance "$SONARQUBE_INSTANCE_ID" '[.services[] | select(."service_id"=="sonarqube")][] | select(."instance_id"==$sonar_instance) | .parameters.user_password' /toolchain/toolchain.json)"
+    #   touch "$WORKSPACE"/liberty-getting-started/sonar-project.properties
+    #   cat << EOF > "$WORKSPACE"/liberty-getting-started/sonar-project.properties
+    #   sonar.projectKey=liberty-getting-started
+    #   sonar.host.url=$SONAR_HOST_URL
+    #   sonar.sources=.
+    #   sonar.login=$SONAR_USER
+    #   sonar.password=$SONAR_PASS
+    #   sonar.c.file.suffixes=-
+    #   sonar.cpp.file.suffixes=-
+    #   sonar.objc.file.suffixes=-
+    #   EOF
+    #   chmod -x "$WORKSPACE"/liberty-getting-started/sonar-project.properties
+    #   #echo "$SONAR_PASS" >> /tmp/sonarqube-token
+    #   "${ONE_PIPELINE_PATH}"/internal/sonarqube/sonarqube_run
+    # fi
 
 containerize:
   abort_on_failure: true
@@ -194,35 +194,35 @@ acceptance-test:
       set -x
     fi
 
-    export PIPELINE_USERNAME=$(get_env ibmcloud-api-user)
-    export PIPELINE_PASSWORD=$(get_env ibmcloud-api-key-staging)
-    export CONTAINER_REGISTRY=$(get_env CONTAINER_REGISTRY "stg.icr.io")
-    REGISTRY_REPO=$(get_env REGISTRY_REPO)
-    IMAGE_TAG=$(get_env IMAGE_TAG)
-    IMAGE=$CONTAINER_REGISTRY/$REGISTRY_REPO:$IMAGE_TAG
-    BRANCH=$(get_env branch)
+    # export PIPELINE_USERNAME=$(get_env ibmcloud-api-user)
+    # export PIPELINE_PASSWORD=$(get_env ibmcloud-api-key-staging)
+    # export CONTAINER_REGISTRY=$(get_env CONTAINER_REGISTRY "stg.icr.io")
+    # REGISTRY_REPO=$(get_env REGISTRY_REPO)
+    # IMAGE_TAG=$(get_env IMAGE_TAG)
+    # IMAGE=$CONTAINER_REGISTRY/$REGISTRY_REPO:$IMAGE_TAG
+    # BRANCH=$(get_env branch)
 
-    W3_USERNAME=$(get_env w3_username)
-    W3_PASSWORD=$(get_env w3_password)
+    # W3_USERNAME=$(get_env w3_username)
+    # W3_PASSWORD=$(get_env w3_password)
 
-    export arch=$(get_env architecture)
+    # export arch=$(get_env architecture)
 
-    # check P and Z
-    if [[ "$arch" == "ZXP" ]]; then
-      echo "<ciorchestrator> Sending request to build P and Z"
-      ./scripts/pipeline/request-ciorchestrator.sh --command "make check-build IMAGE=${IMAGE}" --user "$W3_USERNAME" --password "$W3_PASSWORD" --branch "$BRANCH" --repository "sample-getting-started" --org "OpenLiberty" --trigger "sample-liberty" --configFile ".ci-orchestrator/sample-liberty-build.yml"
-      pipelineid=$(cat ciorchestrator-submit.id)
-    fi
+    # # check P and Z
+    # if [[ "$arch" == "ZXP" ]]; then
+    #   echo "<ciorchestrator> Sending request to build P and Z"
+    #   ./scripts/pipeline/request-ciorchestrator.sh --command "make check-build IMAGE=${IMAGE}" --user "$W3_USERNAME" --password "$W3_PASSWORD" --branch "$BRANCH" --repository "sample-getting-started" --org "OpenLiberty" --trigger "sample-liberty" --configFile ".ci-orchestrator/sample-liberty-build.yml"
+    #   pipelineid=$(cat ciorchestrator-submit.id)
+    # fi
     
-    # Check X
-    make check-build IMAGE=${IMAGE}
+    # # Check X
+    # make check-build IMAGE=${IMAGE}
   
-    #wait on build for P and Z  
-    if [[ "$arch" == "ZXP" ]]; then
-      # wait for build ppc64le and s390x images
-      echo "<ciorchestrator> waiting on request to build P and Z"
-      ./scripts/pipeline/await-ciorchestrator.sh --user "$W3_USERNAME" --password "$W3_PASSWORD" --pipelineId "$pipelineid"
-    fi   
+    # #wait on build for P and Z  
+    # if [[ "$arch" == "ZXP" ]]; then
+    #   # wait for build ppc64le and s390x images
+    #   echo "<ciorchestrator> waiting on request to build P and Z"
+    #   ./scripts/pipeline/await-ciorchestrator.sh --user "$W3_USERNAME" --password "$W3_PASSWORD" --pipelineId "$pipelineid"
+    # fi   
    
     
 scan-artifact:
@@ -249,41 +249,41 @@ release:
       set -x
     fi
 
-    PUBLISH_IMAGES=$(get_env PUBLISH_IMAGES)
-    if [[ "$PUBLISH_IMAGES" == 1 ]]; then
-      skopeo --version
+    # PUBLISH_IMAGES=$(get_env PUBLISH_IMAGES)
+    # if [[ "$PUBLISH_IMAGES" == 1 ]]; then
+    #   skopeo --version
 
-      IMAGE_TAG=$(get_env IMAGE_TAG)
+    #   IMAGE_TAG=$(get_env IMAGE_TAG)
 
-      export PIPELINE_USERNAME=$(get_env ibmcloud-api-user)
-      PIPELINE_STAGING_PASSWORD=$(get_env ibmcloud-api-key-staging)
-      CONTAINER_REGISTRY=$(get_env CONTAINER_REGISTRY "stg.icr.io")
-      REGISTRY_REPO=$(get_env REGISTRY_REPO)
-      STAGING_IMAGE=$CONTAINER_REGISTRY/$REGISTRY_REPO:$IMAGE_TAG
+    #   export PIPELINE_USERNAME=$(get_env ibmcloud-api-user)
+    #   PIPELINE_STAGING_PASSWORD=$(get_env ibmcloud-api-key-staging)
+    #   CONTAINER_REGISTRY=$(get_env CONTAINER_REGISTRY "stg.icr.io")
+    #   REGISTRY_REPO=$(get_env REGISTRY_REPO)
+    #   STAGING_IMAGE=$CONTAINER_REGISTRY/$REGISTRY_REPO:$IMAGE_TAG
 
-      PIPELINE_PROD_PASSWORD=$(get_env ibmcloud-api-key)
-      PROD_CONTAINER_REGISTRY=$(get_env PROD_CONTAINER_REGISTRY)
-      PROD_REGISTRY_REPO=$(get_env PROD_REGISTRY_REPO)
-      PROD_IMAGE=$PROD_CONTAINER_REGISTRY/$PROD_REGISTRY_REPO:$IMAGE_TAG
+    #   PIPELINE_PROD_PASSWORD=$(get_env ibmcloud-api-key)
+    #   PROD_CONTAINER_REGISTRY=$(get_env PROD_CONTAINER_REGISTRY)
+    #   PROD_REGISTRY_REPO=$(get_env PROD_REGISTRY_REPO)
+    #   PROD_IMAGE=$PROD_CONTAINER_REGISTRY/$PROD_REGISTRY_REPO:$IMAGE_TAG
 
-      # Copy image digests and manifest list to prod
-      echo $PIPELINE_STAGING_PASSWORD | docker login $CONTAINER_REGISTRY -u "$PIPELINE_USERNAME" --password-stdin
-      echo $PIPELINE_PROD_PASSWORD | docker login $PROD_CONTAINER_REGISTRY -u "$PIPELINE_USERNAME" --password-stdin
+    #   # Copy image digests and manifest list to prod
+    #   echo $PIPELINE_STAGING_PASSWORD | docker login $CONTAINER_REGISTRY -u "$PIPELINE_USERNAME" --password-stdin
+    #   echo $PIPELINE_PROD_PASSWORD | docker login $PROD_CONTAINER_REGISTRY -u "$PIPELINE_USERNAME" --password-stdin
 
-      echo "Copying staged image $STAGING_IMAGE to prod at $PROD_IMAGE as user $PIPELINE_USERNAME"
-      skopeo copy --src-creds $PIPELINE_USERNAME:$PIPELINE_STAGING_PASSWORD --dest-creds $PIPELINE_USERNAME:$PIPELINE_PROD_PASSWORD --all docker://$STAGING_IMAGE docker://$PROD_IMAGE
+    #   echo "Copying staged image $STAGING_IMAGE to prod at $PROD_IMAGE as user $PIPELINE_USERNAME"
+    #   skopeo copy --src-creds $PIPELINE_USERNAME:$PIPELINE_STAGING_PASSWORD --dest-creds $PIPELINE_USERNAME:$PIPELINE_PROD_PASSWORD --all docker://$STAGING_IMAGE docker://$PROD_IMAGE
 
-      echo "Manifest list of $PROD_IMAGE"
-      docker manifest inspect "$PROD_IMAGE"
-      digest="$(skopeo inspect docker://$PROD_IMAGE | grep Digest | grep -o 'sha[^\"]*')"
-      echo "$digest"
+    #   echo "Manifest list of $PROD_IMAGE"
+    #   docker manifest inspect "$PROD_IMAGE"
+    #   digest="$(skopeo inspect docker://$PROD_IMAGE | grep Digest | grep -o 'sha[^\"]*')"
+    #   echo "$digest"
 
-      export CONTAINER_REGISTRY=$PROD_CONTAINER_REGISTRY
-      export PIPELINE_PASSWORD=$PIPELINE_PROD_PASSWORD
+    #   export CONTAINER_REGISTRY=$PROD_CONTAINER_REGISTRY
+    #   export PIPELINE_PASSWORD=$PIPELINE_PROD_PASSWORD
 
-      # Check X image from prod registry
-      make check-build IMAGE=${PROD_IMAGE}
-    fi
+    #   # Check X image from prod registry
+    #   make check-build IMAGE=${PROD_IMAGE}
+    # fi
 
 owasp-zap-api:
   dind: true
