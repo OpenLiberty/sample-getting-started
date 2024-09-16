@@ -1,5 +1,7 @@
 package basic.unittests;
 
+import static org.junit.jupiter.api.Assertions.fail;
+
 import org.junit.jupiter.api.Test;
 
 public class ThirdSuiteTest {
@@ -16,5 +18,10 @@ public class ThirdSuiteTest {
     @Test
     public void thirdTest3() {
         System.out.println("thirdTest3 successful!");
+    }
+
+    @Test
+    public void testAlwaysFails() {
+        fail("Intentional failing test");
     }
 }
