@@ -19,9 +19,4 @@ public class ThirdSuiteTest {
     public void thirdTest3() {
         System.out.println("thirdTest3 successful!");
     }
-
-    @Test
-    public void testAlwaysFails() {
-        fail("Intentional failing test");
-    }
 }
