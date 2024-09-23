@@ -79,7 +79,7 @@
           <serverName>sampleAppServer</serverName>
         </configuration>
       </plugin>
-      <!-- Plugin to run functional tests -->
+      <!-- Plugin to run functional tests 1 -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-failsafe-plugin</artifactId>
