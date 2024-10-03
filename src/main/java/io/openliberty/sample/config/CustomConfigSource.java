@@ -84,7 +84,6 @@ public class CustomConfigSource implements ConfigSource {
   public String readFile(String fileName) {
     String result = "";
     try {
-      // BufferedReader br = new BufferedReader(new FileReader(fileName));
       InputStream is = this.getClass().getClassLoader().getResourceAsStream(fileName);
       BufferedReader br = new BufferedReader(new InputStreamReader(is, "UTF-8"));
       StringBuilder sb = new StringBuilder();
