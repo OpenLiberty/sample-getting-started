@@ -16,7 +16,6 @@ LABEL \
   description="This image contains a sample application that displays the Java system properties and demonstrates MicroProfile Config, Health and Metrics."
 
 COPY --chown=1001:0 src/main/liberty/config/ /config/
-COPY --chown=1001:0 resources/ /output/resources/
 
 RUN features.sh
 
