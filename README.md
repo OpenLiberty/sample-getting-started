@@ -19,12 +19,12 @@ The sample application provides a simple example of how to get started with Open
       - `SystemRuntime.java` - A REST Resource that exposes the version of the Open Liberty runtime via a /rest/runtime GET request.
     - `SystemApplication.java` - The Jakarta RESTful Web Services Application class
   - `liberty/config/server.xml` - The server configuration for the liberty runtime
-  - `META-INF` - Contains the metadata files for MicroProfile Config including how to load CustomConfigSource.java
+  - `resources/META-INF` - Contains the metadata files for MicroProfile Config including how to load CustomConfigSource.java
+    - `CustomConfigSource.json` - Contains the data that is read by the MicroProfile Config ConfigSource.
   - `webapp` - Contains the Web UI for the application.
   - `test/java/it/io/openliberty/sample/health`
     - `HealthIT.java` - Test cases for a sample application running on `localhost`
     - `HealthUtilIT.java` - Utility methods for functional tests
-- `resources/CustomConfigSource.json` - Contains the data that is read by the MicroProfile Config ConfigSource.
 - `Dockerfile` - The Dockerfile for building the sample
 - `pom.xml` - The Maven POM file
 

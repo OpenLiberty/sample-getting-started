@@ -15,8 +15,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
 import java.io.FileWriter;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 
 import jakarta.json.JsonArray;
 import jakarta.json.JsonObject;
@@ -64,8 +65,9 @@ public class HealthUtilIT {
 
   public static void changeProperty(String oldValue, String newValue) {
     try {
-      String fileName = System.getProperty("user.dir").split("target")[0] + "/resources/CustomConfigSource.json";
-      BufferedReader reader = new BufferedReader(new FileReader(new File(fileName)));
+      String fileName = "META-INF/CustomConfigSource.json";
+      InputStream is = this.getClass().getClassLoader().getResourceAsStream(fileName);
+      BufferedReader br = new BufferedReader(new InputStreamReader(is, "UTF-8"));
       String line = "";
       String oldContent = "", newContent = "";
       while ((line = reader.readLine()) != null) {
