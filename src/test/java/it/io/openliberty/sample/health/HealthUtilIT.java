@@ -76,7 +76,7 @@ public class HealthUtilIT {
       FileWriter writer = new FileWriter(fileName);
       writer.write(newContent);
       writer.close();
-      Thread.sleep(600);
+      Thread.sleep(1500);
     } catch (Exception e) {
       e.printStackTrace();
     }
