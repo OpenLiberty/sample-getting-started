@@ -86,6 +86,7 @@
         <artifactId>maven-failsafe-plugin</artifactId>
         <version>${version.maven-failsafe-plugin}</version>
         <configuration>
+          <workingDirectory>${project.basedir}/src/main/resources</workingDirectory>
           <systemPropertyVariables>
             <http.port>${liberty.var.default.http.port}</http.port>
             <https.port>${liberty.var.default.https.port}</https.port>
