@@ -54,7 +54,7 @@ To build the container image from Dockerfile and run locally using docker:
 ```
 docker build --platform=linux/amd64 -t openliberty-gettingstarted:<TAG> .
 docker images --filter reference=openliberty-gettingstarted
-sudo podman run --platform=linux/amd64 -t -i -p 127.0.0.1:9080:9080 openliberty-gettingstarted:<TAG> 
+sudo docker run --platform=linux/amd64 -t -i -p 127.0.0.1:9080:9080 openliberty-gettingstarted:<TAG> 
 ```
 
 To build the container image from Dockerfile and run locally using podman:
