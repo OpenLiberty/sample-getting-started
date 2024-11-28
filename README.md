@@ -48,6 +48,26 @@ if you just want to build it run:
 mvnw package
 ```
 
+## Build container image from Dockerfile and run locally
+To build the container image from Dockerfile and run locally using docker:
+
+```
+docker build --platform=linux/amd64 -t openliberty-gettingstarted:<TAG> .
+docker images --filter reference=openliberty-gettingstarted
+sudo docker run --platform=linux/amd64 -t -i -p 127.0.0.1:9080:9080 openliberty-gettingstarted:<TAG> 
+```
+
+To build the container image from Dockerfile and run locally using podman:
+
+```
+podman build --platform=linux/amd64 -t openliberty-gettingstarted:<TAG> .
+podman images --filter reference=openliberty-gettingstarted
+sudo podman run --platform=linux/amd64 -t -i -p 127.0.0.1:9080:9080 openliberty-gettingstarted:<TAG> 
+```
+
+### Access the application
+Open a browser to http://localhost:9080
+
 ## Run the Sample in a container
 
 To run the sample using docker run:
