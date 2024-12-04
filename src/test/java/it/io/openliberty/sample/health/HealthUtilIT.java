@@ -64,20 +64,27 @@ public class HealthUtilIT {
 
   public static void changeProperty(String oldValue, String newValue) {
     try {
+      System.out.println("oldValue: " + oldValue + " : newValue: " + newValue);
       String fileName = "META-INF/CustomConfigSource.json";
       BufferedReader reader = new BufferedReader(new FileReader(new File(fileName)));
       String line = "";
       String oldContent = "", newContent = "";
       while ((line = reader.readLine()) != null) {
         oldContent += line + "\r\n";
+        System.out.println("Line: " + line);
       }
       reader.close();
+      System.out.println("oldContent: " + oldContent);
       newContent = oldContent.replaceAll(oldValue, newValue);
+      System.out.println("newContent: " + newContent);
       FileWriter writer = new FileWriter(fileName);
       writer.write(newContent);
       writer.close();
-      Thread.sleep(5000);
+      System.out.println("Start sleep");
+      Thread.sleep(20000);
+      System.out.println("Finished sleep");
     } catch (Exception e) {
+      System.out.println("Exception occurred: " + e);
       e.printStackTrace();
     }
   }
