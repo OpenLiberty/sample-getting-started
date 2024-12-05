@@ -33,17 +33,26 @@ public class HealthIT {
 
   @Test
   public void testIfServicesAreUp() {
+    System.out.println("Begin testIfServicesAreUp");
     servicesstatus = HealthUtilIT.connectToHealthEnpoint(200);
+    System.out.println("After connectToHealthEnpoint 200");
     checkServicesstatus(dataWhenServicesUP, servicesstatus);
+    System.out.println("End testIfServicesAreUp");
   }
 
   @Test
   public void testIfServicesAreDown() {
+    System.out.println("Begin testIfServicesAreUp");
     servicesstatus = HealthUtilIT.connectToHealthEnpoint(200);
+    System.out.println("After connectToHealthEnpoint 200");
     checkServicesstatus(dataWhenServicesUP, servicesstatus);
+    System.out.println("Before changeProperty");
     HealthUtilIT.changeProperty(HealthUtilIT.INV_MAINTENANCE_FALSE, HealthUtilIT.INV_MAINTENANCE_TRUE);
+    System.out.println("After changeProperty");
     servicesstatus = HealthUtilIT.connectToHealthEnpoint(503);
+    System.out.println("After connectToHealthEnpoint 503");
     checkServicesstatus(dataWhenServicesDown, servicesstatus);
+    System.out.println("End testIfServicesAreDown");
   }
 
   private void checkServicesstatus(HashMap<String, String> testData, JsonArray servicesstatus) {

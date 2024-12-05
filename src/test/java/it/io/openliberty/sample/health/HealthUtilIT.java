@@ -64,7 +64,9 @@ public class HealthUtilIT {
 
   public static void changeProperty(String oldValue, String newValue) {
     try {
-      System.out.println("oldValue: " + oldValue + " : newValue: " + newValue);
+      System.out.println("Begin changeProperty");
+      System.out.println("oldValue: " + oldValue);
+      System.out.println("newValue: " + newValue);
       String fileName = "META-INF/CustomConfigSource.json";
       BufferedReader reader = new BufferedReader(new FileReader(new File(fileName)));
       String line = "";
@@ -80,9 +82,23 @@ public class HealthUtilIT {
       FileWriter writer = new FileWriter(fileName);
       writer.write(newContent);
       writer.close();
+      
+      System.out.println("Begin reading written file");
+      BufferedReader reader2 = new BufferedReader(new FileReader(new File(fileName)));
+      String line2 = "";
+      String oldContent2 = "";
+      while ((line2 = reader2.readLine()) != null) {
+        oldContent2 += line2 + "\r\n";
+        System.out.println("After write - Line2: " + line2);
+      }
+      reader2.close();
+      System.out.println("oldContent2: " + oldContent2);
+System.out.println("Finished reading written file");
+
       System.out.println("Start sleep");
       Thread.sleep(20000);
       System.out.println("Finished sleep");
+      System.out.println("End changeProperty");
     } catch (Exception e) {
       System.out.println("Exception occurred: " + e);
       e.printStackTrace();
@@ -90,7 +106,10 @@ public class HealthUtilIT {
   }
 
   public static void cleanUp() {
+    System.out.println("Begin cleanUp");
+    System.out.println("Before changeProperty: true --> false");
     changeProperty(INV_MAINTENANCE_TRUE, INV_MAINTENANCE_FALSE);
+    System.out.println("End cleanUp");
   }
 
 }
