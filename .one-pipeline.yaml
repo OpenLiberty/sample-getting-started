@@ -82,20 +82,11 @@ containerize:
       set -x
     fi
 
-    apt-get update
-    apt-get -qq -y install build-essential software-properties-common uidmap
+    yum -y -q update
 
-    # Download and install skopeo
-    if ! command -v skopeo &> /dev/null; then
-      if [ ! -f "/apt/sources.list.d/devel:kubic:libcontainers:stable.list" ]; then
-        sudo sh -c "echo 'deb http://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/xUbuntu_18.04/ /' > /etc/apt/sources.list.d/devel:kubic:libcontainers:stable.list"
-        wget --no-check-certificate -nv https://download.opensuse.org/repositories/devel:kubic:libcontainers:stable/xUbuntu_18.04/Release.key -O- | sudo apt-key add -
-        sudo apt-get update -qq
-      fi
-      sudo apt-get -y install skopeo
-    else
-      skopeo --version
-    fi
+    # Check skopeo version
+    echo "skopeo version"
+    skopeo --version || exit 1
 
     # Build images
     export PIPELINE_USERNAME=$(get_env ibmcloud-api-user)
