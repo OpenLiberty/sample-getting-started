@@ -24,7 +24,6 @@
     <liberty.var.default.https.port>9443</liberty.var.default.https.port>
     <liberty.var.app.context.root>/</liberty.var.app.context.root>
   </properties>
-
   
   <dependencies>
     <!-- Dependencies -->
