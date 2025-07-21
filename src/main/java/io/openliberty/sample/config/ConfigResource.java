@@ -25,6 +25,8 @@ import jakarta.ws.rs.Produces;
 import org.eclipse.microprofile.config.Config;
 import org.eclipse.microprofile.config.spi.ConfigSource;
 
+
+
 @RequestScoped
 @Path("/config")
 public class ConfigResource {
