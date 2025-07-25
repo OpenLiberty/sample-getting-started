@@ -9,12 +9,11 @@
   <version>1.0-SNAPSHOT</version>
   <packaging>war</packaging>
 
-  <!-- Just Testing Something-->
+  <!-- Just Testing Something else -->
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-    <maven.compiler.source>11</maven.compiler.source>
-    <maven.compiler.target>11</maven.compiler.target>
+    <maven.compiler.release>17</maven.compiler.release>
     <!-- Plugin versions -->
     <version.liberty-maven-plugin>3.7.1</version.liberty-maven-plugin>
     <version.maven-failsafe-plugin>3.0.0</version.maven-failsafe-plugin>
@@ -80,7 +79,7 @@
           <serverName>sampleAppServer</serverName>
         </configuration>
       </plugin>
-      <!-- Plugin to run functional tests -->
+      <!-- Plugin to run functional tests 1 -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-failsafe-plugin</artifactId>
