@@ -15,6 +15,10 @@ LABEL \
   summary="Sample app running on Open Liberty that uses Eclipse MicroProfile" \
   description="This image contains a sample application that displays the Java system properties and demonstrates MicroProfile Config, Health and Metrics."
 
+USER 0
+RUN command -v yum && pkgcmd=yum || pkgcmd=microdnf && $pkgcmd update -y && $pkgcmd install -y procps-ng net-tools ncurses hostname
+USER 1001
+
 COPY --chown=1001:0 src/main/liberty/config/ /config/
 
 RUN features.sh
