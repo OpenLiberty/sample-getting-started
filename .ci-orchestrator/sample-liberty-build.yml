@@ -20,8 +20,7 @@ steps:
   timeoutInMinutes: 1440
   # Need properties for Makefile or build script for WLO
   properties:  
-    ebcPlan: svl-dockerJenkins-ubuntu22_z_fyrev3.yml
-    
+    ebcShortlist: jenkinsbuild-docker-ubuntu22_z.yml
 
 - stepName: P Build
   workType: Jenkins
@@ -29,4 +28,4 @@ steps:
   timeoutInMinutes: 1440
   # Need properties for Makefile or build script for WLO
   properties:  
-    ebcPlan: svl-dockerJenkins-ubuntu22_p9_fyrev3.yml
+    ebcShortlist: jenkinsbuild-docker-ubuntu22_p9.yml
