@@ -43,14 +43,14 @@ tasks:
     # code-build includes five configurable steps: setup, unit-test, build-artifact, sign-artifact, scan-artifact
     steps:
       - name: setup
-        image: icr.io/continuous-delivery/pipeline/pipeline-base-ubi:3.64
+        image: icr.io/continuous-delivery/pipeline/pipeline-base-ubi:3.67
         script: |
           #!/usr/bin/sh
           echo "in checks-setup"
           echo "Stage is: ${STAGE}"
           ./scripts/pipeline/code-setup-stage.sh
       - name: unit-test
-        image: icr.io/continuous-delivery/pipeline/pipeline-base-ubi:3.64
+        image: icr.io/continuous-delivery/pipeline/pipeline-base-ubi:3.67
         script: |
           #!/usr/bin/env bash
           echo $STAGE
@@ -61,7 +61,7 @@ tasks:
             mvn clean package liberty:create liberty:install-feature liberty:test-start liberty:deploy failsafe:integration-test failsafe:verify liberty:test-stop
           fi
       - name: build-artifact
-        image: icr.io/continuous-delivery/pipeline/pipeline-base-ubi:3.64
+        image: icr.io/continuous-delivery/pipeline/pipeline-base-ubi:3.67
         include:
           - docker-socket
         script: |
@@ -149,7 +149,7 @@ tasks:
       #     exit 0
       # - name: scan-artifact
       #   abort_on_failure: false
-      #   image: icr.io/continuous-delivery/pipeline/pipeline-base-ubi:3.64
+      #   image: icr.io/continuous-delivery/pipeline/pipeline-base-ubi:3.67
       #   script: |
       #     #!/usr/bin/env bash
       #     echo $STAGE
