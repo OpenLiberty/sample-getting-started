@@ -50,11 +50,9 @@ tasks:
           echo "Stage is: ${STAGE}"
           ./scripts/pipeline/code-setup-stage.sh
       - name: unit-test
-        image: icr.io/continuous-delivery/pipeline/pipeline-base-ubi:3.67
+        image: icr.io/continuous-delivery/pipeline/pipeline-base-ubi:3.12
         script: |
           #!/usr/bin/env bash
-          echo $STAGE
-
           SKIP_UNIT_TESTS=$(get_env SKIP_UNIT_TESTS)
           if [[ "$SKIP_UNIT_TESTS" != 1 ]]; then
             cd ../"$(load_repo app-repo path)"
