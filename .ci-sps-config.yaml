@@ -39,6 +39,8 @@ tasks:
 
   code-build:
     # code-build includes five configurable steps: setup, unit-test, build-artifact, sign-artifact, scan-artifact
+    include:
+      - dind      
     steps:
       - name: setup
         image: icr.io/continuous-delivery/pipeline/pipeline-base-ubi:3.67
@@ -49,6 +51,7 @@ tasks:
           ./scripts/pipeline/code-setup-stage.sh
       - name: unit-test
         image: icr.io/continuous-delivery/pipeline/pipeline-base-ubi:3.12
+        dind: false
         script: |
           #!/usr/bin/env bash
           SKIP_UNIT_TESTS=$(get_env SKIP_UNIT_TESTS)
@@ -60,7 +63,6 @@ tasks:
         image: icr.io/continuous-delivery/pipeline/pipeline-base-ubi:3.67
         include:
           - docker-socket
-          - dind
         script: |
           #!/usr/bin/env bash
           echo $STAGE
