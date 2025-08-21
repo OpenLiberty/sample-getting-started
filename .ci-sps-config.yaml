@@ -38,8 +38,6 @@ tasks:
           exit 0
 
   code-build:
-    include:
-      - dind
     # code-build includes five configurable steps: setup, unit-test, build-artifact, sign-artifact, scan-artifact
     steps:
       - name: setup
@@ -62,6 +60,7 @@ tasks:
         image: icr.io/continuous-delivery/pipeline/pipeline-base-ubi:3.67
         include:
           - docker-socket
+          - dind
         script: |
           #!/usr/bin/env bash
           echo $STAGE
