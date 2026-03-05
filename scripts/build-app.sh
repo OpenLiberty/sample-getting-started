@@ -10,9 +10,19 @@ set -Eeo pipefail
 
 readonly usage="Usage: $0 --image <image>"
 
+DEFAULT_IMAGE="icr.io/appcafe/open-liberty/samples/getting-started:latest"
+
 main() {
     parse_args "$@"
     check_args
+
+    echo "IMAGE: $IMAGE"
+
+    CONTAINER_REGISTRY=$(echo "$IMAGE" | cut -d '/' -f 1)
+    echo "CONTAINER_REGISTRY: $CONTAINER_REGISTRY"
+
+    # Docker login
+    echo ${PIPELINE_PASSWORD} | docker login ${CONTAINER_REGISTRY} -u "${PIPELINE_USERNAME}" --password-stdin
 
     # Define current arch variable
     case "$(uname -p)" in
@@ -50,9 +60,9 @@ main() {
 
 check_args() {
     if [[ -z "${IMAGE}" ]]; then
-        echo "****** Missing target image for app build, see usage"
-        echo "${usage}"
-        exit 1
+        echo "****** Missing target image for app build"
+        echo "Setting the target image to default: ${DEFAULT_IMAGE}"
+        IMAGE="${DEFAULT_IMAGE}"
     fi
 }
 

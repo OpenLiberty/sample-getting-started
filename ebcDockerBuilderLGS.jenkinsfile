@@ -6,7 +6,7 @@ properties([
       string(name: 'ebcPlan', defaultValue: 'svl-dockerJenkins-ubuntu20_ppcle.yml', description: 'EBC plan to use when provisioning a Jenkins node'),
       string(name: 'ebcBranch', defaultValue: "${env.ecosystem_branch}", description: 'Git branch used for ebc code'),
       string(name: 'scriptOrg', defaultValue: "OpenLiberty", description: 'Git org containing docker build scripts'),
-      string(name: 'command', defaultValue: "make build-app-pipeline IMAGE=stg.icr.io/cp/olc-sample/open-liberty/samples/getting-started", description: 'Build command to execute on target arch machine, e.g. make build-pipeline-releases'),
+      string(name: 'command', defaultValue: "scripts/build-app.sh --image stg.icr.io/cp/olc-sample/open-liberty/samples/getting-started", description: 'Build command to execute on target arch machine'),
       string(name: 'BRANCH', defaultValue: "main", description: 'release branch to use'),
       string(name: 'CONTAINER_REGISTRY', defaultValue: "stg.icr.io", description: 'staging registry to push images to')
    ])

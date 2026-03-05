@@ -17,3 +17,5 @@ MANIFEST.MF
 
 # Zip files
 *.zip
+
+.secrets.baseline

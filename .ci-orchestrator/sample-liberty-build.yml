@@ -9,7 +9,7 @@ triggers:
   - name: BRANCH
     defaultValue: "main"        
   - name: command
-    defaultValue: "make build-app-pipeline IMAGE=${IMAGE}"
+    defaultValue: "scripts/build-app.sh --image ${IMAGE}"
   - name: IMAGE
     defaultValue: "stg.icr.io/cp/olc-sample/open-liberty/samples/getting-started:latest"
 
