@@ -10,9 +10,19 @@ set -Eeo pipefail
 
 readonly usage="Usage: $0 --image <image>"
 
+DEFAULT_IMAGE="icr.io/appcafe/open-liberty/samples/getting-started:latest"
+
 main() {
     parse_args "$@"
     check_args
+
+    echo "IMAGE: $IMAGE"
+
+    CONTAINER_REGISTRY=$(echo "$IMAGE" | cut -d '/' -f 1)
+    echo "CONTAINER_REGISTRY: $CONTAINER_REGISTRY"
+
+    # Docker login
+    echo ${PIPELINE_PASSWORD} | docker login ${CONTAINER_REGISTRY} -u "${PIPELINE_USERNAME}" --password-stdin
 
     docker pull $IMAGE
     docker images
@@ -39,7 +49,7 @@ main() {
 
     # Test the endpoints for 200 response code
     curl -f -s -I "0.0.0.0:9080" &>/dev/null && echo "OK: Landing page did return 200" || { echo 'FAIL: Sample App landing page did not return 200' ; exit 1; }
-    curl -f -s "0.0.0.0:9080" | grep -q '<title>Open Liberty - Getting Started Sample</title>' && echo "OK: Sample App landing page contained '<title>Open Liberty - Getting Started Sample</title>'" || { echo 'FAIL: Did not find "<title>Open Liberty - Getting Started Sample</title>" in response' ; exit 1; }
+    curl -f -s "0.0.0.0:9080" | grep '<title>Open Liberty - Getting Started Sample</title>' && echo "OK: Sample App landing page contained '<title>Open Liberty - Getting Started Sample</title>'" || { echo 'FAIL: Did not find "<title>Open Liberty - Getting Started Sample</title>" in response' ; exit 1; }
     curl -f -s -I "0.0.0.0:9080/system/properties" &>/dev/null && echo "OK: /system/properties did return 200" || { echo 'FAIL: /system/properties did not return 200' ; exit 1; }
     curl -f -s -I "0.0.0.0:9080/system/config" &>/dev/null && echo "OK: /system/config did return 200" || { echo 'FAIL: /system/config did not return 200' ; exit 1; }
     curl -f -s -I "0.0.0.0:9080/system/runtime" &>/dev/null && echo "OK: /system/runtime did return 200" || { echo 'FAIL: /system/runtime did not return 200' ; exit 1; }
@@ -49,9 +59,9 @@ main() {
 
 check_args() {
     if [[ -z "${IMAGE}" ]]; then
-        echo "****** Missing target image for app image check, see usage"
-        echo "${usage}"
-        exit 1
+        echo "****** Missing target image for app build"
+        echo "Setting the target image to default: ${DEFAULT_IMAGE}"
+        IMAGE="${DEFAULT_IMAGE}"
     fi
 }
 
