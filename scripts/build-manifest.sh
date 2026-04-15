@@ -36,6 +36,8 @@ build_manifest() {
 
     if [[ "$arch" == "ZXP" ]]; then
       echo "Adding $target-s390x to manifest list"
+      docker pull $target-s390x --platform linux/s390x
+      docker push $target-s390x
       docker manifest create --amend "$target" "$target-s390x"
       if [ "$?" != "0" ]; then
           echo "Error adding $target-s390x to manifest list"
@@ -48,6 +50,8 @@ build_manifest() {
       fi
 
       echo "Adding $target-ppc64le to manifest list"
+      docker pull $target-ppc64le --platform linux/ppc64le
+      docker push $target-ppc64le
       docker manifest create --amend "$target" "$target-ppc64le"
       if [ "$?" != "0" ]; then
           echo "Error adding $target-ppc64le to manifest list"
