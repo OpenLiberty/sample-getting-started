@@ -8,8 +8,6 @@
     <feature>mpConfig-3.1</feature>
   </featureManager>
 
-  <applicationManager autoExpand="true" />
-
   <mpMetrics authentication="false" />
 
   <variable name="default.http.port" defaultValue="9080"/>
