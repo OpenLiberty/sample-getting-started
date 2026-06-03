@@ -45,7 +45,7 @@ timestamps {
          stage("Running Job"){
             withCredentials([usernamePassword(credentialsId: 'operator_icrId', usernameVariable: 'PIPELINE_USERNAME', passwordVariable: 'PIPELINE_PASSWORD'),
                              usernamePassword(credentialsId: 'dockerId', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD'),
-                             usernamePassword(credentialsId: 'feature_repo_credentials', usernameVariable: 'FEATURE_REPO_USER', passwordVariable: 'FEATURE_REPO_PASSWORD')]) {
+                             usernamePassword(credentialsId: 'feature_repoId', usernameVariable: 'FEATURE_REPO_USER', passwordVariable: 'FEATURE_REPO_PASSWORD')]) {
                //This is executing on ebc dynamic machine
                doWork();
             } // withCredentials() end
