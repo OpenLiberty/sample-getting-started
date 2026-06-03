@@ -9,6 +9,7 @@ properties([
       string(name: 'command', defaultValue: "scripts/build-app.sh --image stg.icr.io/cp/olc-sample/open-liberty/samples/getting-started", description: 'Build command to execute on target arch machine'),
       string(name: 'BRANCH', defaultValue: "main", description: 'release branch to use'),
       string(name: 'CONTAINER_REGISTRY', defaultValue: "stg.icr.io", description: 'staging registry to push images to'),
+      string(name: 'FEATURE_REPO_URL', defaultValue: "https://repo1.maven.org/maven2/", description: 'Maven repository mirror'),
       string(name: 'SPS_CONFIG_BRANCH', defaultValue: "main", description: 'branch to use for sample-getting-started-sps-config repository')
    ])
 ])
@@ -44,8 +45,7 @@ timestamps {
          stage("Running Job"){
             withCredentials([usernamePassword(credentialsId: 'operator_icrId', usernameVariable: 'PIPELINE_USERNAME', passwordVariable: 'PIPELINE_PASSWORD'),
                              usernamePassword(credentialsId: 'dockerId', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD'),
-                             usernamePassword(credentialsId: 'feature_repo_credentials', usernameVariable: 'FEATURE_REPO_USER', passwordVariable: 'FEATURE_REPO_PASSWORD'),
-                             string(credentialsId: 'feature_repo_url', variable: 'FEATURE_REPO_URL')]) {
+                             usernamePassword(credentialsId: 'feature_repo_credentials', usernameVariable: 'FEATURE_REPO_USER', passwordVariable: 'FEATURE_REPO_PASSWORD')]) {
                //This is executing on ebc dynamic machine
                doWork();
             } // withCredentials() end
