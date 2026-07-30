@@ -6,9 +6,10 @@ properties([
       string(name: 'ebcPlan', defaultValue: 'svl-dockerJenkins-ubuntu20_ppcle.yml', description: 'EBC plan to use when provisioning a Jenkins node'),
       string(name: 'ebcBranch', defaultValue: "${env.ecosystem_branch}", description: 'Git branch used for ebc code'),
       string(name: 'scriptOrg', defaultValue: "OpenLiberty", description: 'Git org containing docker build scripts'),
-      string(name: 'command', defaultValue: "scripts/build-app.sh --image stg.icr.io/cp/olc-sample/open-liberty/samples/getting-started", description: 'Build command to execute on target arch machine'),
+      string(name: 'command', defaultValue: "scripts/build/build-app.sh --image stg.icr.io/cp/olc-sample/open-liberty/samples/getting-started", description: 'Build command to execute on target arch machine'),
       string(name: 'BRANCH', defaultValue: "main", description: 'release branch to use'),
-      string(name: 'CONTAINER_REGISTRY', defaultValue: "stg.icr.io", description: 'staging registry to push images to')
+      string(name: 'CONTAINER_REGISTRY', defaultValue: "stg.icr.io", description: 'staging registry to push images to'),
+      string(name: 'SPS_CONFIG_BRANCH', defaultValue: "main", description: 'branch to use for sample-getting-started-sps-config repository')
    ])
 ])
 timestamps {
@@ -72,8 +73,19 @@ timestamps {
 
 // Clone the git repo and stash it, so that the jenkins agent machine can grab it later
 def gitCloneAndStash() {
-   git branch: BRANCH, url: "git@github.com:${scriptOrg}/sample-getting-started.git"
-   stash(name: 'sample-getting-started')
+   dir('sample-getting-started') {
+      git branch: "main", url: "git@github.com:${scriptOrg}/sample-getting-started.git"
+      sh "git checkout ${BRANCH}"
+   }
+   dir('sample-getting-started-sps-config') {
+      git branch: "main", url: "git@github.ibm.com:websphere-operators-sps/sample-getting-started-sps-config.git"
+      sh "git checkout ${SPS_CONFIG_BRANCH}"
+   }
+   sh "cp -rf sample-getting-started-sps-config/* sample-getting-started/"
+   dir('sample-getting-started') {
+      stash(name: 'sample-getting-started')
+   }
+   sh "ls -l"
 }
   
 // Job Specific Functions
