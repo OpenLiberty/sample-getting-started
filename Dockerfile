@@ -17,11 +17,13 @@ LABEL \
   description="This image contains a sample application that displays the Java system properties and demonstrates MicroProfile Config, Health and Metrics."
 
 # Install required packages for running the Liberty MustGather (linperf.sh) script.
+USER 0
 RUN if [ "$SKIP_LINPERF" != "true" ]; then \
       PKG_MGR=$(command -v dnf || command -v microdnf) && \
       $PKG_MGR install -y procps-ng net-tools ncurses hostname && \
       $PKG_MGR clean all; \
     fi
+USER 1001
 
 COPY --chown=1001:0 src/main/liberty/config/ /config/
 
