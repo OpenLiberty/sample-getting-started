@@ -1,0 +1,27 @@
+{
+  "realm": "liberty",
+  "enabled": true,
+  "clients": [
+    {
+      "clientId": "metrics-client",
+      "enabled": true,
+      "publicClient": false,
+      "secret": "metrics-secret",
+      "directAccessGrantsEnabled": true,
+      "defaultClientScopes": ["profile", "email"]
+    }
+  ],
+  "users": [
+    {
+      "username": "metrics",
+      "enabled": true,
+      "credentials": [
+        {
+          "type": "password",
+          "value": "metrics",
+          "temporary": false
+        }
+      ]
+    }
+  ]
+}

@@ -6,13 +6,16 @@
     <feature>mpMetrics-5.1</feature>
     <feature>mpHealth-4.0</feature>
     <feature>mpConfig-3.1</feature>
+    <!-- JWT Bearer auth for /metrics -->
+    <feature>mpJwt-2.1</feature>
   </featureManager>
 
   <httpOptions removeServerHeader="true" />
   <webContainer disableXPoweredBy="true" />
   <webAppSecurity ssoRequiresSSL="true" httpOnlyCookies="true" />
 
-  <mpMetrics authentication="false"/>
+  <!-- mpMetrics: authentication delegated to mpJwt (see /config/configDropins/overrides/sso.xml) -->
+  <mpMetrics authentication="true"/>
 
   <variable name="default.https.port" defaultValue="9443"/>
   <variable name="app.context.root" defaultValue="/"/>

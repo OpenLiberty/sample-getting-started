@@ -27,6 +27,9 @@ USER 1001
 
 COPY --chown=1001:0 src/main/liberty/config/ /config/
 
+# Bundle the dev SSO for mpMetrics. You can override at deploy time by mounting a different sso.xml
+COPY --chown=1001:0 dev/sso.xml /config/configDropins/overrides/sso.xml
+
 RUN features.sh
 
 COPY --chown=1001:0 target/*.war /config/apps/
