@@ -1,0 +1,20 @@
+<!--
+  Development SSO config — auto-loaded from /config/configDropins/overrides/ by Liberty.
+  No <include> needed in server.xml.
+
+  In production, replace this file by mounting a different sso.xml at the same path.
+  Do NOT commit real issuer URIs or secrets here — inject via environment variables.
+-->
+<server>
+  <!--
+    MP_JWT_ISSUER   = token issuer URI, must match the 'iss' claim in incoming JWTs
+    MP_JWT_JWKS_URI = JWKS endpoint Liberty uses to verify token signatures
+    Defaults below point at the Keycloak dev sidecar.
+  -->
+  <variable name="MP_JWT_ISSUER"   defaultValue="http://keycloak:8080/realms/liberty"/>
+  <variable name="MP_JWT_JWKS_URI" defaultValue="http://keycloak:8080/realms/liberty/protocol/openid-connect/certs"/>
+
+  <mpJwt id="mpJwtConfig"
+         issuer="${MP_JWT_ISSUER}"
+         jwksUri="${MP_JWT_JWKS_URI}"/>
+</server>

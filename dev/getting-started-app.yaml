@@ -1,0 +1,68 @@
+---
+# Development OpenLibertyApplication: Liberty app + Keycloak sidecar
+# Containers in the same Pod share localhost — Keycloak is reachable at localhost:8080.
+#
+# Prerequisites:
+#   oc create configmap keycloak-realm --from-file=realm.json=dev/keycloak-realm.json
+#   oc apply -f dev/getting-started-app.yaml
+#
+# To hit the /metrics endpoint run:
+#   ./dev/metrics.sh
+#
+# In production: remove sidecarContainers, and provide a Secret
+# containing the real sso.xml mounted at /config/configDropins/overrides/sso.xml.
+apiVersion: apps.openliberty.io/v1
+kind: OpenLibertyApplication
+metadata:
+  name: getting-started
+spec:
+  applicationImage: icr.io/appcafe/open-liberty/samples/getting-started:latest
+  replicas: 1
+
+  service:
+    port: 9443
+
+  # Dev Keycloak sidecar — shares localhost with the Liberty container
+  sidecarContainers:
+    - name: keycloak
+      image: quay.io/keycloak/keycloak:25.0
+      args: ["start-dev", "--import-realm"]
+      env:
+        - name: KEYCLOAK_ADMIN
+          value: admin
+        - name: KEYCLOAK_ADMIN_PASSWORD
+          value: admin
+      volumeMounts:
+        - name: realm-config
+          mountPath: /opt/keycloak/data/import
+      ports:
+        - containerPort: 8080
+
+  # Mount the dev sso.xml; in production replace with a Secret mount pointing at your real IdP
+  volumeMounts:
+    - name: sso-override
+      mountPath: /config/configDropins/overrides/sso.xml
+      subPath: sso.xml
+
+  volumes:
+    - name: realm-config
+      configMap:
+        name: keycloak-realm
+    - name: sso-override
+      configMap:
+        name: liberty-sso-dev
+---
+# ConfigMap holding the dev sso.xml — points mpJwt at the Keycloak sidecar on localhost
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: liberty-sso-dev
+data:
+  sso.xml: |
+    <server>
+      <variable name="MP_JWT_ISSUER"   defaultValue="http://localhost:8080/realms/liberty"/>
+      <variable name="MP_JWT_JWKS_URI" defaultValue="http://localhost:8080/realms/liberty/protocol/openid-connect/certs"/>
+      <mpJwt id="mpJwtConfig"
+             issuer="${MP_JWT_ISSUER}"
+             jwksUri="${MP_JWT_JWKS_URI}"/>
+    </server>

@@ -6,15 +6,21 @@
     <feature>mpMetrics-5.1</feature>
     <feature>mpHealth-4.0</feature>
     <feature>mpConfig-3.1</feature>
+    <!-- JWT Bearer auth for /metrics -->
+    <feature>mpJwt-2.1</feature>
   </featureManager>
 
-  <mpMetrics authentication="false" />
+  <httpOptions removeServerHeader="true" />
+  <webContainer disableXPoweredBy="true" />
+  <webAppSecurity ssoRequiresSSL="true" httpOnlyCookies="true" />
 
-  <variable name="default.http.port" defaultValue="9080"/>
+  <!-- mpMetrics: authentication delegated to mpJwt (see /config/configDropins/overrides/sso.xml) -->
+  <mpMetrics authentication="true"/>
+
   <variable name="default.https.port" defaultValue="9443"/>
   <variable name="app.context.root" defaultValue="/"/>
 
-  <httpEndpoint host="*" httpPort="${default.http.port}" httpsPort="${default.https.port}" id="defaultHttpEndpoint"/>
+  <httpEndpoint host="*" httpPort="-1" httpsPort="${default.https.port}" id="defaultHttpEndpoint"/>
 
   <webApplication location="io.openliberty.sample.getting.started.war" contextRoot="${app.context.root}"/>
 </server>

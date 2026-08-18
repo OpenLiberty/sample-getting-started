@@ -1,0 +1,37 @@
+services:
+
+  keycloak:
+    image: quay.io/keycloak/keycloak:25.0
+    command: start-dev --import-realm
+    environment:
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+    volumes:
+      - ./dev/keycloak-realm.json:/opt/keycloak/data/import/realm.json:ro
+    ports:
+      - "8080:8080"
+    healthcheck:
+      test: ["CMD-SHELL", "curl -sf http://localhost:8080/realms/liberty/.well-known/openid-configuration || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+
+  app:
+    build: .
+    volumes:
+      # Mount the dev SSO include file into the Liberty config includes directory
+      - ./dev/sso.xml:/config/configDropins/overrides/sso.xml:ro
+    ports:
+      - "9443:9443"
+    depends_on:
+      keycloak:
+        condition: service_healthy
+
+# To get a token and hit /metrics:
+#
+#   TOKEN=$(curl -s -X POST \
+#     http://localhost:8080/realms/liberty/protocol/openid-connect/token \
+#     -d "grant_type=password&client_id=metrics-client&client_secret=metrics-secret&username=metrics&password=metrics" \
+#     | jq -r .access_token)
+#
+#   curl -k -H "Authorization: Bearer $TOKEN" https://localhost:9443/metrics
