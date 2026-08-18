@@ -1,6 +1,21 @@
 {
   "realm": "liberty",
   "enabled": true,
+  "requiredCredentials": ["password"],
+  "attributes": {
+    "userProfileEnabled": "false"
+  },
+  "requiredActions": [
+    {
+      "alias": "VERIFY_PROFILE",
+      "name": "Verify Profile",
+      "providerId": "VERIFY_PROFILE",
+      "enabled": false,
+      "defaultAction": false,
+      "priority": 90,
+      "config": {}
+    }
+  ],
   "clients": [
     {
       "clientId": "metrics-client",
@@ -15,6 +30,8 @@
     {
       "username": "metrics",
       "enabled": true,
+      "emailVerified": true,
+      "requiredActions": [],
       "credentials": [
         {
           "type": "password",
