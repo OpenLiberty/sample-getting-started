@@ -43,7 +43,7 @@ timestamps {
 
       node(label: "ebc_${executionId}"){
          stage("Running Job"){
-            withCredentials([usernamePassword(credentialsId: 'operator_preprod_icrId_user', usernameVariable: 'PIPELINE_USERNAME', passwordVariable: 'PIPELINE_PASSWORD'),
+            withCredentials([usernamePassword(credentialsId: 'operator_preprod_icrId', usernameVariable: 'PIPELINE_USERNAME', passwordVariable: 'PIPELINE_PASSWORD'),
                              usernamePassword(credentialsId: 'dockerId', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
                //This is executing on ebc dynamic machine
                doWork();
