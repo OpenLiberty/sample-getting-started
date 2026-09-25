@@ -8,8 +8,9 @@ properties([
       string(name: 'scriptOrg', defaultValue: "OpenLiberty", description: 'Git org containing docker build scripts'),
       string(name: 'command', defaultValue: "scripts/build/build-app.sh --image stg.icr.io/cp/olc-sample/open-liberty/samples/getting-started", description: 'Build command to execute on target arch machine'),
       string(name: 'BRANCH', defaultValue: "main", description: 'release branch to use'),
+      string(name: 'SPS_CONFIG_BRANCH', defaultValue: "main", description: 'branch to use for sample-getting-started-sps-config repository'),
       string(name: 'CONTAINER_REGISTRY', defaultValue: "preprod.icr.io", description: 'preprod registry to push images to'),
-      string(name: 'SPS_CONFIG_BRANCH', defaultValue: "main", description: 'branch to use for sample-getting-started-sps-config repository')
+      string(name: 'IMAGE', defaultValue: "icr.io/appcafe/open-liberty/samples/getting-started", description: 'full image')
    ])
 ])
 timestamps {
@@ -96,7 +97,7 @@ def void doWork(){
    unstash(name: 'sample-getting-started')
    
    withMaven(maven: '3.6.3') {
-        sh "${COMMAND}"
+        sh "${command}"
    } 
    
 }
